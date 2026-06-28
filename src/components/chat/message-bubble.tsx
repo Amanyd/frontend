@@ -1,6 +1,8 @@
+import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { SourceCitation } from "./source-citation";
 import type { Citation } from "@/types/chat";
+import { Copy, Check, Volume2, Square, Loader2 } from "lucide-react";
 
 interface MessageBubbleProps {
   role: "user" | "assistant";
@@ -16,6 +18,60 @@ export function MessageBubble({
   isStreaming,
 }: MessageBubbleProps) {
   const isUser = role === "user";
+  const [isCopied, setIsCopied] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isSynthesizing, setIsSynthesizing] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+    };
+  }, []);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(content);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+
+  const toggleSpeak = async () => {
+    if (isPlaying && audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      try {
+        setIsSynthesizing(true);
+        const res = await fetch("/api/audio/speak", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: content, voice: "hf_beta", speed: 0.9 }),
+        });
+        
+        if (res.ok) {
+          const blob = await res.blob();
+          const url = URL.createObjectURL(blob);
+          const audio = new Audio(url);
+          audioRef.current = audio;
+          audio.onended = () => setIsPlaying(false);
+          audio.onerror = () => setIsPlaying(false);
+          
+          setIsSynthesizing(false);
+          setIsPlaying(true);
+          audio.play();
+        } else {
+          setIsSynthesizing(false);
+          setIsPlaying(false);
+        }
+      } catch (e) {
+        console.error("TTS Error:", e);
+        setIsSynthesizing(false);
+        setIsPlaying(false);
+      }
+    }
+  };
 
   return (
     <div
@@ -59,6 +115,31 @@ export function MessageBubble({
             </span>
           )}
         </div>
+        
+        {!isUser && !isStreaming && content && (
+          <div className="flex items-center gap-3 px-2 text-outline">
+            <button 
+              onClick={handleCopy} 
+              className="flex items-center gap-1.5 hover:text-ink transition-colors text-xs font-medium" 
+              title="Copy response"
+            >
+              {isCopied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+              {isCopied ? "Copied" : "Copy"}
+            </button>
+            <button 
+              onClick={toggleSpeak} 
+              className={cn(
+                "flex items-center gap-1.5 hover:text-ink transition-colors text-xs font-medium",
+                isPlaying && "text-brand-teal"
+              )} 
+              title={isPlaying ? "Stop speaking" : "Listen to response"}
+            >
+              {isPlaying ? <Square className="h-3.5 w-3.5 fill-current" /> : <Volume2 className="h-3.5 w-3.5" />}
+              {isPlaying ? "Stop" : "Listen"}
+            </button>
+          </div>
+        )}
+
         {citations.length > 0 && (
           <SourceCitation citations={citations} />
         )}

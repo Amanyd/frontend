@@ -153,7 +153,7 @@ export function FileUploadZone({
       onDrop={handleDrop}
       onClick={() => inputRef.current?.click()}
       className={`
-        border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all
+        border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors
         ${
           dragOver
             ? "border-brand-teal bg-brand-teal/5"

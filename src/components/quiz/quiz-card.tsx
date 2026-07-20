@@ -18,20 +18,20 @@ export function QuizCard({ quiz, index }: QuizCardProps) {
     <div
       className={cn(
         colorClass,
-        "rounded-xl p-8 min-h-[320px] flex flex-col justify-between relative overflow-hidden group hover:scale-[1.02] transition-transform duration-300"
+        "rounded-[24px] p-8 min-h-[320px] flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300 ease-snappy"
       )}
     >
       <div className={cn("relative z-10", isDark ? "text-white" : "text-ink")}>
         <div className="flex items-center gap-2 mb-4">
           <DifficultyBadge difficulty={quiz.difficulty} />
           {quiz.status === "generating" && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/20 text-[13px] font-semibold animate-pulse">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/20 text-[13px] font-medium">
               <Loader2 className="h-3 w-3 animate-spin" />
               Generating
             </span>
           )}
           {quiz.status === "failed" && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-error/20 text-error text-[13px] font-semibold">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-error/20 text-error text-[13px] font-medium">
               Failed
             </span>
           )}

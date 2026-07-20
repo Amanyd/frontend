@@ -16,7 +16,7 @@ const DropdownMenuContent = forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        "z-50 min-w-[180px] overflow-hidden bg-white border border-hairline rounded-2xl p-1 shadow-lg animate-fade-in",
+        "z-50 min-w-[180px] overflow-hidden bg-white border border-hairline rounded-2xl p-1 shadow-lg animate-popover [transform-origin:var(--radix-dropdown-menu-content-transform-origin)]",
         className
       )}
       {...props}
@@ -34,7 +34,7 @@ const DropdownMenuItem = forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex items-center gap-2 rounded-lg px-3 py-2.5 font-sans text-body-md text-ink cursor-pointer outline-none select-none transition-colors focus:bg-surface-card hover:bg-surface-card data-[disabled]:opacity-50 data-[disabled]:pointer-events-none",
+      "relative flex items-center gap-2 rounded-lg px-3 py-2.5 font-sans text-body-sm text-ink cursor-pointer outline-none select-none transition-colors focus:bg-surface-card hover:bg-surface-card data-[disabled]:opacity-50 data-[disabled]:pointer-events-none",
       inset && "pl-8",
       className
     )}

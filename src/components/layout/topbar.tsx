@@ -28,7 +28,7 @@ export function Topbar({ user }: TopbarProps) {
       <div className="flex items-center gap-3">
         <button
           onClick={toggleSidebar}
-          className="w-10 h-10 rounded-xl flex items-center justify-center hover:bg-surface-strong transition-colors"
+          className="w-10 h-10 rounded-xl flex items-center justify-center hover:bg-surface-strong transition-[background-color,transform] duration-150 ease-snappy active:scale-95 cursor-pointer"
           aria-label="Toggle navigation"
         >
           <Menu className="h-5 w-5 text-ink" />
@@ -40,7 +40,7 @@ export function Topbar({ user }: TopbarProps) {
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="w-8 h-8 rounded-full bg-brand-teal flex items-center justify-center text-white text-caption font-semibold">
+          <button className="w-8 h-8 rounded-full bg-brand-teal flex items-center justify-center text-white text-caption font-semibold transition-transform duration-150 ease-snappy active:scale-95 cursor-pointer">
             {user.name?.charAt(0)?.toUpperCase() ?? "U"}
           </button>
         </DropdownMenuTrigger>

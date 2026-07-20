@@ -19,7 +19,7 @@ export function DifficultyBadge({ difficulty, className }: DifficultyBadgeProps)
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[13px] font-semibold capitalize",
+        "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[13px] font-medium capitalize",
         style.bg,
         style.text,
         className

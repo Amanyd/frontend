@@ -29,7 +29,7 @@ export function ScoreBarChart({
   const max = maxValue ?? Math.max(...items.map((i) => i.value), 1);
 
   return (
-    <div className="bg-surface-card border border-hairline rounded-xl p-6 flex flex-col">
+    <div className="bg-surface-card border border-hairline rounded-2xl p-6 flex flex-col">
       <div className="mb-8">
         <h3 className="text-title-lg font-semibold text-ink">{title}</h3>
         {subtitle && (

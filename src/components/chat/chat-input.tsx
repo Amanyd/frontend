@@ -87,7 +87,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
   return (
     <div className="border-t border-hairline bg-white">
       <div className="p-4 md:p-6">
-        <div className="relative flex items-end gap-3 bg-surface-soft border border-hairline rounded-2xl p-2 focus-within:border-ink transition-colors shadow-sm">
+        <div className="relative flex items-end gap-3 bg-surface-soft border border-hairline rounded-2xl p-2 focus-within:border-ink focus-within:ring-1 focus-within:ring-ink transition-colors shadow-sm">
           <textarea
             ref={textareaRef}
             value={value}
@@ -101,8 +101,8 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
           <button
             onClick={toggleListening}
             title={isListening ? "Stop listening" : "Start speaking"}
-            className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors shrink-0 shadow-sm ${
-              isListening ? "bg-red-500 text-white animate-pulse" : "bg-white text-ink border border-hairline hover:bg-surface-card"
+            className={`w-12 h-12 rounded-xl flex items-center justify-center transition-[color,background-color,border-color,transform] duration-150 ease-snappy active:scale-95 shrink-0 shadow-sm cursor-pointer ${
+              isListening ? "bg-error text-white animate-pulse" : "bg-white text-ink border border-hairline hover:bg-surface-card"
             }`}
           >
             {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
@@ -110,7 +110,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
           <button
             onClick={handleSend}
             disabled={disabled || !value.trim()}
-            className="w-12 h-12 bg-ink text-white rounded-xl flex items-center justify-center hover:opacity-90 transition-opacity shrink-0 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-12 h-12 bg-ink text-white rounded-xl flex items-center justify-center hover:bg-ink/90 transition-[background-color,transform] duration-150 ease-snappy active:scale-95 shrink-0 shadow-md disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             {disabled ? (
               <Loader2 className="h-5 w-5 animate-spin" />

@@ -38,22 +38,23 @@
   --font-mono: "JetBrains Mono", monospace;
 
   /* ─── Display sizes (Plus Jakarta Sans) ─── */
-  --text-display-xl: 72px;
+  /* Fluid: identical on desktop, scales down on small viewports */
+  --text-display-xl: clamp(44px, 8vw, 72px);
   --text-display-xl--line-height: 1.0;
   --text-display-xl--letter-spacing: -2.5px;
   --text-display-xl--font-weight: 500;
 
-  --text-display-lg: 56px;
+  --text-display-lg: clamp(36px, 6vw, 56px);
   --text-display-lg--line-height: 1.05;
   --text-display-lg--letter-spacing: -2px;
   --text-display-lg--font-weight: 500;
 
-  --text-display-md: 40px;
+  --text-display-md: clamp(30px, 5vw, 40px);
   --text-display-md--line-height: 1.1;
   --text-display-md--letter-spacing: -1px;
   --text-display-md--font-weight: 500;
 
-  --text-display-sm: 32px;
+  --text-display-sm: clamp(26px, 4vw, 32px);
   --text-display-sm--line-height: 1.15;
   --text-display-sm--letter-spacing: -0.5px;
   --text-display-sm--font-weight: 500;
@@ -95,12 +96,17 @@
   --text-caption-uppercase--letter-spacing: 1.5px;
   --text-caption-uppercase--font-weight: 600;
 
+  /* ─── Easing ─── */
+  /* Strong ease-out for UI interactions — built-ins are too weak */
+  --ease-snappy: cubic-bezier(0.23, 1, 0.32, 1);
+  /* Strong ease-in-out for on-screen movement */
+  --ease-swift: cubic-bezier(0.77, 0, 0.175, 1);
+
   /* ─── Animations ─── */
-  --animate-fade-in: fade-in 0.3s ease-out;
-  --animate-slide-up: slide-up 0.3s ease-out;
-  --animate-slide-down: slide-down 0.2s ease-out;
-  --animate-slide-in-left: slide-in-left 0.25s ease-out;
-  --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-fade-in: fade-in 0.25s var(--ease-snappy);
+  --animate-slide-in-left: slide-in-left 0.25s var(--ease-snappy);
+  --animate-popover: popover 0.15s var(--ease-snappy);
+  --animate-modal: modal 0.2s var(--ease-snappy);
 }
 
 @keyframes fade-in {
@@ -108,19 +114,21 @@
   to   { opacity: 1; }
 }
 
-@keyframes slide-up {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slide-down {
-  from { opacity: 0; transform: translateY(-10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
 @keyframes slide-in-left {
   from { transform: translateX(-100%); }
   to   { transform: translateX(0); }
+}
+
+/* Popovers scale in from their trigger, never from scale(0) */
+@keyframes popover {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Modals stay centered — subtle scale + fade only */
+@keyframes modal {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
 }
 
 @keyframes scroll {
@@ -133,10 +141,33 @@
     @apply font-sans antialiased bg-canvas text-ink;
   }
 
+  ::selection {
+    background-color: color-mix(in srgb, var(--color-brand-ochre) 35%, transparent);
+  }
+
   ::-webkit-scrollbar { @apply w-2; }
   ::-webkit-scrollbar-track { @apply bg-transparent; }
   ::-webkit-scrollbar-thumb { @apply bg-outline-variant rounded-full; }
   ::-webkit-scrollbar-thumb:hover { @apply bg-outline; }
+
+  /* Reduced motion: keep fades, drop movement */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @layer utilities {

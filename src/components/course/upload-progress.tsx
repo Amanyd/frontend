@@ -53,7 +53,7 @@ export function UploadProgress({
       <div className="w-full bg-surface-container rounded-full h-2 overflow-hidden">
         <div
           className={cn(
-            "h-full rounded-full transition-all duration-300",
+            "h-full rounded-full transition-[width] duration-300 ease-snappy",
             status === "uploading" && "bg-brand-teal",
             status === "complete" && "bg-success",
             status === "error" && "bg-error"

@@ -39,17 +39,17 @@ export default async function QuizzesPage() {
   return (
     <div>
       <header className="mb-12">
-        <h1 className="font-display text-display-xl text-ink mb-4">
+        <h1 className="font-display text-display-lg text-ink mb-4">
           Skill Validation
         </h1>
-        <p className="text-title-lg text-surface-tint max-w-2xl">
+        <p className="text-body-md text-surface-tint max-w-2xl">
           Master your technical knowledge with targeted assessments. Complete
           these drills to validate your understanding.
         </p>
       </header>
 
       {courseQuizGroups.length === 0 ? (
-        <div className="bg-surface-card rounded-2xl border border-hairline p-16 text-center">
+        <div className="bg-surface-card rounded-2xl border border-hairline p-12 text-center">
           <h3 className="font-display text-display-sm text-ink mb-2">
             No quizzes available
           </h3>

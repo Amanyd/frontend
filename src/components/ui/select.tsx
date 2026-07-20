@@ -16,7 +16,7 @@ const SelectTrigger = forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-11 w-full items-center justify-between bg-canvas border border-hairline rounded-xl px-4 font-sans text-body-md text-ink placeholder:text-outline transition-colors focus:outline-none focus:border-ink disabled:opacity-50 disabled:cursor-not-allowed",
+      "flex h-11 w-full items-center justify-between bg-canvas border border-hairline rounded-xl px-4 font-sans text-body-md text-ink placeholder:text-outline transition-colors focus:outline-none focus:border-ink focus:ring-1 focus:ring-ink disabled:opacity-50 disabled:cursor-not-allowed data-[placeholder]:text-outline",
       className
     )}
     {...props}
@@ -38,7 +38,7 @@ const SelectContent = forwardRef<
       ref={ref}
       position={position}
       className={cn(
-        "relative z-50 max-h-72 min-w-[8rem] overflow-hidden bg-white border border-hairline rounded-2xl shadow-lg animate-fade-in",
+        "relative z-50 max-h-72 min-w-[8rem] overflow-hidden bg-white border border-hairline rounded-2xl shadow-lg animate-popover [transform-origin:var(--radix-select-content-transform-origin)]",
         position === "popper" && "w-[var(--radix-select-trigger-width)]",
         className
       )}
@@ -59,7 +59,7 @@ const SelectItem = forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-pointer items-center rounded-lg py-2.5 px-3 font-sans text-body-md text-ink outline-none select-none hover:bg-surface-card focus:bg-surface-card data-[disabled]:opacity-50 data-[disabled]:pointer-events-none",
+      "relative flex w-full cursor-pointer items-center rounded-lg py-2.5 px-3 font-sans text-body-sm text-ink outline-none select-none hover:bg-surface-card focus:bg-surface-card data-[disabled]:opacity-50 data-[disabled]:pointer-events-none",
       className
     )}
     {...props}
@@ -81,7 +81,7 @@ const SelectLabel = forwardRef<
   <SelectPrimitive.Label
     ref={ref}
     className={cn(
-      "py-2 px-3 text-caption-uppercase font-semibold tracking-[1.5px] uppercase text-outline font-sans",
+      "py-2 px-3 text-caption-uppercase uppercase text-outline font-sans",
       className
     )}
     {...props}

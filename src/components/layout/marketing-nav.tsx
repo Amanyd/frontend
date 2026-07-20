@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export function MarketingNav() {
   return (
@@ -17,12 +18,9 @@ export function MarketingNav() {
           >
             Sign In
           </Link>
-          <Link
-            href="/register"
-            className="bg-ink text-white h-[44px] px-6 rounded-xl font-button text-button flex items-center hover:opacity-90 transition-opacity"
-          >
-            Get Started
-          </Link>
+          <Button asChild>
+            <Link href="/register">Get Started</Link>
+          </Button>
         </div>
       </div>
     </nav>

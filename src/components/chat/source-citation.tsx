@@ -14,7 +14,7 @@ export function SourceCitation({ citations }: SourceCitationProps) {
   if (citations.length === 0) return null;
 
   return (
-    <div className="bg-brand-mint px-5 py-4 rounded-2xl text-ink text-[15px] leading-relaxed shadow-sm border border-[#8ec7b6]">
+    <div className="bg-brand-mint px-5 py-4 rounded-2xl text-ink text-[15px] leading-relaxed shadow-sm border border-ink/10">
       <button
         onClick={() => setExpanded(!expanded)}
         className="flex items-center gap-2 font-semibold text-sm w-full"

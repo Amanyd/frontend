@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { capitalize } from "@/lib/utils";
 import {
   Table,
@@ -119,12 +120,12 @@ export function InstructorDashboard({
             <p className="text-body-md text-surface-tint mb-6">
               Create your first course to get started.
             </p>
-            <Link href="/courses">
-              <button className="bg-ink text-white h-11 px-6 rounded-xl text-button font-semibold hover:bg-ink/90 transition-colors inline-flex items-center gap-2">
+            <Button asChild>
+              <Link href="/courses">
                 Create Course
                 <ArrowRight className="h-4 w-4" />
-              </button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         ) : (
           <div className="bg-surface-card rounded-2xl border border-hairline overflow-hidden">

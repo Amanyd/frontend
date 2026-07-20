@@ -16,7 +16,7 @@ export function CourseCard({ course, index }: CourseCardProps) {
       <article
         className={cn(
           colorClass,
-          "rounded-[24px] p-8 flex flex-col justify-between min-h-[340px] shadow-sm hover:-translate-y-1 transition-transform duration-300 cursor-pointer"
+          "rounded-[24px] p-8 flex flex-col justify-between min-h-[340px] hover:-translate-y-1 transition-transform duration-300 ease-snappy cursor-pointer"
         )}
       >
         <div>

@@ -17,7 +17,7 @@ export default function CourseDetailLoading() {
           </div>
         </div>
         <div className="md:col-span-5">
-          <Skeleton className="aspect-[4/3] rounded-[32px]" />
+          <Skeleton className="aspect-[4/3] rounded-[24px]" />
         </div>
       </div>
 

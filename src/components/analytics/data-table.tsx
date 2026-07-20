@@ -21,7 +21,7 @@ export function DataTable<T>({
   emptyMessage = "No data available",
 }: DataTableProps<T>) {
   return (
-    <div className="w-full overflow-x-auto bg-surface-card border border-hairline rounded-xl">
+    <div className="w-full overflow-x-auto bg-surface-card border border-hairline rounded-2xl">
       <table className="w-full text-left border-collapse">
         <thead>
           <tr>
@@ -29,7 +29,7 @@ export function DataTable<T>({
               <th
                 key={col.key}
                 className={cn(
-                  "text-caption-uppercase uppercase text-surface-tint p-4 border-b border-hairline",
+                  "text-caption-uppercase uppercase text-outline p-4 border-b border-hairline",
                   col.className
                 )}
               >

@@ -107,7 +107,7 @@ export default function QuizTakePage() {
         </div>
         <div className="h-2 w-full bg-surface-card rounded-full overflow-hidden border border-hairline">
           <div
-            className="h-full bg-brand-coral rounded-full transition-all duration-300"
+            className="h-full bg-brand-coral rounded-full transition-[width] duration-300 ease-snappy"
             style={{ width: `${progress}%` }}
           />
         </div>

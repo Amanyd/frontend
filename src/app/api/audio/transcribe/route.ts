@@ -6,7 +6,7 @@ export async function POST(req: Request) {
     const upstream = await fetch("http://127.0.0.1:8000/api/v1/audio/transcribe", {
       method: "POST",
       headers: {
-        "X-Internal-Token": "changeme-internal-token",
+        "X-Internal-Token": process.env.INTERNAL_TOKEN || "development_secret_token",
       },
       body: formData,
     });

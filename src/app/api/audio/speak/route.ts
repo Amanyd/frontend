@@ -7,7 +7,7 @@ export async function POST(req: Request) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Internal-Token": "changeme-internal-token",
+        "X-Internal-Token": process.env.INTERNAL_TOKEN || "development_secret_token",
       },
       body: JSON.stringify(body),
     });

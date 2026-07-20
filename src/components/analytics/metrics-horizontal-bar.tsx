@@ -23,7 +23,7 @@ export function MetricsHorizontalBar({
       </div>
       <div className="w-full bg-surface-container rounded-full h-3">
         <div
-          className={cn("h-3 rounded-full transition-all duration-500", color)}
+          className={cn("h-3 rounded-full transition-[width] duration-500 ease-snappy", color)}
           style={{ width: `${pct}%` }}
         />
       </div>

@@ -20,7 +20,7 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
           <h2 className="font-display text-display-md text-ink text-center">
             {question.question}
           </h2>
-          <p className="text-body-md text-ink-muted text-center">
+          <p className="text-body-md text-surface-tint text-center">
             This question has no options available.
           </p>
         </div>
@@ -38,9 +38,9 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
               <label
                 key={choice.label}
                 className={cn(
-                  "relative flex items-center p-6 rounded-2xl cursor-pointer transition-all",
+                  "relative flex items-center p-6 rounded-2xl cursor-pointer transition-colors",
                   isSelected
-                    ? "bg-surface-soft border-2 border-brand-coral"
+                    ? "bg-surface-soft border border-brand-coral ring-1 ring-brand-coral"
                     : "bg-white border border-hairline hover:border-brand-coral hover:bg-surface-soft"
                 )}
               >
@@ -91,7 +91,7 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
         placeholder="Type your answer here..."
         value={selectedAnswer}
         onChange={(e) => setAnswer(question.id, e.target.value)}
-        className="w-full bg-canvas border border-hairline rounded-2xl p-6 text-body-md text-ink focus:border-ink focus:ring-1 focus:ring-ink transition-all outline-none resize-none"
+        className="w-full bg-canvas border border-hairline rounded-2xl p-6 text-body-md text-ink focus:border-ink focus:ring-1 focus:ring-ink transition-colors outline-none resize-none"
       />
     </div>
   );

@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { api } from "@/lib/api-client";
 import { CourseGrid } from "@/components/course/course-grid";
+import { Button } from "@/components/ui/button";
 import type { Course } from "@/types/course";
 import Link from "next/link";
 import { Plus } from "lucide-react";
@@ -33,13 +34,12 @@ export default async function CoursesPage() {
           </p>
         </div>
         {isInstructor && (
-          <Link
-            href="/courses/new"
-            className="inline-flex items-center gap-2 bg-ink text-white h-11 px-6 rounded-xl text-button font-semibold hover:bg-ink/90 transition-colors shrink-0"
-          >
-            <Plus className="h-4 w-4" />
-            New Course
-          </Link>
+          <Button asChild className="shrink-0">
+            <Link href="/courses/new">
+              <Plus className="h-4 w-4" />
+              New Course
+            </Link>
+          </Button>
         )}
       </header>
 

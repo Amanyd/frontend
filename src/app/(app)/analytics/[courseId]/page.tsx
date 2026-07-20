@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { KpiCard } from "@/components/analytics/kpi-card";
 import { DataTable } from "@/components/analytics/data-table";
+import { DifficultyBadge } from "@/components/quiz/difficulty-badge";
 import type { CourseMetric } from "@/types/analytics";
 import type { Course, Lesson, FileAsset } from "@/types/course";
 import type { Quiz } from "@/types/quiz";
@@ -62,7 +63,7 @@ export default async function CourseAnalyticsPage({ params }: PageProps) {
     };
     return (
       <span
-        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm font-semibold ${styles[status] ?? styles.pending}`}
+        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[13px] font-medium ${styles[status] ?? styles.pending}`}
       >
         <span className="w-1.5 h-1.5 rounded-full bg-current" />
         {status ? status.charAt(0).toUpperCase() + status.slice(1) : "—"}
@@ -86,7 +87,7 @@ export default async function CourseAnalyticsPage({ params }: PageProps) {
         <p className="text-caption-uppercase uppercase text-surface-tint mb-2">
           Course Analytics
         </p>
-        <h1 className="font-display text-display-md text-ink">
+        <h1 className="font-display text-display-lg text-ink">
           {course.title}
         </h1>
       </header>
@@ -165,21 +166,7 @@ export default async function CourseAnalyticsPage({ params }: PageProps) {
             {
               key: "difficulty",
               header: "Difficulty",
-              render: (q) => {
-                const styles: Record<string, string> = {
-                  easy: "bg-success/10 text-success",
-                  medium: "bg-warning/10 text-warning",
-                  hard: "bg-error/10 text-error",
-                };
-                return (
-                  <span
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm font-semibold capitalize ${styles[q.difficulty] ?? ""}`}
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-current" />
-                    {q.difficulty}
-                  </span>
-                );
-              },
+              render: (q) => <DifficultyBadge difficulty={q.difficulty} />,
             },
             {
               key: "status",

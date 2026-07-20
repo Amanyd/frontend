@@ -29,10 +29,10 @@ export default function ChatListPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-12">
         <div>
-          <h1 className="font-display text-display-xl text-ink mb-2">
+          <h1 className="font-display text-display-lg text-ink mb-4">
             AeroMentor AI
           </h1>
-          <p className="text-title-lg text-surface-tint">
+          <p className="text-body-md text-surface-tint">
             Ask questions about your course materials with AI-powered search.
           </p>
         </div>
@@ -54,7 +54,7 @@ export default function ChatListPage() {
           ))}
         </div>
       ) : sessions.length === 0 ? (
-        <div className="bg-surface-card rounded-[24px] border border-hairline p-16 text-center">
+        <div className="bg-surface-card rounded-2xl border border-hairline p-12 text-center">
           <div className="w-16 h-16 rounded-full bg-surface-soft mx-auto mb-6 flex items-center justify-center border border-hairline font-display text-2xl select-none text-surface-tint">
             AI
           </div>

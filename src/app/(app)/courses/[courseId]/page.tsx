@@ -96,7 +96,7 @@ export default async function CourseDetailPage({ params }: PageProps) {
           </div>
         </div>
         <div className="md:col-span-5">
-          <div className="bg-brand-lavender rounded-[32px] aspect-[4/3] overflow-hidden relative shadow-sm border border-ink/5 flex items-center justify-center">
+          <div className="bg-brand-lavender rounded-[24px] aspect-[4/3] overflow-hidden relative shadow-sm border border-ink/5 flex items-center justify-center">
             <div className="text-center p-8">
               <Badge variant="ghost" className="mb-4">
                 {capitalize(course.rank)}

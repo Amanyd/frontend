@@ -6,6 +6,7 @@ import { ArrowRight } from "lucide-react";
 import { KpiCard } from "@/components/analytics/kpi-card";
 import { ScoreBarChart } from "@/components/analytics/score-bar-chart";
 import { MetricsHorizontalBar } from "@/components/analytics/metrics-horizontal-bar";
+import { DataTable } from "@/components/analytics/data-table";
 import type { AnalyticsOverview } from "@/types/analytics";
 import type { Course } from "@/types/course";
 
@@ -44,7 +45,7 @@ export default async function AnalyticsPage() {
           <p className="text-caption-uppercase uppercase text-surface-tint mb-2">
             Instructor Dashboard
           </p>
-          <h1 className="font-display text-display-md text-ink">
+          <h1 className="font-display text-display-lg text-ink">
             Nav Analytics
           </h1>
         </div>
@@ -84,7 +85,7 @@ export default async function AnalyticsPage() {
             items={chartItems.length > 0 ? chartItems : [{ label: "—", value: 0 }]}
           />
         </div>
-        <div className="bg-surface-card border border-hairline rounded-xl p-6 flex flex-col">
+        <div className="bg-surface-card border border-hairline rounded-2xl p-6 flex flex-col">
           <h3 className="text-title-lg font-semibold text-ink mb-2">
             Key Metrics
           </h3>
@@ -122,59 +123,43 @@ export default async function AnalyticsPage() {
           </h3>
         </div>
         {courses.length === 0 ? (
-          <div className="bg-surface-card border border-hairline rounded-xl p-12 text-center">
+          <div className="bg-surface-card border border-hairline rounded-2xl p-12 text-center">
             <p className="text-body-md text-surface-tint">
               No courses found. Create a course to see analytics.
             </p>
           </div>
         ) : (
-          <div className="bg-surface-card border border-hairline rounded-xl overflow-hidden">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr>
-                  <th className="text-caption-uppercase uppercase text-surface-tint p-4 border-b border-hairline">
-                    Course
-                  </th>
-                  <th className="text-caption-uppercase uppercase text-surface-tint p-4 border-b border-hairline">
-                    Rank
-                  </th>
-                  <th className="text-caption-uppercase uppercase text-surface-tint p-4 border-b border-hairline text-right">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="text-body-md text-ink">
-                {courses.map((course, i) => (
-                  <tr
-                    key={course.id}
-                    className="hover:bg-surface-soft transition-colors"
+          <DataTable
+            columns={[
+              {
+                key: "title",
+                header: "Course",
+                render: (c) => <span className="font-semibold">{c.title}</span>,
+              },
+              {
+                key: "rank",
+                header: "Rank",
+                render: (c) => <span className="capitalize">{c.rank}</span>,
+              },
+              {
+                key: "actions",
+                header: "Actions",
+                className: "text-right",
+                render: (c) => (
+                  <Link
+                    href={`/analytics/${c.id}`}
+                    className="inline-flex items-center gap-1 text-button font-semibold text-ink hover:text-surface-tint transition-colors"
                   >
-                    <td
-                      className={`p-4 font-semibold ${i < courses.length - 1 ? "border-b border-hairline" : ""}`}
-                    >
-                      {course.title}
-                    </td>
-                    <td
-                      className={`p-4 capitalize ${i < courses.length - 1 ? "border-b border-hairline" : ""}`}
-                    >
-                      {course.rank}
-                    </td>
-                    <td
-                      className={`p-4 text-right ${i < courses.length - 1 ? "border-b border-hairline" : ""}`}
-                    >
-                      <Link
-                        href={`/analytics/${course.id}`}
-                        className="inline-flex items-center gap-1 text-button font-semibold text-ink hover:text-brand-coral transition-colors"
-                      >
-                        View Details
-                        <ArrowRight className="h-3.5 w-3.5" />
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                    View Details
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                ),
+              },
+            ]}
+            data={courses}
+            keyExtractor={(c) => c.id}
+            emptyMessage="No courses found."
+          />
         )}
       </section>
     </div>

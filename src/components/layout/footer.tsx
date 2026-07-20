@@ -5,7 +5,7 @@ export function Footer() {
     <footer className="bg-surface-soft border-t border-hairline pt-12 pb-8">
       <div className="max-w-[1280px] mx-auto px-8 flex flex-col md:flex-row justify-between items-end gap-8">
         <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-2 text-sm font-black font-display text-ink uppercase">
+          <div className="flex items-center gap-2 text-sm font-extrabold font-display text-ink uppercase">
             AeroMentor
           </div>
           <div className="font-display text-xs uppercase tracking-widest text-ink opacity-60">

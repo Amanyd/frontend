@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { LogOut } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 interface NavItem {
@@ -41,7 +40,7 @@ export function Sidebar({ user, className }: SidebarProps) {
   return (
     <aside
       className={cn(
-        "h-full w-64 border-r border-hairline bg-surface-card flex flex-col flex-shrink-0",
+        "h-full w-64 border-r border-hairline bg-surface-card flex flex-col shrink-0",
         className
       )}
     >
@@ -66,10 +65,10 @@ export function Sidebar({ user, className }: SidebarProps) {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 px-4 py-3 rounded-xl text-button font-semibold transition-all duration-200 active:scale-[0.98]",
+                "flex items-center gap-3 px-4 py-3 rounded-xl text-button transition-colors duration-150",
                 isActive
                   ? "bg-ink text-white"
-                  : "text-surface-tint hover:bg-surface-strong hover:translate-x-0.5 group"
+                  : "text-surface-tint hover:bg-surface-strong"
               )}
             >
               {item.label}
@@ -80,24 +79,24 @@ export function Sidebar({ user, className }: SidebarProps) {
 
       <div className="p-4 border-t border-hairline">
         <div className="flex items-center gap-3 px-4 py-3 mb-2">
-          <div className="w-8 h-8 rounded-full bg-brand-teal flex items-center justify-center text-white text-caption font-semibold">
+          <div className="w-12 h-12 rounded-full bg-brand-teal flex items-center justify-center text-white text-caption font-semibold">
             {user.name?.charAt(0)?.toUpperCase() ?? "U"}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-body-sm font-semibold text-ink truncate">
+            <p className="text-body-md font-semibold text-ink truncate">
               {user.name ?? "User"}
             </p>
-            <Badge variant="default" className="mt-0.5 text-[10px] px-1.5 py-0">
+            <p className="mt-0.5 text-caption font-medium text-ink">
               {user.role}
-            </Badge>
+            </p>
           </div>
         </div>
         <button
           onClick={() => signOut({ callbackUrl: "/login" })}
-          className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-surface-tint hover:bg-surface-strong hover:text-error w-full transition-colors text-button font-semibold group"
+          className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-surface-tint hover:bg-surface-strong hover:text-error w-full transition-[color,background-color,transform] duration-150 ease-snappy active:scale-[0.97] text-button cursor-pointer"
         >
-          <LogOut className="h-4 w-4 group-hover:text-error" />
-          <span className="group-hover:text-error">Sign Out</span>
+          <LogOut className="h-4 w-4" />
+          <span>Sign Out</span>
         </button>
       </div>
     </aside>

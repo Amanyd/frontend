@@ -23,7 +23,7 @@ export function KpiCard({ label, value, trend, color }: KpiCardProps) {
     <div
       className={cn(
         color,
-        "rounded-xl p-6 flex flex-col justify-between aspect-[3/2] relative overflow-hidden"
+        "rounded-[24px] p-6 flex flex-col justify-between aspect-[3/2] relative overflow-hidden"
       )}
     >
       <div>

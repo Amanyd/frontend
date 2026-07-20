@@ -41,10 +41,10 @@ export function FileViewer({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-ink/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-ink/40 backdrop-blur-sm animate-fade-in"
         onClick={onClose}
       />
-      <div className="relative bg-canvas rounded-[24px] border border-hairline shadow-xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden animate-fade-in">
+      <div className="relative bg-canvas rounded-[24px] border border-hairline shadow-xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden animate-modal">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-hairline">
           <div className="flex items-center gap-3 min-w-0">

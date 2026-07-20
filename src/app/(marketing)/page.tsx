@@ -83,7 +83,7 @@ export default function LandingPage() {
               <Link
                 href="/register"
                 id="hero-cta-register"
-                className="bg-brand-ochre text-ink h-[52px] px-8 rounded-xl font-button text-button hover:brightness-110 transition-all flex items-center gap-2 shadow-lg shadow-brand-ochre/30"
+                className="bg-brand-ochre text-ink h-[52px] px-8 rounded-xl text-button hover:brightness-110 active:scale-[0.97] transition-[filter,transform] duration-150 ease-snappy flex items-center gap-2 shadow-lg shadow-brand-ochre/30"
               >
                 Get Started
                 <ArrowRight className="h-4 w-4" />
@@ -91,7 +91,7 @@ export default function LandingPage() {
               <Link
                 href="/login"
                 id="hero-cta-login"
-                className="bg-white/10 backdrop-blur-sm text-white h-[52px] px-8 rounded-xl font-button text-button border border-white/20 hover:bg-white/20 transition-colors flex items-center"
+                className="bg-white/10 backdrop-blur-sm text-white h-[52px] px-8 rounded-xl text-button border border-white/20 hover:bg-white/20 active:scale-[0.97] transition-[background-color,transform] duration-150 ease-snappy flex items-center"
               >
                 Sign In
               </Link>
@@ -163,7 +163,7 @@ export default function LandingPage() {
                 />
                 {/* Hover overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute bottom-0 left-0 right-0 p-5 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                <div className="absolute bottom-0 left-0 right-0 p-5 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-[transform,opacity] duration-300 ease-snappy">
                   <span className="text-white font-display font-semibold text-lg">
                     {img.caption}
                   </span>
@@ -349,7 +349,7 @@ export default function LandingPage() {
           <Link
             href="/register"
             id="cta-register"
-            className="inline-flex items-center gap-2 bg-white text-ink h-[52px] px-8 rounded-xl font-button text-button hover:bg-brand-ochre hover:text-ink transition-colors shadow-xl"
+            className="inline-flex items-center gap-2 bg-white text-ink h-[52px] px-8 rounded-xl text-button hover:bg-brand-ochre hover:text-ink active:scale-[0.97] transition-[color,background-color,transform] duration-150 ease-snappy shadow-xl"
           >
             Start Training Today
             <ArrowRight className="h-4 w-4" />

@@ -9,14 +9,14 @@ export default function AnalyticsLoading() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         {[0, 1, 2].map((i) => (
-          <Skeleton key={i} className="aspect-[3/2] rounded-xl" />
+          <Skeleton key={i} className="aspect-[3/2] rounded-[24px]" />
         ))}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
-        <Skeleton className="lg:col-span-2 h-[340px] rounded-xl" />
-        <Skeleton className="h-[340px] rounded-xl" />
+        <Skeleton className="lg:col-span-2 h-[340px] rounded-2xl" />
+        <Skeleton className="h-[340px] rounded-2xl" />
       </div>
-      <Skeleton className="h-64 rounded-xl" />
+      <Skeleton className="h-64 rounded-2xl" />
     </div>
   );
 }

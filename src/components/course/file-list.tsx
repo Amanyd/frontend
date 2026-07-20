@@ -121,7 +121,7 @@ export function FileList({
       <div
         key={file.id}
         className={`
-          flex items-center justify-between px-4 py-3 rounded-xl border transition-all group
+          flex items-center justify-between px-4 py-3 rounded-xl border transition-colors group
           ${
             isReady
               ? "bg-white border-hairline hover:border-outline-variant hover:shadow-sm cursor-pointer"

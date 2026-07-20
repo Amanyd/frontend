@@ -126,7 +126,7 @@ export function LessonList({ courseId, lessons, isInstructor, instructorId, publ
 
         {/* Lesson items */}
         {lessons.length === 0 && !showAdd && (
-          <div className="bg-surface-card rounded-[24px] border border-hairline p-12 text-center">
+          <div className="bg-surface-card rounded-2xl border border-hairline p-12 text-center">
             <p className="text-title-md font-semibold text-ink mb-1">
               No lessons yet
             </p>

@@ -13,7 +13,7 @@ import {
 } from "@/lib/validations/course";
 import { useCreateCourse, useUpdateCourse } from "@/hooks/use-courses";
 import type { Course } from "@/types/course";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import { useState } from "react";
 
 interface CourseFormProps {
@@ -92,18 +92,21 @@ export function CourseForm({ initialData }: CourseFormProps) {
 
           <div>
             <Label htmlFor="rank">Target Rank</Label>
-            <select
-              id="rank"
-              className="mt-2 w-full bg-canvas border border-hairline rounded-xl h-[44px] px-4 text-body-md text-ink focus:border-ink focus:ring-1 focus:ring-ink transition-all outline-none appearance-none cursor-pointer"
-              {...register("rank")}
-            >
-              <option value="">Select rank...</option>
-              {RANKS.map((r) => (
-                <option key={r} value={r}>
-                  {capitalize(r)}
-                </option>
-              ))}
-            </select>
+            <div className="relative mt-2">
+              <select
+                id="rank"
+                className="w-full bg-canvas border border-hairline rounded-xl h-11 px-4 pr-10 text-body-md text-ink focus:border-ink focus:ring-1 focus:ring-ink transition-colors outline-none appearance-none cursor-pointer"
+                {...register("rank")}
+              >
+                <option value="">Select rank...</option>
+                {RANKS.map((r) => (
+                  <option key={r} value={r}>
+                    {capitalize(r)}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-outline" />
+            </div>
             {errors.rank && (
               <p className="text-body-sm text-error mt-1.5">
                 {errors.rank.message}
@@ -117,7 +120,7 @@ export function CourseForm({ initialData }: CourseFormProps) {
               id="description"
               rows={4}
               placeholder="Describe the course content and objectives..."
-              className="mt-2 w-full bg-canvas border border-hairline rounded-xl p-4 text-body-md text-ink focus:border-ink focus:ring-1 focus:ring-ink transition-all outline-none resize-none"
+              className="mt-2 w-full bg-canvas border border-hairline rounded-xl p-4 text-body-md text-ink focus:border-ink focus:ring-1 focus:ring-ink transition-colors outline-none resize-none"
               {...register("description")}
             />
             {errors.description && (

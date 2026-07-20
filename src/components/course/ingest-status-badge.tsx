@@ -50,14 +50,14 @@ export function IngestStatusBadge({
       className={cn(
         "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[13px] font-medium",
         style.bg,
-        style.text,
-        status === "processing" && "animate-pulse-slow"
+        style.text
       )}
     >
-      {status === "processing" && (
+      {status === "processing" ? (
         <Loader2 className="h-3 w-3 animate-spin" />
+      ) : (
+        <span className="w-1.5 h-1.5 rounded-full bg-current" />
       )}
-      <span className="w-1.5 h-1.5 rounded-full bg-current" />
       {style.label}
     </span>
   );

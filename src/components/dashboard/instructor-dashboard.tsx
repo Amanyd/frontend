@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { capitalize } from "@/lib/utils";
@@ -27,36 +28,66 @@ export function InstructorDashboard({
   const safeCourses = courses || [];
   return (
     <div className="space-y-12">
-      {/* Welcome Header */}
-      <header>
-        <p className="text-caption-uppercase uppercase text-outline mb-2">
-          Command Center
-        </p>
-        <h1 className="font-display text-display-lg text-ink">
-          Welcome, {user.name?.split(" ")[0] ?? "Instructor"}.
-        </h1>
-        <p className="text-body-md text-surface-tint mt-2 max-w-2xl">
-          Your training command overview. Monitor student progress, manage
-          courses, and review quiz performance.
-        </p>
+      {/* ═══════ Hero Banner — Command Center Theme ═══════ */}
+      <header className="relative rounded-[28px] overflow-hidden min-h-[280px] flex items-end">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/images/command-center.png"
+            alt="Naval command center operations room"
+            fill
+            className="object-cover"
+            sizes="(max-width: 1280px) 100vw, 1280px"
+            priority
+          />
+        </div>
+        {/* Overlays */}
+        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/85 via-black/50 to-black/20" />
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-brand-teal/30 to-transparent" />
+
+        <div className="relative z-20 p-8 md:p-10 w-full">
+          <p className="text-caption-uppercase uppercase text-brand-ochre tracking-[0.2em] font-semibold mb-2">
+            Command Center
+          </p>
+          <h1 className="font-display text-display-lg text-white drop-shadow-md">
+            Welcome, {user.name?.split(" ")[0] ?? "Instructor"}.
+          </h1>
+          <p className="text-body-md text-white/70 mt-2 max-w-2xl">
+            Your training command overview. Monitor student progress, manage
+            courses, and review quiz performance.
+          </p>
+        </div>
       </header>
 
-      {/* KPI Cards */}
+      {/* ═══════ KPI Cards ═══════ */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Total Students — Lavender */}
-        <div className="bg-brand-lavender rounded-[24px] p-8 flex flex-col justify-between min-h-[200px] relative overflow-hidden">
-          <div>
-            <p className="text-caption-uppercase uppercase text-ink/70 mb-1">
-              Total Students
-            </p>
-            <h2 className="font-display text-display-sm text-ink">
-              {overview?.total_students ?? 0}
-            </h2>
+        {/* Total Students — with Carrier Image */}
+        <div className="rounded-[24px] min-h-[200px] relative overflow-hidden group">
+          <div className="absolute inset-0 z-0">
+            <Image
+              src="/images/aircraft-carrier.png"
+              alt="Aircraft carrier fleet"
+              fill
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
+              sizes="(max-width: 768px) 100vw, 33vw"
+            />
           </div>
-          <div className="flex items-center gap-2 mt-auto">
-            <span className="text-button font-semibold text-ink">
-              Enrolled across all courses
-            </span>
+          <div className="absolute inset-0 z-10 bg-gradient-to-t from-brand-lavender/90 via-brand-lavender/70 to-brand-lavender/50" />
+
+          <div className="relative z-20 p-8 flex flex-col justify-between h-full">
+            <div>
+              <p className="text-caption-uppercase uppercase text-ink/70 mb-1">
+                Total Students
+              </p>
+              <h2 className="font-display text-display-sm text-ink">
+                {overview?.total_students ?? 0}
+              </h2>
+            </div>
+            <div className="flex items-center gap-2 mt-auto">
+              <span className="text-button font-semibold text-ink">
+                Enrolled across all courses
+              </span>
+            </div>
           </div>
         </div>
 
@@ -77,27 +108,71 @@ export function InstructorDashboard({
           </div>
         </div>
 
-        {/* Avg Quiz Score — Peach */}
-        <div className="bg-brand-peach rounded-[24px] p-8 flex flex-col justify-between min-h-[200px] relative overflow-hidden">
-          <div>
-            <p className="text-caption-uppercase uppercase text-ink/70 mb-1">
-              Avg Quiz Score
-            </p>
-            <h2 className="font-display text-display-sm text-ink">
-              {overview?.avg_score
-                ? `${Math.round(overview.avg_score)}%`
-                : "—"}
-            </h2>
+        {/* Avg Quiz Score — with Helicopter Image */}
+        <div className="rounded-[24px] min-h-[200px] relative overflow-hidden group">
+          <div className="absolute inset-0 z-0">
+            <Image
+              src="/images/helicopter-formation.png"
+              alt="Naval helicopter formation"
+              fill
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
+              sizes="(max-width: 768px) 100vw, 33vw"
+            />
           </div>
-          <div className="flex items-center gap-2 mt-auto">
-            <span className="text-button font-semibold text-ink">
-              Across all quizzes
-            </span>
+          <div className="absolute inset-0 z-10 bg-gradient-to-t from-brand-peach/90 via-brand-peach/70 to-brand-peach/50" />
+
+          <div className="relative z-20 p-8 flex flex-col justify-between h-full">
+            <div>
+              <p className="text-caption-uppercase uppercase text-ink/70 mb-1">
+                Avg Quiz Score
+              </p>
+              <h2 className="font-display text-display-sm text-ink">
+                {overview?.avg_score
+                  ? `${Math.round(overview.avg_score)}%`
+                  : "—"}
+              </h2>
+            </div>
+            <div className="flex items-center gap-2 mt-auto">
+              <span className="text-button font-semibold text-ink">
+                Across all quizzes
+              </span>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Your Courses Table */}
+      {/* ═══════ Quick Action Banner ═══════ */}
+      <section className="relative rounded-[24px] overflow-hidden min-h-[140px]">
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/images/navy-jet-takeoff.png"
+            alt="Fighter jet launching from carrier"
+            fill
+            className="object-cover"
+            sizes="(max-width: 1280px) 100vw, 1280px"
+          />
+        </div>
+        <div className="absolute inset-0 z-10 bg-brand-teal/80" />
+
+        <div className="relative z-20 p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <h3 className="font-display text-display-sm text-white">
+              Ready to deploy new content?
+            </h3>
+            <p className="text-body-md text-white/70 mt-1">
+              Create courses, upload materials, and auto-generate quizzes.
+            </p>
+          </div>
+          <Link href="/courses/new">
+            <button className="bg-white text-ink h-12 px-8 rounded-xl text-button font-semibold hover:bg-brand-ochre transition-colors inline-flex items-center gap-2 shrink-0 shadow-lg">
+              Create Course
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          </Link>
+        </div>
+      </section>
+
+      {/* ═══════ Your Courses Table ═══════ */}
       <section>
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-title-lg font-semibold text-ink">

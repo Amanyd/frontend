@@ -125,7 +125,7 @@ export default function RegisterPage() {
 
         <div>
           <Label htmlFor="rank">Rank</Label>
-          <Select onValueChange={(val) => setValue("rank", val as RegisterInput["rank"])}>
+          <Select onValueChange={(val) => setValue("rank", val as RegisterInput["rank"], { shouldValidate: true })}>
             <SelectTrigger className="mt-2" id="rank">
               <SelectValue placeholder="Select your rank" />
             </SelectTrigger>
@@ -137,6 +137,7 @@ export default function RegisterPage() {
               ))}
             </SelectContent>
           </Select>
+          <input type="hidden" {...register("rank")} />
           {errors.rank && (
             <p className="text-body-sm text-error mt-1.5">
               {errors.rank.message}
@@ -148,7 +149,7 @@ export default function RegisterPage() {
           <Label htmlFor="role">Role</Label>
           <Select
             defaultValue="student"
-            onValueChange={(val) => setValue("role", val as RegisterInput["role"])}
+            onValueChange={(val) => setValue("role", val as RegisterInput["role"], { shouldValidate: true })}
           >
             <SelectTrigger className="mt-2" id="role">
               <SelectValue placeholder="Select role" />
@@ -158,6 +159,7 @@ export default function RegisterPage() {
               <SelectItem value="instructor">Instructor</SelectItem>
             </SelectContent>
           </Select>
+          <input type="hidden" {...register("role")} />
           {errors.role && (
             <p className="text-body-sm text-error mt-1.5">
               {errors.role.message}

@@ -8,7 +8,8 @@ import type { AnalyticsOverview } from "@/types/analytics";
 
 export default async function DashboardPage() {
   const session = await auth();
-  if (!session) redirect("/login");
+  if (!session) return null;
+  
 
   const user = session.user;
 

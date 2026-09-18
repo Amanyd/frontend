@@ -75,17 +75,10 @@ export default function RegisterPage() {
 
   return (
     <>
-      <div className="mb-8">
-        <h2 className="font-display text-display-sm text-ink">
-          Join the Academy.
-        </h2>
-        <p className="text-body-md text-surface-tint mt-2">
-          Create your cadet credentials.
-        </p>
-      </div>
+
 
       {error && (
-        <div className="mb-6 rounded-xl border border-error/30 bg-error/5 px-4 py-3">
+        <div className="mb-6 rounded-md border border-error/30 bg-error/5 px-4 py-3">
           <p className="text-body-sm text-error font-medium">{error}</p>
         </div>
       )}
@@ -182,7 +175,7 @@ export default function RegisterPage() {
           )}
         </div>
 
-        <Button type="submit" className="w-full" disabled={loading}>
+        <Button type="submit" className="w-full font-medium" variant="blue" size="md" disabled={loading}>
           {loading ? "Creating Account…" : "Create Account"}
           {!loading && <ArrowRight className="h-4 w-4" />}
         </Button>

@@ -12,7 +12,8 @@ import type { Course } from "@/types/course";
 
 export default async function AnalyticsPage() {
   const session = await auth();
-  if (!session) redirect("/login");
+  if (!session) return null;
+  
   if (session.user.role !== "instructor") redirect("/dashboard");
 
   let overview: AnalyticsOverview = {

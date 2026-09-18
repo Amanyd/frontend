@@ -14,6 +14,14 @@ const nextConfig: NextConfig = {
   experimental: {
     serverActions: { bodySizeLimit: "10mb" },
   },
+  async rewrites() {
+    return [
+      {
+        source: "/landing",
+        destination: "/supermemory.html",
+      },
+    ];
+  },
 };
 
 export default nextConfig;

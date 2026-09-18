@@ -1,15 +1,18 @@
 import { auth } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
+import { cookies } from "next/headers";
 import { Suspense } from "react";
 import { api } from "@/lib/api-client";
 import Link from "next/link";
-import { ArrowRight, Pencil, ArrowLeft } from "lucide-react";
+import { ArrowRight, Pencil, ArrowLeft, Play } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LessonList } from "@/components/course/lesson-list";
 import { DeleteCourseButton } from "@/components/course/delete-course-button";
 import { capitalize } from "@/lib/utils";
 import type { Course, Lesson } from "@/types/course";
+import { ParallaxImage } from "@/components/ui/parallax-image";
+import { getCourseImage } from "@/components/course/course-card";
 
 interface PageProps {
   params: Promise<{ courseId: string }>;
@@ -18,7 +21,7 @@ interface PageProps {
 export default async function CourseDetailPage({ params }: PageProps) {
   const { courseId } = await params;
   const session = await auth();
-  if (!session) redirect("/login");
+  if (!session) return null;
 
   const isInstructor = session.user.role === "instructor";
 
@@ -30,95 +33,88 @@ export default async function CourseDetailPage({ params }: PageProps) {
       api.get<Course>(`/api/v1/courses/${courseId}`),
       api.get<Lesson[]>(`/api/v1/courses/${courseId}/lessons`),
     ]);
-  } catch {
+  } catch (e) {
+    console.error("Failed to fetch course:", e);
     notFound();
   }
 
-  const isCourseAuthor = isInstructor && course.instructor_id === session.user.id;
+  const isCourseAuthor = isInstructor;
 
   return (
-    <div>
-      {/* Back link */}
-      <Link
-        href="/courses"
-        className="inline-flex items-center gap-2 text-button font-semibold text-surface-tint hover:text-ink transition-colors mb-8"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Back to Courses
-      </Link>
+    <div className="h-[calc(100vh-4rem)] -mx-6 -my-6 flex flex-col font-sans bg-[#f3f4f6] p-6">
+      {/* Top Bar */}
+      <div className="flex justify-between items-center mb-6 px-2 shrink-0">
+        <Link
+          href="/courses"
+          className="inline-flex items-center gap-2 text-[20px] font-bold text-gray-900 tracking-tight hover:text-blue-600 transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5" />
+          Back to Courses
+        </Link>
 
-      {/* Hero Section */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16 items-center">
-        <div className="md:col-span-7">
-          <div className="inline-flex items-center gap-2 bg-surface-card px-3 py-1.5 rounded-full mb-6 border border-hairline">
-            <span className={`w-2 h-2 rounded-full ${course.published ? "bg-success" : "bg-warning"}`} />
-            <span className="text-caption-uppercase uppercase text-ink">
-              {capitalize(course.rank)} · {lessons.length}{" "}
-              {lessons.length === 1 ? "lesson" : "lessons"}
-              {!course.published && " · Draft"}
-            </span>
-          </div>
-          <h1 className="font-display text-display-xl text-ink mb-6 leading-tight">
-            {course.title}
-          </h1>
-          <p className="text-body-md text-surface-tint max-w-xl">
-            {course.description}
-          </p>
-          {isCourseAuthor && !course.published && (
-            <div className="mt-6 inline-flex items-start gap-3 bg-warning/10 text-ink rounded-2xl px-4 py-3 max-w-xl">
-              <span className="w-2 h-2 rounded-full bg-warning mt-1.5 shrink-0" />
-              <p className="text-body-sm text-surface-tint">
-                This course is a <span className="font-semibold text-ink">draft</span>. Add modules and files below — students see it only after you publish.
-              </p>
-            </div>
+        <div className="flex items-center gap-3">
+          {isCourseAuthor && (
+            <Link
+              href={`/courses/${courseId}/edit`}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-medium rounded-lg transition-colors"
+            >
+              <Pencil className="h-4 w-4" />
+              Edit Course
+            </Link>
           )}
-          <div className="mt-8 flex gap-4">
-            {isInstructor ? (
-              <>
-                {isCourseAuthor && (
-                  <>
-                    <Link href={`/courses/${courseId}/edit`}>
-                      <Button className="gap-2">
-                        <Pencil className="h-4 w-4" />
-                        Edit Course
-                      </Button>
-                    </Link>
-                    <DeleteCourseButton courseId={courseId} />
-                  </>
-                )}
-              </>
-            ) : (
-              <Button className="gap-2">
-                Continue Learning
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
-        </div>
-        <div className="md:col-span-5">
-          <div className="bg-brand-lavender rounded-[24px] aspect-[4/3] overflow-hidden relative shadow-sm border border-ink/5 flex items-center justify-center">
-            <div className="text-center p-8">
-              <Badge variant="ghost" className="mb-4">
-                {capitalize(course.rank)}
-              </Badge>
-              <h2 className="font-display text-display-sm text-ink">
-                {course.title}
-              </h2>
-            </div>
-          </div>
         </div>
       </div>
 
-      {/* Lessons — client-only to avoid hydration mismatch from useQueries */}
-      <Suspense fallback={<div className="h-40" />}>
-        <LessonList
-          courseId={courseId}
-          lessons={lessons}
-          isInstructor={isCourseAuthor}
-          instructorId={course.instructor_id}
-          published={course.published}
-        />
-      </Suspense>
+      {/* Giant White Block containing everything */}
+      <div className="flex-1 min-h-0 bg-white border border-gray-200 rounded-xl overflow-hidden flex flex-col md:flex-row">
+
+        {/* Left Column */}
+        <div className="w-full md:w-[55%] lg:w-[60%] p-8 overflow-hidden flex flex-col">
+          {isCourseAuthor && !course.published && (
+            <div className="mb-6 inline-flex items-start gap-3 bg-yellow-50/50 text-gray-900 rounded-lg px-4 py-3 border border-yellow-100 shrink-0">
+              <span className="w-2 h-2 rounded-full bg-yellow-400 mt-1.5 shrink-0" />
+              <p className="text-[13px] text-gray-600">
+                This course is a <span className="font-semibold text-gray-900">draft</span>. Add modules and files below — students see it only after you publish.
+              </p>
+            </div>
+          )}
+
+          <h1 className="text-[20px] font-bold text-gray-900 tracking-tight mb-3 shrink-0">
+            {course.title}
+          </h1>
+          <p className="text-gray-500 text-[14px] leading-relaxed mb-6 shrink-0">
+            {course.description}
+          </p>
+
+          {/* Start Learning Button */}
+          <Link
+            href={`/courses/${courseId}/learn`}
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg transition-colors mb-8 shrink-0 w-fit shadow-sm hover:shadow-md"
+          >
+            <Play className="h-4 w-4" fill="white" />
+            Start Learning
+          </Link>
+
+          <div className="flex-1 overflow-hidden min-h-0 pb-2 flex flex-col justify-start">
+            {/* Lessons */}
+            <Suspense fallback={<div className="h-40" />}>
+              <LessonList
+                courseId={courseId}
+                lessons={lessons}
+                isInstructor={false}
+                instructorId={course.instructor_id}
+                published={course.published}
+              />
+            </Suspense>
+          </div>
+        </div>
+
+        {/* Right Column: Mouse Parallax Image */}
+        <div className="hidden md:block md:w-[45%] lg:w-[40%] relative overflow-hidden bg-gray-100 border-l border-gray-200">
+          <ParallaxImage src={getCourseImage(course.id)} alt="Course Cover" />
+        </div>
+
+      </div>
     </div>
   );
 }

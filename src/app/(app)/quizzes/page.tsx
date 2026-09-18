@@ -12,7 +12,8 @@ interface CourseWithQuizzes {
 
 export default async function QuizzesPage() {
   const session = await auth();
-  if (!session) redirect("/login");
+  if (!session) return null;
+  
 
   let courses: Course[] = [];
   try {

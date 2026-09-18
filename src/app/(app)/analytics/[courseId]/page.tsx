@@ -19,7 +19,8 @@ interface PageProps {
 export default async function CourseAnalyticsPage({ params }: PageProps) {
   const { courseId } = await params;
   const session = await auth();
-  if (!session) redirect("/login");
+  if (!session) return null;
+  
   if (session.user.role !== "instructor") redirect("/dashboard");
 
   let course: Course;

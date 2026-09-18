@@ -38,7 +38,7 @@ function LoginForm() {
       });
 
       if (result?.error) {
-        setError("Invalid service number or password. Please try again.");
+        setError(result.error);
         return;
       }
 
@@ -53,17 +53,10 @@ function LoginForm() {
 
   return (
     <>
-      <div className="mb-8">
-        <h2 className="font-display text-display-sm text-ink">
-          Welcome Back, Cadet.
-        </h2>
-        <p className="text-body-md text-surface-tint mt-2">
-          Sign in to continue your mission.
-        </p>
-      </div>
+
 
       {registered && (
-        <div className="mb-6 rounded-xl border border-success/30 bg-success/5 px-4 py-3">
+        <div className="mb-6 rounded-md border border-success/30 bg-success/5 px-4 py-3">
           <p className="text-body-sm text-success font-medium">
             Account created successfully. Sign in with your credentials.
           </p>
@@ -71,7 +64,7 @@ function LoginForm() {
       )}
 
       {error && (
-        <div className="mb-6 rounded-xl border border-error/30 bg-error/5 px-4 py-3">
+        <div className="mb-6 rounded-md border border-error/30 bg-error/5 px-4 py-3">
           <p className="text-body-sm text-error font-medium">{error}</p>
         </div>
       )}
@@ -81,13 +74,12 @@ function LoginForm() {
           <Label htmlFor="enrollment_id">Service Number</Label>
           <Input
             id="enrollment_id"
-            placeholder="SVC-2024-001"
+            placeholder="e.g. 12345678"
             className="mt-2"
-            autoComplete="username"
             {...register("enrollment_id")}
           />
           {errors.enrollment_id && (
-            <p className="text-body-sm text-error mt-1.5">
+            <p className="mt-1.5 text-body-sm text-error">
               {errors.enrollment_id.message}
             </p>
           )}
@@ -100,19 +92,18 @@ function LoginForm() {
             type="password"
             placeholder="••••••••"
             className="mt-2"
-            autoComplete="current-password"
             {...register("password")}
           />
           {errors.password && (
-            <p className="text-body-sm text-error mt-1.5">
+            <p className="mt-1.5 text-body-sm text-error">
               {errors.password.message}
             </p>
           )}
         </div>
 
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? "Signing in…" : "Sign In"}
-          {!loading && <ArrowRight className="h-4 w-4" />}
+        <Button type="submit" className="w-full font-medium" size="md" disabled={loading}>
+          {loading ? "Signing in..." : "Sign in"}
+          {!loading && <ArrowRight className="h-4 w-4 ml-2" />}
         </Button>
       </form>
 

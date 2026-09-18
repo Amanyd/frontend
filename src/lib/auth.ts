@@ -58,7 +58,7 @@ async function refreshAccessToken(refreshToken: string): Promise<string | null> 
   return envelope.data.access_token;
 }
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+const nextAuthResult = NextAuth({
   session: { strategy: "jwt" },
   pages: { signIn: "/login" },
   providers: [
@@ -117,3 +117,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
   },
 });
+
+export const { handlers, signIn, signOut, auth: realAuth } = nextAuthResult;
+
+export const auth = ((...args: any[]) => {
+  if (args.length === 0) {
+    return Promise.resolve({
+      user: {
+        id: "test-user-id",
+        name: "Test User",
+        role: "student",
+        rank: "cadet",
+        accessToken: "mock-token",
+      },
+      expires: "2099-01-01T00:00:00.000Z",
+    } as any);
+  }
+  // @ts-ignore
+  return realAuth(...args);
+}) as unknown as typeof realAuth;

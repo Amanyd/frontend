@@ -148,10 +148,10 @@ export function CoursePlayer({
         <div className="shrink-0 px-6 py-3 border-b border-gray-200 flex items-center justify-between bg-white">
           <div className="flex items-center gap-2 min-w-0">
             <span className="text-[13px] font-semibold text-gray-900 truncate">
-              {currentFile.name}
+              {currentFile.file_name}
             </span>
             <span className="text-[11px] font-medium text-gray-400 uppercase px-1.5 py-0.5 bg-gray-100 rounded shrink-0">
-              {currentFile.type}
+              {currentFile.file_type}
             </span>
           </div>
           <span className="text-[12px] text-gray-500 shrink-0 ml-4">

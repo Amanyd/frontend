@@ -1,8 +1,11 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { DocxViewer } from "./docx-viewer";
 import { PdfViewer } from "./pdf-viewer";
 import { PptxViewer } from "./pptx-viewer";
+import { Loader2 } from "lucide-react";
+import { api } from "@/lib/api-client";
 import type { LessonFile } from "@/types/progress";
 
 interface DocViewerProps {
@@ -10,13 +13,33 @@ interface DocViewerProps {
 }
 
 export function DocViewer({ file }: DocViewerProps) {
-  switch (file.type) {
+  const [url, setUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    setUrl(null);
+    api.get<{url: string}>(`/api/v1/files/${file.id}/view`).then(res => {
+      if (!cancelled) setUrl(res.url);
+    }).catch(console.error);
+    return () => { cancelled = true; };
+  }, [file.id]);
+
+  if (!url) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full gap-3 text-gray-400">
+        <Loader2 className="w-8 h-8 animate-spin" />
+        <span className="text-[13px] font-medium">Preparing document viewer…</span>
+      </div>
+    );
+  }
+
+  switch (file.file_type) {
     case "docx":
-      return <DocxViewer filePath={file.path} />;
+      return <DocxViewer filePath={url} />;
     case "pdf":
-      return <PdfViewer filePath={file.path} />;
+      return <PdfViewer filePath={url} />;
     case "pptx":
-      return <PptxViewer filePath={file.path} fileName={file.name} />;
+      return <PptxViewer filePath={url} fileName={file.file_name} />;
     default:
       return (
         <div className="flex items-center justify-center h-full text-gray-400 text-[14px]">

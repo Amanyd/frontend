@@ -1,9 +1,9 @@
 /** File reference within a lesson for the course player */
 export interface LessonFile {
   id: string;
-  name: string;
-  path: string;
-  type: "docx" | "pptx" | "pdf";
+  file_name: string;
+  minio_key: string;
+  file_type: "docx" | "pptx" | "pdf";
 }
 
 /** Lesson with its associated files */

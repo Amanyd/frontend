@@ -167,7 +167,7 @@ export function LessonSidebar({
                       lessonIdx === currentLessonIdx &&
                       fileIdx === currentFileIdx;
                     const isViewed = isFileViewed(lesson.id, file.id);
-                    const Icon = FILE_TYPE_ICON[file.type] ?? FileText;
+                    const Icon = FILE_TYPE_ICON[file.file_type] ?? FileText;
 
                     return (
                       <button
@@ -197,7 +197,7 @@ export function LessonSidebar({
                         <Icon
                           className={cn(
                             "w-3.5 h-3.5 shrink-0",
-                            FILE_TYPE_COLOR[file.type] ?? "text-gray-400",
+                            FILE_TYPE_COLOR[file.file_type] ?? "text-gray-400",
                           )}
                         />
                         <span
@@ -210,12 +210,12 @@ export function LessonSidebar({
                                 : "text-gray-700",
                           )}
                         >
-                          {file.name}
+                          {file.file_name}
                         </span>
 
                         {/* Type badge */}
                         <span className="ml-auto text-[10px] font-medium text-gray-400 uppercase shrink-0">
-                          {file.type}
+                          {file.file_type}
                         </span>
                       </button>
                     );

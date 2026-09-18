@@ -101,7 +101,7 @@ function LoginForm() {
           )}
         </div>
 
-        <Button type="submit" className="w-full font-medium" size="md" disabled={loading}>
+        <Button type="submit" className="w-full font-medium" variant="blue" size="md" disabled={loading}>
           {loading ? "Signing in..." : "Sign in"}
           {!loading && <ArrowRight className="h-4 w-4 ml-2" />}
         </Button>

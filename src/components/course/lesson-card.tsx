@@ -7,6 +7,7 @@ import { useUpdateLesson } from "@/hooks/use-courses";
 import type { Lesson, FileAsset } from "@/types/course";
 import { clientApi } from "@/lib/api-client.client";
 import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 interface LessonCardProps {
   lesson: Lesson;
@@ -61,7 +62,7 @@ export function LessonCard({ lesson, courseId, instructorId }: LessonCardProps) 
       setUploads(prev => ({ ...prev, [file.name]: 0 }));
 
       const upload = new Upload(file, {
-        endpoint: "/api/v1/files/tus/",
+        endpoint: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/files/tus/`,
         retryDelays: [0, 3000, 5000, 10000, 20000],
         metadata: {
           file_name: file.name,
@@ -71,6 +72,7 @@ export function LessonCard({ lesson, courseId, instructorId }: LessonCardProps) 
         },
         onError: function (error) {
           console.log("Failed because: " + error);
+          toast.error(`Upload failed: ${error.message}`);
           setUploads(prev => {
             const next = { ...prev };
             delete next[file.name];

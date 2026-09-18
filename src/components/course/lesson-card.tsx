@@ -64,6 +64,11 @@ export function LessonCard({ lesson, courseId, instructorId }: LessonCardProps) 
       
       setUploads(prev => ({ ...prev, [file.name]: 0 }));
 
+      const ext = file.name.split('.').pop()?.toLowerCase();
+      let fileType = "pdf";
+      if (ext === "docx" || ext === "doc") fileType = "docx";
+      else if (ext === "pptx" || ext === "ppt" || ext === "ppsx") fileType = "ppt";
+
       const upload = new Upload(file, {
         endpoint: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/files/tus/`,
         headers: {
@@ -72,7 +77,7 @@ export function LessonCard({ lesson, courseId, instructorId }: LessonCardProps) 
         retryDelays: [0, 3000, 5000, 10000, 20000],
         metadata: {
           file_name: file.name,
-          file_type: "pdf", // Backend infers or validates, but for now just pass a string or parse from name
+          file_type: fileType,
           lesson_id: lesson.id,
           instructor_id: instructorId,
         },

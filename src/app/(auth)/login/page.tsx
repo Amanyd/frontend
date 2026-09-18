@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useState } from "react";
+import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
@@ -15,19 +16,18 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const registered = searchParams.get("registered");
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
   });
 
   async function onSubmit(data: LoginInput) {
-    setError(null);
     setLoading(true);
 
     try {
@@ -38,14 +38,19 @@ function LoginForm() {
       });
 
       if (result?.error) {
-        setError(result.error);
+        if (result.error === "CredentialsSignin" || result.error.includes("unauthorized") || result.error.toLowerCase().includes("credentials")) {
+          setError("enrollment_id", { message: "Invalid service number or password." });
+          setError("password", { message: "Invalid service number or password." });
+        } else {
+          toast.error("Login failed. Please try again.");
+        }
         return;
       }
 
       router.push("/dashboard");
       router.refresh();
     } catch {
-      setError("An unexpected error occurred. Please try again.");
+      toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -60,12 +65,6 @@ function LoginForm() {
           <p className="text-body-sm text-success font-medium">
             Account created successfully. Sign in with your credentials.
           </p>
-        </div>
-      )}
-
-      {error && (
-        <div className="mb-6 rounded-md border border-error/30 bg-error/5 px-4 py-3">
-          <p className="text-body-sm text-error font-medium">{error}</p>
         </div>
       )}
 

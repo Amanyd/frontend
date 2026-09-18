@@ -120,19 +120,4 @@ const nextAuthResult = NextAuth({
 
 export const { handlers, signIn, signOut, auth: realAuth } = nextAuthResult;
 
-export const auth = ((...args: any[]) => {
-  if (args.length === 0) {
-    return Promise.resolve({
-      user: {
-        id: "test-user-id",
-        name: "Test User",
-        role: "student",
-        rank: "cadet",
-        accessToken: "mock-token",
-      },
-      expires: "2099-01-01T00:00:00.000Z",
-    } as any);
-  }
-  // @ts-ignore
-  return realAuth(...args);
-}) as unknown as typeof realAuth;
+export const auth = realAuth;

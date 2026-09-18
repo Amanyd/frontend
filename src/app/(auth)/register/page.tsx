@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,13 +29,13 @@ const ERROR_MAP: Record<string, string> = {
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
     setValue,
+    setError,
     formState: { errors },
   } = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
@@ -44,7 +45,6 @@ export default function RegisterPage() {
   });
 
   async function onSubmit(data: RegisterInput) {
-    setError(null);
     setLoading(true);
 
     try {
@@ -61,13 +61,17 @@ export default function RegisterPage() {
 
       if (!res.ok || envelope.error) {
         const code = envelope.error?.code ?? "unknown";
-        setError(ERROR_MAP[code] ?? envelope.error?.message ?? "Registration failed.");
+        if (code === "conflict") {
+          setError("enrollment_id", { message: "This service number is already registered." });
+        } else {
+          toast.error(envelope.error?.message ?? "Registration failed. Please check your inputs.");
+        }
         return;
       }
 
       router.push("/login?registered=1");
     } catch {
-      setError("An unexpected error occurred. Please try again.");
+      toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -75,14 +79,6 @@ export default function RegisterPage() {
 
   return (
     <>
-
-
-      {error && (
-        <div className="mb-6 rounded-md border border-error/30 bg-error/5 px-4 py-3">
-          <p className="text-body-sm text-error font-medium">{error}</p>
-        </div>
-      )}
-
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <div>
           <Label htmlFor="name">Full Name</Label>

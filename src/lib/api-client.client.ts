@@ -37,7 +37,9 @@ class ClientApiClient {
       if (newToken && newToken !== token) {
         res = await this.doFetch(path, newToken, opts);
       } else {
-        signOut({ callbackUrl: "/login" });
+        if (typeof window !== "undefined") {
+          signOut({ callbackUrl: "/login" });
+        }
       }
     }
 

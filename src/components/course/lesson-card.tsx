@@ -9,6 +9,8 @@ import { clientApi } from "@/lib/api-client.client";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import { useSession } from "next-auth/react";
+
 interface LessonCardProps {
   lesson: Lesson;
   courseId: string;
@@ -16,6 +18,7 @@ interface LessonCardProps {
 }
 
 export function LessonCard({ lesson, courseId, instructorId }: LessonCardProps) {
+  const { data: session } = useSession();
   const { mutate: updateLesson } = useUpdateLesson();
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(lesson.title);
@@ -63,6 +66,9 @@ export function LessonCard({ lesson, courseId, instructorId }: LessonCardProps) 
 
       const upload = new Upload(file, {
         endpoint: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/files/tus/`,
+        headers: {
+          Authorization: `Bearer ${(session?.user as any)?.accessToken}`,
+        },
         retryDelays: [0, 3000, 5000, 10000, 20000],
         metadata: {
           file_name: file.name,

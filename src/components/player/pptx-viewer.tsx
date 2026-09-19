@@ -1,6 +1,9 @@
 "use client";
 
-import { Download, Presentation } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Download, Presentation, Loader2 } from "lucide-react";
+import { PowerPointViewer } from "pptx-react-viewer";
+import "pptx-react-viewer/styles";
 
 interface PptxViewerProps {
   filePath: string;
@@ -8,47 +11,75 @@ interface PptxViewerProps {
 }
 
 export function PptxViewer({ filePath, fileName }: PptxViewerProps) {
-  return (
-    <div className="h-full w-full flex flex-col animate-in fade-in duration-500">
-      {/* Try to embed via Google Docs viewer (works when online) */}
-      <div className="flex-1 min-h-0 relative">
-        <iframe
-          src={`https://docs.google.com/gview?url=${encodeURIComponent(filePath)}&embedded=true`}
-          className="w-full h-full border-0"
-          title={fileName}
-          onError={(e) => {
-            const target = e.currentTarget;
-            target.style.display = "none";
-            const fallback = target.nextElementSibling;
-            if (fallback) (fallback as HTMLElement).style.display = "flex";
-          }}
-        />
+  const [content, setContent] = useState<Uint8Array | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-        {/* Fallback for offline */}
-        <div
-          className="absolute inset-0 flex-col items-center justify-center gap-5 bg-gradient-to-b from-orange-50/40 to-white"
-          style={{ display: "none" }}
-        >
-          <div className="w-20 h-20 rounded-2xl bg-orange-100 flex items-center justify-center">
-            <Presentation className="w-10 h-10 text-orange-500" />
-          </div>
-          <div className="text-center">
-            <h3 className="text-[16px] font-semibold text-gray-900 mb-1">
-              {fileName}
-            </h3>
-            <p className="text-[13px] text-gray-500 max-w-xs">
-              PowerPoint presentations can be downloaded for viewing offline.
-            </p>
-          </div>
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    setContent(null);
+
+    (async () => {
+      try {
+        const response = await fetch(filePath);
+        if (!response.ok) throw new Error("File not found");
+        const arrayBuffer = await response.arrayBuffer();
+        if (!cancelled) {
+          setContent(new Uint8Array(arrayBuffer));
+          setLoading(false);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load document");
+          setLoading(false);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [filePath]);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full gap-3 text-gray-400">
+        <Loader2 className="w-8 h-8 animate-spin" />
+        <span className="text-[13px] font-medium">Loading presentation…</span>
+      </div>
+    );
+  }
+
+  if (error || !content) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full gap-5 bg-gradient-to-b from-orange-50/40 to-white">
+        <div className="w-20 h-20 rounded-2xl bg-orange-100 flex items-center justify-center">
+          <Presentation className="w-10 h-10 text-orange-500" />
+        </div>
+        <div className="text-center">
+          <h3 className="text-[16px] font-semibold text-gray-900 mb-1">{fileName}</h3>
+          <p className="text-[13px] text-gray-500 max-w-xs mb-4">
+            Failed to load presentation: {error}
+          </p>
           <a
             href={filePath}
             download
-            className="flex items-center gap-2 px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white text-[13px] font-medium rounded-lg transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white text-[13px] font-medium rounded-lg transition-colors"
           >
             <Download className="w-4 h-4" />
             Download Presentation
           </a>
         </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-full w-full flex flex-col animate-in fade-in duration-500 bg-gray-100">
+      <div className="flex-1 min-h-0 relative">
+        <PowerPointViewer content={content} canEdit={false} />
       </div>
 
       {/* Bottom download bar */}

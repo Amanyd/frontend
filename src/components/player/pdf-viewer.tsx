@@ -6,8 +6,11 @@ import { ChevronLeft, ChevronRight, Loader2, FileType } from "lucide-react";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 
-// Configure worker to load locally for offline support
-pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+// Configure worker to load locally for offline support via Next.js bundler
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.mjs',
+  import.meta.url,
+).toString();
 
 interface PdfViewerProps {
   filePath: string;

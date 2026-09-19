@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { CoursePlayer } from "@/components/player/course-player";
 import { api } from "@/lib/api-client";
 import type { Course, Lesson } from "@/types/course";
-import type { LessonWithFiles } from "@/types/progress";
+import type { LessonWithContent, CourseProgressData } from "@/types/progress";
 
 interface PageProps {
   params: Promise<{ courseId: string }>;
@@ -14,20 +14,30 @@ export default async function LearnPage({ params }: PageProps) {
   const { courseId } = await params;
 
   let course: Course;
-  let lessonsWithFiles: LessonWithFiles[] = [];
+  let lessonsWithContent: LessonWithContent[] = [];
+  let initialProgress: CourseProgressData = {
+    course_id: courseId,
+    is_completed: false,
+    lessons: {}
+  };
 
   try {
-    const [fetchedCourse, lessons] = await Promise.all([
+    const [fetchedCourse, lessons, quizzes, progress] = await Promise.all([
       api.get<Course>(`/api/v1/courses/${courseId}`),
       api.get<Lesson[]>(`/api/v1/courses/${courseId}/lessons`),
+      api.get<any[]>(`/api/v1/courses/${courseId}/quizzes`),
+      api.get<CourseProgressData>(`/api/v1/courses/${courseId}/progress`).catch(() => initialProgress), // Default to empty if not found
     ]);
     course = fetchedCourse;
+    initialProgress = progress;
 
-    const lessonsWithFilesPromises = lessons.map(async (lesson) => {
+    const lessonsWithContentPromises = lessons.map(async (lesson) => {
       const files = await api.get<any[]>(`/api/v1/lessons/${lesson.id}/files`);
-      return { ...lesson, files } as LessonWithFiles;
+      // Find quiz for this lesson
+      const quiz = quizzes.find((q) => q.lesson_id === lesson.id) || null;
+      return { ...lesson, files, quiz } as LessonWithContent;
     });
-    lessonsWithFiles = await Promise.all(lessonsWithFilesPromises);
+    lessonsWithContent = await Promise.all(lessonsWithContentPromises);
   } catch (e) {
     console.error("Failed to fetch data for learn page:", e);
     notFound();
@@ -53,7 +63,7 @@ export default async function LearnPage({ params }: PageProps) {
       </div>
 
       {/* Big white container — course player fills this */}
-      <CoursePlayer courseId={courseId} lessons={lessonsWithFiles} />
+      <CoursePlayer courseId={courseId} lessons={lessonsWithContent} initialProgress={initialProgress} />
     </div>
   );
 }

@@ -1,48 +1,19 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import type { CourseProgressData } from "@/types/progress";
+import { clientApi } from "@/lib/api-client.client";
 
-const STORAGE_KEY = (courseId: string) => `aeromentor-progress-${courseId}`;
-
-const EMPTY_PROGRESS: CourseProgressData = {
-  lessons: {},
-  lastLessonIndex: 0,
-  lastFileIndex: 0,
-};
-
-function getStoredProgress(courseId: string): CourseProgressData {
-  if (typeof window === "undefined") return EMPTY_PROGRESS;
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY(courseId));
-    if (stored) return JSON.parse(stored);
-  } catch {
-    /* corrupted data, reset */
-  }
-  return EMPTY_PROGRESS;
-}
-
-function saveProgress(courseId: string, data: CourseProgressData) {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY(courseId), JSON.stringify(data));
-}
-
-export function useProgress(courseId: string, totalLessons: number) {
-  const [progress, setProgress] = useState<CourseProgressData>(() =>
-    getStoredProgress(courseId),
-  );
-
-  // Persist every change
-  useEffect(() => {
-    saveProgress(courseId, progress);
-  }, [courseId, progress]);
+export function useProgress(courseId: string, totalLessons: number, initialProgress: CourseProgressData) {
+  const [progress, setProgress] = useState<CourseProgressData>(initialProgress);
 
   const markFileViewed = useCallback((lessonId: string, fileId: string) => {
+    // Optimistic update
     setProgress((prev) => {
       const lesson = prev.lessons[lessonId] ?? {
-        completed: false,
-        completedAt: null,
-        viewedFiles: {},
+        is_completed: false,
+        completed_at: null,
+        viewed_files: {},
       };
       return {
         ...prev,
@@ -50,19 +21,23 @@ export function useProgress(courseId: string, totalLessons: number) {
           ...prev.lessons,
           [lessonId]: {
             ...lesson,
-            viewedFiles: { ...lesson.viewedFiles, [fileId]: true },
+            viewed_files: { ...lesson.viewed_files, [fileId]: true },
           },
         },
       };
     });
+
+    // Call backend API (fire and forget)
+    clientApi.post(`/api/v1/progress/file/${fileId}`).catch(console.error);
   }, []);
 
   const markLessonComplete = useCallback((lessonId: string) => {
+    // Optimistic update
     setProgress((prev) => {
       const lesson = prev.lessons[lessonId] ?? {
-        viewedFiles: {},
-        completed: false,
-        completedAt: null,
+        viewed_files: {},
+        is_completed: false,
+        completed_at: null,
       };
       return {
         ...prev,
@@ -70,55 +45,55 @@ export function useProgress(courseId: string, totalLessons: number) {
           ...prev.lessons,
           [lessonId]: {
             ...lesson,
-            completed: true,
-            completedAt: new Date().toISOString(),
+            is_completed: true,
+            completed_at: new Date().toISOString(),
           },
         },
       };
     });
+
+    // Call backend API
+    clientApi.post(`/api/v1/progress/lesson/${lessonId}`).catch(console.error);
   }, []);
 
-  const updateLastPosition = useCallback(
-    (lessonIndex: number, fileIndex: number) => {
-      setProgress((prev) => ({
-        ...prev,
-        lastLessonIndex: lessonIndex,
-        lastFileIndex: fileIndex,
-      }));
-    },
-    [],
-  );
+  const markCourseComplete = useCallback(() => {
+    setProgress((prev) => ({
+      ...prev,
+      is_completed: true,
+      completed_at: new Date().toISOString()
+    }));
+    clientApi.post(`/api/v1/progress/course/${courseId}`).catch(console.error);
+  }, [courseId]);
 
   const isLessonComplete = useCallback(
-    (lessonId: string) => progress.lessons[lessonId]?.completed ?? false,
+    (lessonId: string) => progress.lessons[lessonId]?.is_completed ?? false,
     [progress],
   );
 
   const isFileViewed = useCallback(
     (lessonId: string, fileId: string) =>
-      progress.lessons[lessonId]?.viewedFiles[fileId] ?? false,
+      progress.lessons[lessonId]?.viewed_files?.[fileId] ?? false,
     [progress],
   );
 
-  const completedCount = Object.values(progress.lessons).filter(
-    (l) => l.completed,
-  ).length;
+  const isCourseComplete = progress.is_completed;
 
+  // Calculate completion stats (Lessons)
+  const completedCount = Object.values(progress.lessons).filter(
+    (l) => l.is_completed,
+  ).length;
   const percentage =
-    totalLessons > 0
-      ? Math.round((completedCount / totalLessons) * 100)
-      : 0;
+    totalLessons === 0 ? 0 : Math.round((completedCount / totalLessons) * 100);
 
   return {
     progress,
     markFileViewed,
     markLessonComplete,
-    updateLastPosition,
+    markCourseComplete,
     isLessonComplete,
     isFileViewed,
+    isCourseComplete,
     completedCount,
     percentage,
-    lastLessonIndex: progress.lastLessonIndex,
-    lastFileIndex: progress.lastFileIndex,
   };
 }

@@ -10,19 +10,24 @@ import {
   Check,
   Play,
   Circle,
+  HelpCircle,
+  Award,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { LessonWithFiles, LessonFile } from "@/types/progress";
+import type { LessonWithContent, LessonFile } from "@/types/progress";
 
 interface LessonSidebarProps {
-  lessons: LessonWithFiles[];
+  lessons: LessonWithContent[];
   currentLessonIdx: number;
   currentFileIdx: number;
+  viewState: "file" | "quiz" | "certificate";
   isLessonComplete: (lessonId: string) => boolean;
   isFileViewed: (lessonId: string, fileId: string) => boolean;
   percentage: number;
   completedCount: number;
   onFileSelect: (lessonIdx: number, fileIdx: number) => void;
+  onQuizSelect: (lessonIdx: number) => void;
+  onCertificateSelect: () => void;
 }
 
 const FILE_TYPE_ICON: Record<string, typeof FileText> = {
@@ -41,11 +46,14 @@ export function LessonSidebar({
   lessons,
   currentLessonIdx,
   currentFileIdx,
+  viewState,
   isLessonComplete,
   isFileViewed,
   percentage,
   completedCount,
   onFileSelect,
+  onQuizSelect,
+  onCertificateSelect,
 }: LessonSidebarProps) {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(() => {
     // Auto-expand current lesson
@@ -165,7 +173,8 @@ export function LessonSidebar({
                   {lesson.files.map((file, fileIdx) => {
                     const isCurrentFile =
                       lessonIdx === currentLessonIdx &&
-                      fileIdx === currentFileIdx;
+                      fileIdx === currentFileIdx &&
+                      viewState === "file";
                     const isViewed = isFileViewed(lesson.id, file.id);
                     const Icon = FILE_TYPE_ICON[file.file_type] ?? FileText;
 
@@ -220,11 +229,68 @@ export function LessonSidebar({
                       </button>
                     );
                   })}
+
+                  {/* Quiz Item */}
+                  {lesson.quiz && (
+                    <button
+                      onClick={() => onQuizSelect(lessonIdx)}
+                      className={cn(
+                        "w-full flex items-center gap-2.5 pl-12 pr-5 py-2 text-left transition-all mt-1",
+                        lessonIdx === currentLessonIdx && viewState === "quiz"
+                          ? "bg-purple-50 border-l-2 border-purple-500"
+                          : "hover:bg-gray-50 border-l-2 border-transparent",
+                      )}
+                    >
+                      <div className="w-4 h-4 shrink-0 flex items-center justify-center">
+                        <HelpCircle className="w-4 h-4 text-purple-500" />
+                      </div>
+                      <span
+                        className={cn(
+                          "text-[12px] truncate font-medium",
+                          lessonIdx === currentLessonIdx && viewState === "quiz"
+                            ? "text-purple-900"
+                            : "text-gray-700",
+                        )}
+                      >
+                        Lesson Quiz
+                      </span>
+                    </button>
+                  )}
                 </div>
               )}
             </div>
           );
         })}
+
+        {/* Certificate Item */}
+        <div className="border-t border-gray-200 mt-2">
+          <button
+            onClick={onCertificateSelect}
+            className={cn(
+              "w-full flex items-center gap-3 px-5 py-4 text-left transition-colors",
+              viewState === "certificate"
+                ? "bg-yellow-50 border-l-4 border-yellow-500"
+                : "hover:bg-gray-50 border-l-4 border-transparent",
+            )}
+          >
+            <div className="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center shrink-0">
+              <Award className="w-4 h-4 text-yellow-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p
+                className={cn(
+                  "text-[13px] font-bold",
+                  viewState === "certificate" ? "text-yellow-900" : "text-gray-900",
+                )}
+              >
+                Finish
+              </p>
+              <p className="text-[11px] text-gray-500">
+                Claim Certificate
+              </p>
+            </div>
+          </button>
+        </div>
       </div>
     </div>
   );

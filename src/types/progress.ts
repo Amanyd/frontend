@@ -6,23 +6,24 @@ export interface LessonFile {
   file_type: "docx" | "pptx" | "ppt" | "pdf";
 }
 
-/** Lesson with its associated files */
-export interface LessonWithFiles {
+/** Lesson with its associated files and quiz */
+export interface LessonWithContent {
   id: string;
   title: string;
   files: LessonFile[];
+  quiz: any | null; // using any for now, could type Quiz later
 }
 
-/** Per-lesson progress stored in localStorage */
 export interface LessonProgressData {
-  completed: boolean;
-  completedAt: string | null;
-  viewedFiles: Record<string, boolean>;
+  is_completed: boolean;
+  completed_at: string | null;
+  viewed_files: Record<string, boolean>;
 }
 
-/** Full course progress stored in localStorage */
+/** Full course progress from backend */
 export interface CourseProgressData {
+  course_id: string;
+  is_completed: boolean;
+  completed_at?: string;
   lessons: Record<string, LessonProgressData>;
-  lastLessonIndex: number;
-  lastFileIndex: number;
 }

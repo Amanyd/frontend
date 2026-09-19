@@ -22,12 +22,14 @@ export function PdfViewer({ filePath }: PdfViewerProps) {
         </div>
       )}
       
-      <iframe
-        src={viewerUrl}
-        className="w-full h-full border-0 z-20"
-        title="PDF Viewer"
-        onLoad={() => setLoading(false)}
-      />
+      {viewerUrl && (
+        <iframe
+          src={viewerUrl}
+          className="w-full h-full border-0 z-20"
+          title="PDF Viewer"
+          onLoad={() => setLoading(false)}
+        />
+      )}
     </div>
   );
 }

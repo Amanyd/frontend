@@ -24,7 +24,16 @@ export function DocxViewer({ filePath }: DocxViewerProps) {
         const response = await fetch(filePath);
         if (!response.ok) throw new Error("File not found");
         const arrayBuffer = await response.arrayBuffer();
-        const result = await mammoth.convertToHtml({ arrayBuffer });
+        const options = {
+          convertImage: mammoth.images.imgElement((image: any) => {
+            return image.read("base64").then((imageBuffer: any) => {
+              return {
+                src: "data:" + image.contentType + ";base64," + imageBuffer,
+              };
+            });
+          }),
+        };
+        const result = await mammoth.convertToHtml({ arrayBuffer }, options);
         if (!cancelled) {
           setHtml(result.value);
           setLoading(false);

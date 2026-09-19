@@ -109,7 +109,7 @@ export default function EditCoursePage() {
           </div>
 
           {/* Studio Content */}
-          <div className="flex-1 overflow-y-auto pb-10">
+          <div className="flex-1 overflow-y-auto pb-10 scrollbar-hide">
             {activeTab === "basic" && (
               <div className="animate-in fade-in duration-300">
                 <CourseForm initialData={effectiveCourse} />
@@ -118,7 +118,16 @@ export default function EditCoursePage() {
 
             {activeTab === "curriculum" && (
               <div className="animate-in fade-in duration-300 space-y-4">
-                <div className="flex justify-end mb-6">
+                {effectiveLessons.map(lesson => (
+                  <LessonCard 
+                    key={lesson.id} 
+                    lesson={lesson} 
+                    courseId={courseId} 
+                    instructorId={effectiveCourse.instructor_id} 
+                  />
+                ))}
+
+                <div className="flex justify-end mt-6">
                   <button 
                     onClick={handleNewLesson}
                     disabled={isCreatingLesson}
@@ -128,15 +137,6 @@ export default function EditCoursePage() {
                     New Lesson
                   </button>
                 </div>
-
-                {effectiveLessons.map(lesson => (
-                  <LessonCard 
-                    key={lesson.id} 
-                    lesson={lesson} 
-                    courseId={courseId} 
-                    instructorId={effectiveCourse.instructor_id} 
-                  />
-                ))}
               </div>
             )}
 
@@ -148,9 +148,7 @@ export default function EditCoursePage() {
                     <h3 className="text-[14px] font-bold text-red-900">Delete Course</h3>
                     <p className="text-[12px] text-red-700 mt-0.5">Permanently remove this course and all of its content.</p>
                   </div>
-                  <button className="h-9 px-4 bg-red-600 hover:bg-red-700 text-white rounded-lg text-[13px] font-medium transition-colors">
-                    Delete
-                  </button>
+                  <DeleteCourseButton courseId={course.id} />
                 </div>
               </div>
             )}

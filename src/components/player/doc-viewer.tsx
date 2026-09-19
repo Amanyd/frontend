@@ -38,6 +38,7 @@ export function DocViewer({ file }: DocViewerProps) {
       return <DocxViewer filePath={url} />;
     case "pdf":
       return <PdfViewer filePath={url} />;
+    case "ppt":
     case "pptx":
       return <PptxViewer filePath={url} fileName={file.file_name} />;
     default:

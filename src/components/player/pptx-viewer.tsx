@@ -13,11 +13,7 @@ export function PptxViewer({ filePath, fileName }: PptxViewerProps) {
       {/* Try to embed via Google Docs viewer (works when online) */}
       <div className="flex-1 min-h-0 relative">
         <iframe
-          src={`https://docs.google.com/gview?url=${encodeURIComponent(
-            typeof window !== "undefined"
-              ? window.location.origin + filePath
-              : filePath,
-          )}&embedded=true`}
+          src={`https://docs.google.com/gview?url=${encodeURIComponent(filePath)}&embedded=true`}
           className="w-full h-full border-0"
           title={fileName}
           onError={(e) => {

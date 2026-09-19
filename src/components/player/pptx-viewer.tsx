@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Download, Presentation, Loader2 } from "lucide-react";
-import { ReactPptxViewer } from "@extend-ai/react-pptx";
+import { Download, Presentation, Loader2, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
+import { ReactPptxViewer, usePptxViewer } from "@extend-ai/react-pptx";
 
 interface PptxViewerProps {
   filePath: string;
@@ -13,6 +13,9 @@ export function PptxViewer({ filePath, fileName }: PptxViewerProps) {
   const [content, setContent] = useState<Uint8Array | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  const viewer = usePptxViewer();
+  const [scrollElement, setScrollElement] = useState<HTMLDivElement | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -76,9 +79,40 @@ export function PptxViewer({ filePath, fileName }: PptxViewerProps) {
   }
 
   return (
-    <div className="h-full w-full flex flex-col animate-in fade-in duration-500 bg-gray-100">
-      <div className="flex-1 min-h-0 relative">
-        <ReactPptxViewer source={content} />
+    <div className="h-full w-full flex flex-col animate-in fade-in duration-500 bg-gray-100 overflow-hidden">
+      
+      {/* Top Control Bar */}
+      <div className="shrink-0 px-4 py-2 border-b border-gray-200 flex items-center justify-between bg-white z-10 shadow-sm relative">
+        <div className="flex items-center gap-1">
+          <button 
+            onClick={() => viewer.controller?.previous()}
+            className="p-1.5 hover:bg-gray-100 rounded-md text-gray-600 transition-colors"
+            title="Previous Slide"
+          >
+             <ChevronLeft className="w-4 h-4" />
+          </button>
+          <span className="text-[12px] font-medium text-gray-600 px-2 select-none">
+             Slide Nav
+          </span>
+          <button 
+            onClick={() => viewer.controller?.next()}
+            className="p-1.5 hover:bg-gray-100 rounded-md text-gray-600 transition-colors"
+            title="Next Slide"
+          >
+             <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* Viewer Area */}
+      <div className="flex-1 min-h-0 relative overflow-y-auto overflow-x-hidden" ref={setScrollElement}>
+        <div className="min-h-full pb-8">
+           <ReactPptxViewer 
+             ref={viewer.ref}
+             source={content} 
+             virtualization={{ enabled: true, overscanViewport: 2, scrollElement }}
+           />
+        </div>
       </div>
 
       {/* Bottom download bar */}

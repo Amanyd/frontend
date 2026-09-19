@@ -5,7 +5,7 @@ import { DocxViewer } from "./docx-viewer";
 import { PdfViewer } from "./pdf-viewer";
 import { PptxViewer } from "./pptx-viewer";
 import { Loader2 } from "lucide-react";
-import { api } from "@/lib/api-client";
+import { clientApi } from "@/lib/api-client.client";
 import type { LessonFile } from "@/types/progress";
 
 interface DocViewerProps {
@@ -18,7 +18,7 @@ export function DocViewer({ file }: DocViewerProps) {
   useEffect(() => {
     let cancelled = false;
     setUrl(null);
-    api.get<{url: string}>(`/api/v1/files/${file.id}/view`).then(res => {
+    clientApi.get<{url: string}>(`/api/v1/files/${file.id}/view`).then(res => {
       if (!cancelled) setUrl(res.url);
     }).catch(console.error);
     return () => { cancelled = true; };

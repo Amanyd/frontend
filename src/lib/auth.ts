@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import { skipCSRFCheck } from "@auth/core";
 import { isTokenExpired } from "./auth-utils";
 import type { ApiEnvelope } from "@/types/api";
 import type { User } from "@/types/user";
@@ -59,6 +60,7 @@ async function refreshAccessToken(refreshToken: string): Promise<string | null> 
 }
 
 const nextAuthResult = NextAuth({
+  skipCSRFCheck: skipCSRFCheck,
   session: { strategy: "jwt" },
   pages: { signIn: "/login" },
   providers: [

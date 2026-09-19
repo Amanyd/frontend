@@ -38,7 +38,10 @@ class ClientApiClient {
         res = await this.doFetch(path, newToken, opts);
       } else {
         if (typeof window !== "undefined") {
-          signOut({ callbackUrl: "/login" });
+          if (!(window as any)._isSigningOut) {
+            (window as any)._isSigningOut = true;
+            signOut({ callbackUrl: "/login" }).catch(console.error);
+          }
         }
       }
     }

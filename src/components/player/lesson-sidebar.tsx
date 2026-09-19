@@ -263,7 +263,7 @@ export function LessonSidebar({
         })}
 
         {/* Certificate Item */}
-        <div className="border-t border-gray-200 mt-2">
+        <div className="border-t border-gray-200">
           <button
             onClick={onCertificateSelect}
             className={cn(

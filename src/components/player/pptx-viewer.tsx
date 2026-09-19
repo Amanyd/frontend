@@ -85,6 +85,7 @@ export function PptxViewer({ filePath, fileName }: PptxViewerProps) {
       <div className="shrink-0 px-4 py-2 border-b border-gray-200 flex items-center justify-between bg-white z-10 shadow-sm relative">
         <div className="flex items-center gap-1">
           <button 
+            type="button"
             onClick={() => viewer.controller?.previous()}
             className="p-1.5 hover:bg-gray-100 rounded-md text-gray-600 transition-colors"
             title="Previous Slide"
@@ -95,6 +96,7 @@ export function PptxViewer({ filePath, fileName }: PptxViewerProps) {
              Slide Nav
           </span>
           <button 
+            type="button"
             onClick={() => viewer.controller?.next()}
             className="p-1.5 hover:bg-gray-100 rounded-md text-gray-600 transition-colors"
             title="Next Slide"
@@ -105,13 +107,20 @@ export function PptxViewer({ filePath, fileName }: PptxViewerProps) {
       </div>
 
       {/* Viewer Area */}
-      <div className="flex-1 min-h-0 relative overflow-y-auto overflow-x-hidden" ref={setScrollElement}>
-        <div className="min-h-full pb-8">
-           <ReactPptxViewer 
-             ref={viewer.ref}
-             source={content} 
-             virtualization={{ enabled: true, overscanViewport: 2, scrollElement }}
-           />
+      <div 
+        ref={setScrollElement} 
+        className="flex-1 min-h-0 relative overflow-y-auto overflow-x-hidden flex justify-center bg-gray-200/50"
+      >
+        <div className="h-full w-full max-w-5xl p-6">
+          <ReactPptxViewer
+            ref={viewer.ref}
+            source={content}
+            mode="slide"
+            virtualization={{
+              enabled: true,
+              scrollElement: scrollElement ?? undefined,
+            }}
+          />
         </div>
       </div>
 

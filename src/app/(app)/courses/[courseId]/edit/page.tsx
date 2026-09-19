@@ -6,6 +6,7 @@ import { CourseForm } from "@/components/course/course-form";
 import { Plus, Save, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LessonCard } from "@/components/course/lesson-card";
+import { DeleteCourseButton } from "@/components/course/delete-course-button";
 import { useCourses, useLessons, useCreateLesson, useFinalizeCourse } from "@/hooks/use-courses";
 import { useCourseFiles } from "@/hooks/use-course-files";
 

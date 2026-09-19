@@ -20,6 +20,7 @@ import type { FileAsset, FileType } from "@/types/course";
 export const FILE_ICONS: Record<FileType, React.ElementType> = {
   pdf: FileText,
   ppt: FileSpreadsheet,
+  pptx: FileSpreadsheet,
   docx: FileText,
 };
 

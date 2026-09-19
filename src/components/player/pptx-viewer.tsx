@@ -2,13 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Download, Presentation, Loader2 } from "lucide-react";
-import dynamic from "next/dynamic";
-import "pptx-react-viewer/styles";
-
-const PowerPointViewer = dynamic(
-  () => import("pptx-react-viewer").then((mod) => mod.PowerPointViewer),
-  { ssr: false }
-);
+import { ReactPptxViewer } from "@extend-ai/react-pptx";
 
 interface PptxViewerProps {
   filePath: string;
@@ -84,7 +78,7 @@ export function PptxViewer({ filePath, fileName }: PptxViewerProps) {
   return (
     <div className="h-full w-full flex flex-col animate-in fade-in duration-500 bg-gray-100">
       <div className="flex-1 min-h-0 relative">
-        <PowerPointViewer content={content} canEdit={false} />
+        <ReactPptxViewer source={content} />
       </div>
 
       {/* Bottom download bar */}

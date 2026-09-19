@@ -2,8 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { Download, Presentation, Loader2 } from "lucide-react";
-import { PowerPointViewer } from "pptx-react-viewer";
+import dynamic from "next/dynamic";
 import "pptx-react-viewer/styles";
+
+const PowerPointViewer = dynamic(
+  () => import("pptx-react-viewer").then((mod) => mod.PowerPointViewer),
+  { ssr: false }
+);
 
 interface PptxViewerProps {
   filePath: string;

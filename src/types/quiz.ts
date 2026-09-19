@@ -2,6 +2,7 @@
 export interface Quiz {
   id: string;
   course_id: string;
+  lesson_id?: string | null;
   difficulty: Difficulty;
   status: QuizStatus;
   created_at: string;

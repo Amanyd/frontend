@@ -197,7 +197,7 @@ export function QuizViewer({ quiz }: QuizViewerProps) {
 
         <div className="flex items-center justify-between pt-6 border-t border-gray-100">
           <Button
-            variant="outline"
+            variant="secondary"
             onClick={prevQuestion}
             disabled={isFirst}
             className="rounded-lg gap-2"
@@ -257,7 +257,7 @@ export function QuizViewer({ quiz }: QuizViewerProps) {
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold text-gray-900">Review Answers</h3>
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
             className="rounded-lg"
             onClick={() => {
@@ -305,7 +305,7 @@ export function QuizViewer({ quiz }: QuizViewerProps) {
                           answer.is_correct ? "text-green-700" : "text-red-700"
                         )}
                       >
-                        {answer.answer}
+                        {answer.user_answer}
                       </span>
                     </p>
                   </div>
@@ -322,9 +322,11 @@ export function QuizViewer({ quiz }: QuizViewerProps) {
     <div className="w-full h-full overflow-y-auto bg-gray-50/50 p-6 md:p-8">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl border border-gray-200 overflow-hidden min-h-[60vh]">
         <div className="p-6 border-b border-gray-100 bg-white">
-          <h2 className="text-xl font-semibold text-gray-900">{quiz.title}</h2>
+          <h2 className="text-xl font-semibold text-gray-900">
+            {quiz.lesson_id ? "Lesson Assessment" : "Course Assessment"}
+          </h2>
           <p className="text-sm text-gray-500 mt-1">
-            {quiz.description || "Test your knowledge on this lesson."}
+            Test your knowledge on this material.
           </p>
         </div>
 

@@ -7,7 +7,6 @@ import { clientApi } from "@/lib/api-client.client";
 import { formatDate, cn } from "@/lib/utils";
 import { Plus, ArrowUp, Copy, Check, MessageSquare, AlertCircle } from "lucide-react";
 import type { ChatSession, Message, Citation } from "@/types/chat";
-import { SourceCitation } from "./source-citation";
 
 interface ChatViewProps {
   initialSessionId?: string;
@@ -407,7 +406,7 @@ export function ChatView({ initialSessionId }: ChatViewProps) {
         {/* Main Chat Area */}
         <div className="flex-[4] min-w-0 bg-white border border-gray-200 rounded-xl flex flex-col relative overflow-hidden">
           {/* Background Image */}
-          <div className="absolute inset-0 bg-[url('/images/bg.png')] bg-[center_top_10rem] bg-cover bg-no-repeat opacity-100 pointer-events-none" />
+          <div className="absolute inset-0 bg-[url('/images/bg.png')] bg-[center_top_14rem] bg-cover bg-no-repeat opacity-100 pointer-events-none" />
 
           {/* Dynamic Messages Area */}
           <div
@@ -439,13 +438,6 @@ export function ChatView({ initialSessionId }: ChatViewProps) {
                       }
                     >
                       <div className="whitespace-pre-wrap">{msg.content}</div>
-
-                      {/* Assistant citation sources */}
-                      {msg.citations && Array.isArray(msg.citations) && msg.citations.length > 0 && (
-                        <div className="mt-2">
-                          <SourceCitation citations={msg.citations} />
-                        </div>
-                      )}
 
                       {/* Action buttons on completed assistant response */}
                       {msg.role === "assistant" && !msg.isGenerating && msg.content && (
@@ -522,23 +514,25 @@ export function ChatView({ initialSessionId }: ChatViewProps) {
             </p>
           </div>
 
-          {/* Bottom Gradient Fade: hard solid white at bottom, smoothly fading to transparent moving upward */}
+          {/* Bottom Gradient Fade: only visible when messages exist, sits behind the input box so messages fade smoothly */}
           <div
-            className="absolute inset-x-0 bottom-0 pointer-events-none z-10 h-44"
+            className={`absolute inset-x-0 bottom-0 pointer-events-none z-10 h-36 transition-opacity duration-300 ${
+              messages.length === 0 ? "opacity-0" : "opacity-100"
+            }`}
             style={{
               background:
-                "linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.92) 20%, rgba(255, 255, 255, 0.5) 55%, rgba(255, 255, 255, 0) 100%)",
+                "linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.85) 30%, rgba(255, 255, 255, 0) 100%)",
             }}
           />
 
           {/* The Chat Input (Animates smoothly between center and bottom) */}
           <div
-            className={`absolute left-0 right-0 px-6 md:px-10 z-20 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+            className={`absolute left-0 right-0 px-6 md:px-10 z-30 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${
               messages.length === 0 ? "bottom-[35%]" : "bottom-0 pb-5 pt-2"
             }`}
           >
             <div className="w-full max-w-3xl mx-auto">
-              <div className="bg-[#fcfcfc] border border-blue-200 rounded-[16px] p-2.5 focus-within:border-blue-500 focus-within:bg-white transition-all relative">
+              <div className="bg-white border border-blue-200 rounded-[16px] p-2.5 focus-within:border-blue-500 transition-all relative shadow-none">
                 <input
                   ref={inputRef}
                   type="text"

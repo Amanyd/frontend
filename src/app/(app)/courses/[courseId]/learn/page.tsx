@@ -29,13 +29,18 @@ export default async function LearnPage({ params }: PageProps) {
       api.get<CourseProgressData>(`/api/v1/courses/${courseId}/progress`).catch(() => initialProgress), // Default to empty if not found
     ]);
     course = fetchedCourse;
-    initialProgress = progress;
+    initialProgress = progress || initialProgress;
+    if (!initialProgress.lessons) initialProgress.lessons = {};
 
-    const lessonsWithContentPromises = lessons.map(async (lesson) => {
-      const files = await api.get<any[]>(`/api/v1/lessons/${lesson.id}/files`);
+    const safeLessons = Array.isArray(lessons) ? lessons : [];
+    const safeQuizzes = Array.isArray(quizzes) ? quizzes : [];
+
+    const lessonsWithContentPromises = safeLessons.map(async (lesson) => {
+      const files = await api.get<any[]>(`/api/v1/lessons/${lesson.id}/files`).catch(() => []);
+      const safeFiles = Array.isArray(files) ? files : [];
       // Find quiz for this lesson
-      const quiz = quizzes.find((q) => q.lesson_id === lesson.id) || null;
-      return { ...lesson, files, quiz } as LessonWithContent;
+      const quiz = safeQuizzes.find((q) => q.lesson_id === lesson.id) || null;
+      return { ...lesson, files: safeFiles, quiz } as LessonWithContent;
     });
     lessonsWithContent = await Promise.all(lessonsWithContentPromises);
   } catch (e) {

@@ -21,8 +21,10 @@ export default async function AnalyticsPage() {
       api.get<InstructorAnalytics>("/api/v1/analytics/instructor"),
       api.get<Course[]>("/api/v1/courses").then((res) => res || []),
     ]);
+    courses = Array.isArray(courses) ? courses : [];
   } catch (err) {
     console.error("Failed to load instructor analytics:", err);
+    courses = [];
   }
 
   return (

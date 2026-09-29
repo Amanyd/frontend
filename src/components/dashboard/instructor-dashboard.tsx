@@ -47,8 +47,9 @@ export function InstructorDashboard({
   analytics,
   courses,
 }: InstructorDashboardProps) {
+  const safeCourses = Array.isArray(courses) ? courses : [];
   const stats = analytics?.stats ?? {
-    total_courses: courses.length,
+    total_courses: safeCourses.length,
     total_students_active: 0,
     total_graduates: 0,
     avg_completion_rate: 0,
@@ -57,9 +58,9 @@ export function InstructorDashboard({
     cohort_course_quiz_avg: 0,
   };
 
-  const courseItems = analytics?.courses?.length
+  const courseItems = analytics?.courses && Array.isArray(analytics.courses) && analytics.courses.length > 0
     ? analytics.courses
-    : courses.map((c) => ({
+    : safeCourses.map((c) => ({
         course_id: c.id,
         title: c.title,
         published: c.published,
@@ -71,7 +72,7 @@ export function InstructorDashboard({
         course_quiz_avg: 0,
       }));
 
-  const recentActivity = analytics?.recent_activity ?? [];
+  const recentActivity = Array.isArray(analytics?.recent_activity) ? analytics.recent_activity : [];
 
   return (
     <div className="space-y-6">

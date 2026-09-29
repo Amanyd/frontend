@@ -79,12 +79,13 @@ export default function QuizTakePage() {
     );
   }
 
-  const { quiz, questions } = quizDetail;
+  const quiz = quizDetail.quiz;
+  const questions = Array.isArray(quizDetail?.questions) ? quizDetail.questions : [];
   const total = questions.length;
-  const current = questions[currentQuestion];
+  const current = total > 0 ? questions[currentQuestion] : undefined;
   const isFirst = currentQuestion === 0;
-  const isLast = currentQuestion === total - 1;
-  const progress = Math.round(((currentQuestion + 1) / total) * 100);
+  const isLast = total > 0 && currentQuestion === total - 1;
+  const progress = total > 0 ? Math.round(((currentQuestion + 1) / total) * 100) : 0;
 
   const handleSubmit = async () => {
     setSubmitting(true);

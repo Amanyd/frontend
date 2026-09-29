@@ -18,7 +18,8 @@ export default async function CoursesPage() {
   let courses: Course[] = [];
 
   try {
-    courses = await api.get<Course[]>("/api/v1/courses");
+    const fetched = await api.get<Course[]>("/api/v1/courses");
+    courses = Array.isArray(fetched) ? fetched : [];
   } catch (e) {
     console.error("Failed to fetch courses:", e);
     // Real server: bubble up error or handle gracefully

@@ -4,7 +4,10 @@ import { getSession, signOut } from "next-auth/react";
 import { ApiClientError } from "@/types/api";
 import type { ApiEnvelope } from "@/types/api";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL!;
+const BASE_URL = (
+  process.env.NEXT_PUBLIC_API_URL ||
+  "http://localhost:8080"
+).replace(/\/+$/, "");
 
 async function getAccessToken(): Promise<string | null> {
   const session = await getSession();
@@ -17,7 +20,8 @@ class ClientApiClient {
     token: string | null,
     opts?: RequestInit
   ): Promise<Response> {
-    return fetch(`${BASE_URL}${path}`, {
+    const cleanPath = path.startsWith("/") ? path : `/${path}`;
+    return fetch(`${BASE_URL}${cleanPath}`, {
       ...opts,
       headers: {
         "Content-Type": "application/json",

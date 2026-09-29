@@ -48,8 +48,9 @@ export function StudentDashboard({
     readiness_score: 0,
   };
 
+  const safeCourses = Array.isArray(courses) ? courses : [];
   const stats = analytics?.stats ?? {
-    courses_enrolled: courses.length,
+    courses_enrolled: safeCourses.length,
     courses_completed: 0,
     overall_completion_pct: 0,
     lessons_completed: 0,
@@ -60,9 +61,9 @@ export function StudentDashboard({
     course_quiz_avg: 0,
   };
 
-  const courseProgress = analytics?.course_progress?.length
+  const courseProgress = analytics?.course_progress && Array.isArray(analytics.course_progress) && analytics.course_progress.length > 0
     ? analytics.course_progress
-    : courses.map((c) => ({
+    : safeCourses.map((c) => ({
         course_id: c.id,
         title: c.title,
         rank: c.rank,
@@ -74,7 +75,7 @@ export function StudentDashboard({
       }));
 
   const spotlight = analytics?.spotlight;
-  const leaderboard = analytics?.leaderboard ?? [];
+  const leaderboard = Array.isArray(analytics?.leaderboard) ? analytics.leaderboard : [];
 
   // On instructor view, filter to ONLY that specific student's entry; on student dashboard show all
   const entriesToShow = useMemo(() => {

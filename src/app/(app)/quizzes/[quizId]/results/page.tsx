@@ -74,9 +74,10 @@ export default function QuizResultsPage() {
     );
   }
 
-  const { attempt, answers } = results;
-  const { questions } = quizDetail;
-  const score = Math.round(attempt.score);
+  const attempt = results.attempt;
+  const answers = Array.isArray(results?.answers) ? results.answers : [];
+  const questions = Array.isArray(quizDetail?.questions) ? quizDetail.questions : [];
+  const score = attempt ? Math.round(attempt.score) : 0;
   const questionsMap = new Map(questions.map((q) => [q.id, q]));
   const correctCount = answers.filter((a) => a.is_correct).length;
 

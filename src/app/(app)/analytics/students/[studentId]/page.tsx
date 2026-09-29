@@ -29,8 +29,10 @@ export default async function StudentDetailPage({ params }: PageProps) {
       api.get<StudentAnalytics>(`/api/v1/analytics/students/${studentId}`),
       api.get<Course[]>("/api/v1/courses").then((res) => res || []),
     ]);
+    courses = Array.isArray(courses) ? courses : [];
   } catch (err) {
     console.error("Failed to load student analytics:", err);
+    courses = [];
   }
 
   return (

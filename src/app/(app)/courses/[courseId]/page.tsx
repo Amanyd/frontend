@@ -33,6 +33,7 @@ export default async function CourseDetailPage({ params }: PageProps) {
       api.get<Course>(`/api/v1/courses/${courseId}`),
       api.get<Lesson[]>(`/api/v1/courses/${courseId}/lessons`),
     ]);
+    lessons = Array.isArray(lessons) ? lessons : [];
   } catch (e) {
     console.error("Failed to fetch course:", e);
     notFound();

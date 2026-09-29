@@ -25,7 +25,7 @@ export default async function QuizzesPage() {
   let courses: Course[] = [];
   try {
     const fetchedCourses = await api.get<Course[]>("/api/v1/courses");
-    courses = fetchedCourses || [];
+    courses = Array.isArray(fetchedCourses) ? fetchedCourses : [];
   } catch {
     courses = [];
   }
@@ -37,8 +37,9 @@ export default async function QuizzesPage() {
       const quizzes = await api.get<Quiz[]>(
         `/api/v1/courses/${course.id}/quizzes`
       );
+      const safeQuizzes = Array.isArray(quizzes) ? quizzes : [];
       // Filter out lesson quizzes; keep course-level comprehensive quizzes
-      const courseQuizzes = (quizzes || []).filter((q) => !q.lesson_id);
+      const courseQuizzes = safeQuizzes.filter((q) => !q.lesson_id);
 
       const easyQuiz = courseQuizzes.find((q) => q.difficulty === "easy");
       const mediumQuiz = courseQuizzes.find((q) => q.difficulty === "medium");

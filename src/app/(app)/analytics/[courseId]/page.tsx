@@ -40,14 +40,16 @@ export default async function CourseAnalyticsPage({ params }: PageProps) {
   }
 
   let allFiles: (FileAsset & { lesson_title: string })[] = [];
-  for (const lesson of lessons) {
+  const safeLessons = Array.isArray(lessons) ? lessons : [];
+  for (const lesson of safeLessons) {
     try {
       const files = await api.get<FileAsset[]>(
         `/api/v1/lessons/${lesson.id}/files`
       );
+      const safeFiles = Array.isArray(files) ? files : [];
       allFiles = [
         ...allFiles,
-        ...files.map((f) => ({ ...f, lesson_title: lesson.title })),
+        ...safeFiles.map((f) => ({ ...f, lesson_title: lesson.title })),
       ];
     } catch {
       // Skip

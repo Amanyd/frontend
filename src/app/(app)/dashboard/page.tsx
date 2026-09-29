@@ -24,8 +24,10 @@ export default async function DashboardPage() {
         api.get<InstructorAnalytics>("/api/v1/analytics/instructor"),
         api.get<Course[]>("/api/v1/courses"),
       ]);
+      courses = Array.isArray(courses) ? courses : [];
     } catch (e) {
       console.error("Failed to fetch instructor analytics:", e);
+      courses = [];
     }
 
     return (
@@ -65,8 +67,10 @@ export default async function DashboardPage() {
       api.get<StudentAnalytics>("/api/v1/analytics/student"),
       api.get<Course[]>("/api/v1/courses"),
     ]);
+    courses = Array.isArray(courses) ? courses : [];
   } catch (e) {
     console.error("Failed to fetch student analytics:", e);
+    courses = [];
   }
 
   return (

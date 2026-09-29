@@ -5,6 +5,9 @@ export interface Quiz {
   lesson_id?: string | null;
   difficulty: Difficulty;
   status: QuizStatus;
+  question_count?: number;
+  last_score?: number | null;
+  is_attempted?: boolean;
   created_at: string;
   updated_at: string;
 }

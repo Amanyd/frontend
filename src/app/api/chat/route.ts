@@ -38,9 +38,18 @@ export async function POST(req: Request) {
   );
 
   if (!upstream.ok) {
-    const text = await upstream.text();
+    let errMsg = "Upstream error";
+    try {
+      const errJson = await upstream.json();
+      errMsg =
+        errJson.error?.message ||
+        errJson.message ||
+        (typeof errJson.error === "string" ? errJson.error : JSON.stringify(errJson));
+    } catch {
+      errMsg = await upstream.text();
+    }
     return NextResponse.json(
-      { error: text || "Upstream error" },
+      { error: errMsg || "Upstream error" },
       { status: upstream.status }
     );
   }

@@ -239,8 +239,20 @@ export function ChatView({ initialSessionId }: ChatViewProps) {
       });
 
       if (!res.ok) {
-        const errText = await res.text();
-        throw new Error(errText || `Chat failed with status ${res.status}`);
+        let msg = `Chat failed with status ${res.status}`;
+        try {
+          const errData = await res.json();
+          msg = errData.error || errData.message || msg;
+          if (typeof msg === "string" && msg.trim().startsWith("{")) {
+            try {
+              const inner = JSON.parse(msg);
+              msg = inner.error?.message || inner.message || inner.error || msg;
+            } catch {}
+          }
+        } catch {
+          msg = await res.text();
+        }
+        throw new Error(msg);
       }
 
       const reader = res.body?.getReader();
@@ -510,10 +522,19 @@ export function ChatView({ initialSessionId }: ChatViewProps) {
             </p>
           </div>
 
+          {/* Bottom Gradient Fade: hard solid white at bottom, smoothly fading to transparent moving upward */}
+          <div
+            className="absolute inset-x-0 bottom-0 pointer-events-none z-10 h-44"
+            style={{
+              background:
+                "linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.92) 20%, rgba(255, 255, 255, 0.5) 55%, rgba(255, 255, 255, 0) 100%)",
+            }}
+          />
+
           {/* The Chat Input (Animates smoothly between center and bottom) */}
           <div
-            className={`absolute left-0 right-0 px-6 md:px-10 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${
-              messages.length === 0 ? "bottom-[35%]" : "bottom-0 pb-4 pt-4 bg-white/80 backdrop-blur-sm"
+            className={`absolute left-0 right-0 px-6 md:px-10 z-20 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+              messages.length === 0 ? "bottom-[35%]" : "bottom-0 pb-5 pt-2"
             }`}
           >
             <div className="w-full max-w-3xl mx-auto">

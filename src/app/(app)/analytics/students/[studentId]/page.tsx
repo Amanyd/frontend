@@ -45,26 +45,19 @@ export default async function StudentDetailPage({ params }: PageProps) {
             <ArrowLeft className="w-3.5 h-3.5" />
             Back to Analytics
           </Link>
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-2.5 flex-wrap">
             <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
               {studentAnalytics?.user_profile?.name || "Student Profile"}
             </h1>
             {studentAnalytics?.user_profile && (
               <>
-                <span className="text-gray-300 font-light text-xl select-none">•</span>
-                <span className="text-sm font-mono font-medium text-gray-700 bg-white px-3 py-1 rounded-lg border border-gray-200">
+                <span className="text-gray-400 font-light text-base select-none">•</span>
+                <span className="text-base font-mono text-gray-500">
                   {studentAnalytics.user_profile.enrollment_id}
                 </span>
-                <span className="text-gray-300 font-light text-xl select-none">•</span>
-                <span
-                  className={cn(
-                    "px-3 py-1 rounded-lg text-xs font-semibold border",
-                    studentAnalytics.user_profile.rank.toLowerCase() === "officer"
-                      ? "bg-blue-50 text-blue-700 border-blue-200"
-                      : "bg-purple-50 text-purple-700 border-purple-200"
-                  )}
-                >
-                  {capitalize(studentAnalytics.user_profile.rank)}
+                <span className="text-gray-400 font-light text-base select-none">•</span>
+                <span className="text-base text-gray-500 capitalize">
+                  {studentAnalytics.user_profile.rank}
                 </span>
               </>
             )}

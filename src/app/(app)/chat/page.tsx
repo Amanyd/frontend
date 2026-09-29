@@ -81,9 +81,14 @@ export default function ChatListPage() {
         }
       `}} />
       <div className="flex items-center justify-between mb-6 px-2">
-        <h1 className="text-[20px] font-bold text-gray-900 tracking-tight">
-          Chat with the RAG powered LLM...
-        </h1>
+        <div>
+          <h1 className="text-[20px] font-bold text-gray-900 tracking-tight">
+            Chat with the RAG powered LLM...
+          </h1>
+          <p className="text-[13px] text-gray-500 mt-0.5">
+            Ask questions, clarify concepts, and get instant answers based on your course materials
+          </p>
+        </div>
       </div>
 
       {/* Main container */}

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { api } from "@/lib/api-client";
 import { StudentDashboard } from "@/components/dashboard/student-dashboard";
 import { InstructorDashboard } from "@/components/dashboard/instructor-dashboard";
+import { capitalize } from "@/lib/utils";
 import type { Course } from "@/types/course";
 import type { StudentAnalytics, InstructorAnalytics } from "@/types/analytics";
 
@@ -32,15 +33,15 @@ export default async function DashboardPage() {
         <div className="flex items-center justify-between mb-6 px-2">
           <div>
             <h1 className="text-[20px] font-bold text-gray-900 tracking-tight">
-              Command Flight Operations & Analytics
+              Instructor Overview & Analytics
             </h1>
             <p className="text-[13px] text-gray-500 mt-0.5">
-              Real-time syllabus training telemetry, cohort accuracy, and flight readiness metrics
+              Track student progress, quiz performance, and course completion
             </p>
           </div>
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[12px] font-medium bg-blue-50 text-blue-700 border border-blue-200">
-              Instructor Command
+              Instructor
             </span>
           </div>
         </div>
@@ -73,15 +74,15 @@ export default async function DashboardPage() {
       <div className="flex items-center justify-between mb-6 px-2">
         <div>
           <h1 className="text-[20px] font-bold text-gray-900 tracking-tight">
-            Pilot Training & Performance Hub
+            Student Overview & Performance
           </h1>
           <p className="text-[13px] text-gray-500 mt-0.5">
-            Mission preparedness, syllabus progress, and tactical drill assessments
+            Track your course progress, quiz scores, and learning milestones
           </p>
         </div>
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[12px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-            Active Duty Cadet
+            {capitalize(user.rank)} Student
           </span>
         </div>
       </div>

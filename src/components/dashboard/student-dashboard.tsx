@@ -7,16 +7,11 @@ import {
   BookOpen,
   CheckCircle2,
   ChevronRight,
-  Compass,
-  FileCheck,
   Flame,
-  GraduationCap,
-  Medal,
   ShieldCheck,
   Sparkles,
   Target,
   Trophy,
-  Zap,
 } from "lucide-react";
 import { capitalize, cn } from "@/lib/utils";
 import { Logo } from "@/components/icons/Logo";
@@ -40,8 +35,8 @@ export function StudentDashboard({
 }: StudentDashboardProps) {
   // Graceful defaults if analytics hasn't loaded or is empty
   const profile = analytics?.user_profile ?? {
-    name: user.name || "Cadet",
-    rank: user.rank || "cadet",
+    name: user.name || "Student",
+    rank: user.rank || "Officer",
     enrollment_id: "AF-2026-9041",
     readiness_score: 0,
   };
@@ -84,9 +79,9 @@ export function StudentDashboard({
     <div className="space-y-6">
       {/* ── ROW 1: Hero Identity Banner (8 cols) & Milestones Matrix (4 cols) ── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Cadet Profile & Combat Readiness Hero Card */}
+        {/* Student Profile & Progress Hero Card */}
         <div className="lg:col-span-8 bg-gradient-to-br from-gray-950 via-gray-900 to-slate-900 text-white rounded-2xl p-7 border border-gray-800 relative overflow-hidden flex flex-col justify-between min-h-[260px] shadow-sm">
-          {/* Subtle military tech background decoration */}
+          {/* Subtle background glow */}
           <div className="absolute top-0 right-0 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
           <div className="absolute bottom-0 right-1/4 w-60 h-60 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none" />
 
@@ -98,7 +93,7 @@ export function StudentDashboard({
               </div>
               <div>
                 <span className="text-[11px] font-semibold uppercase tracking-wider text-blue-300">
-                  Cadet Air Wing
+                  Technical Training
                 </span>
                 <span className="mx-2 text-white/30">•</span>
                 <span className="text-[12px] font-mono text-gray-300">
@@ -109,11 +104,11 @@ export function StudentDashboard({
 
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-white/10 backdrop-blur-md border border-white/15 text-gray-200">
-                Rank: {capitalize(profile.rank)}
+                Category: {capitalize(profile.rank)}
               </span>
               <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Active Flight Status
+                Active Student
               </span>
             </div>
           </div>
@@ -121,12 +116,11 @@ export function StudentDashboard({
           {/* Center greetings */}
           <div className="relative z-10 my-4">
             <h2 className="text-[24px] font-bold text-white tracking-tight">
-              Welcome back, {profile.name.split(" ")[0] || "Cadet"}
+              Welcome back, {profile.name.split(" ")[0] || "Student"}
             </h2>
             <p className="text-[13px] text-gray-400 mt-1 max-w-xl leading-relaxed">
-              Your flight readiness and syllabus telemetry are synchronized.
-              Complete targeted evaluations and tactical modules to elevate your
-              squadron standing.
+              Here is a summary of your learning progress, completed lessons, and
+              quiz scores across all enrolled courses.
             </p>
           </div>
 
@@ -138,14 +132,14 @@ export function StudentDashboard({
                   {readinessScore}%
                 </span>
                 <span className="text-[12px] font-semibold text-emerald-400 uppercase tracking-wide">
-                  Readiness Index
+                  Learning Readiness
                 </span>
               </div>
               <div className="hidden sm:block text-[11px] text-gray-400 border-l border-white/15 pl-4 py-0.5">
-                Composite weighted metric
+                Composite performance score
                 <br />
                 <span className="text-gray-300">
-                  60% Quiz Proficiency • 40% Completion
+                  60% Quiz Accuracy • 40% Course Completion
                 </span>
               </div>
             </div>
@@ -156,7 +150,7 @@ export function StudentDashboard({
                   href={`/courses/${nextCourse.course_id}`}
                   className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[13px] font-medium transition-all shadow-sm"
                 >
-                  Resume Training
+                  Resume Course
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               )}
@@ -164,13 +158,13 @@ export function StudentDashboard({
                 href="/quizzes"
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white text-[13px] font-medium transition-all border border-white/10"
               >
-                Assessments
+                Quizzes
               </Link>
             </div>
           </div>
         </div>
 
-        {/* Milestones KPI Card (4 cols) */}
+        {/* Course Milestones Card (4 cols) */}
         <div className="lg:col-span-4 bg-[#fafbfc] border border-gray-200 rounded-2xl p-6 flex flex-col justify-between shadow-none">
           <div className="flex items-center justify-between pb-3 border-b border-gray-100">
             <div className="flex items-center gap-2">
@@ -178,7 +172,7 @@ export function StudentDashboard({
                 <Target className="h-4 w-4" />
               </div>
               <h3 className="text-[14px] font-bold text-gray-900">
-                Syllabus Milestones
+                Course Milestones
               </h3>
             </div>
             <span className="text-[11px] font-medium text-gray-400 uppercase">
@@ -242,9 +236,9 @@ export function StudentDashboard({
         </div>
       </div>
 
-      {/* ── ROW 2: Quiz Accuracy Telemetry (4 cols), Spotlight (4 cols), Active Courses (4 cols) ── */}
+      {/* ── ROW 2: Quiz Performance (4 cols), Spotlight (4 cols), Enrolled Courses (4 cols) ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
-        {/* Assessment Accuracy Breakdown (4 cols) */}
+        {/* Quiz Performance Card (4 cols) */}
         <div className="lg:col-span-4 bg-white border border-gray-200 rounded-2xl p-6 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
@@ -253,7 +247,7 @@ export function StudentDashboard({
                   <Award className="h-4 w-4" />
                 </div>
                 <h3 className="text-[14px] font-bold text-gray-900">
-                  Assessment Accuracy
+                  Quiz Performance
                 </h3>
               </div>
               <span className="text-[11px] font-mono text-gray-400">
@@ -261,11 +255,11 @@ export function StudentDashboard({
               </span>
             </div>
 
-            {/* Overall big score */}
+            {/* Overall average */}
             <div className="bg-[#fafbfc] border border-gray-200 rounded-xl p-4 mb-4 flex items-center justify-between">
               <div>
                 <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
-                  Cumulative Score
+                  Overall Quiz Average
                 </span>
                 <div className="text-[28px] font-black text-gray-900 leading-tight">
                   {stats.quizzes_attempted > 0
@@ -287,7 +281,7 @@ export function StudentDashboard({
                   ? "Distinction"
                   : stats.overall_avg_score >= 60
                   ? "Proficient"
-                  : "Needs Review"}
+                  : "Needs Practice"}
               </div>
             </div>
 
@@ -296,7 +290,7 @@ export function StudentDashboard({
               <div>
                 <div className="flex items-center justify-between text-[12px] mb-1">
                   <span className="text-gray-600 font-medium">
-                    Lesson Drills
+                    Lesson Quizzes
                   </span>
                   <span className="font-bold text-gray-900">
                     {stats.lesson_quiz_avg > 0
@@ -311,14 +305,14 @@ export function StudentDashboard({
                   />
                 </div>
                 <span className="text-[10px] text-gray-400">
-                  Targeted knowledge checks
+                  Topic-level quizzes
                 </span>
               </div>
 
               <div>
                 <div className="flex items-center justify-between text-[12px] mb-1">
                   <span className="text-gray-600 font-medium">
-                    Course Assessments
+                    Course Quizzes
                   </span>
                   <span className="font-bold text-gray-900">
                     {stats.course_quiz_avg > 0
@@ -333,24 +327,24 @@ export function StudentDashboard({
                   />
                 </div>
                 <span className="text-[10px] text-gray-400">
-                  Comprehensive syllabus drills
+                  Full course quizzes
                 </span>
               </div>
             </div>
           </div>
 
           <div className="pt-4 mt-4 border-t border-gray-100 text-[11px] text-gray-500 flex items-center justify-between">
-            <span>Minimum passing standard: 60%</span>
+            <span>Passing standard: 60%</span>
             <Link
               href="/quizzes"
               className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
             >
-              Drills <ChevronRight className="h-3 w-3" />
+              All Quizzes <ChevronRight className="h-3 w-3" />
             </Link>
           </div>
         </div>
 
-        {/* Tactical Spotlight: Strengths & Weaknesses (4 cols) */}
+        {/* Performance Highlights: Strengths & Weaknesses (4 cols) */}
         <div className="lg:col-span-4 bg-white border border-gray-200 rounded-2xl p-6 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
@@ -359,11 +353,11 @@ export function StudentDashboard({
                   <Sparkles className="h-4 w-4" />
                 </div>
                 <h3 className="text-[14px] font-bold text-gray-900">
-                  Tactical Spotlight
+                  Performance Highlights
                 </h3>
               </div>
               <span className="text-[11px] font-medium text-gray-400 uppercase">
-                Proficiency
+                Strengths & Focus
               </span>
             </div>
 
@@ -383,7 +377,7 @@ export function StudentDashboard({
                 </div>
                 <p className="text-[13px] font-semibold text-gray-900 truncate">
                   {spotlight?.strongest_course?.title ||
-                    "Complete assessments to unlock"}
+                    "Complete quizzes to see highlights"}
                 </p>
               </div>
 
@@ -392,7 +386,7 @@ export function StudentDashboard({
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-blue-800 flex items-center gap-1">
                     <Flame className="h-3.5 w-3.5 text-blue-600" />
-                    Mastered Lesson Drill
+                    Highest Scoring Lesson
                   </span>
                   {spotlight?.strongest_lesson && (
                     <span className="text-[12px] font-extrabold text-blue-700">
@@ -402,7 +396,7 @@ export function StudentDashboard({
                 </div>
                 <p className="text-[13px] font-semibold text-gray-900 truncate">
                   {spotlight?.strongest_lesson?.title ||
-                    "No lesson assessment yet"}
+                    "No lesson quiz taken yet"}
                 </p>
                 {spotlight?.strongest_lesson?.course_title && (
                   <p className="text-[11px] text-gray-500 truncate mt-0.5">
@@ -416,7 +410,7 @@ export function StudentDashboard({
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-amber-800 flex items-center gap-1">
                     <Target className="h-3.5 w-3.5 text-amber-600" />
-                    Priority Focus Area
+                    Needs Improvement
                   </span>
                   {spotlight?.weakest_course && (
                     <span className="text-[12px] font-extrabold text-amber-700">
@@ -427,19 +421,19 @@ export function StudentDashboard({
                 <p className="text-[13px] font-semibold text-gray-900 truncate">
                   {spotlight?.weakest_course?.title ||
                     (spotlight?.strongest_course
-                      ? "Great job! Keep maintaining your score"
-                      : "Pending evaluations")}
+                      ? "Great job! Keep maintaining your scores"
+                      : "Pending quiz attempts")}
                 </p>
               </div>
             </div>
           </div>
 
           <div className="pt-3 mt-3 border-t border-gray-100 text-[11px] text-gray-500">
-            Self-adaptive focus analysis
+            Personalized insights based on your quiz results
           </div>
         </div>
 
-        {/* Active Courses Syllabus Progress (4 cols) */}
+        {/* Enrolled Courses Progress (4 cols) */}
         <div className="lg:col-span-4 bg-white border border-gray-200 rounded-2xl p-6 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
@@ -448,7 +442,7 @@ export function StudentDashboard({
                   <BookOpen className="h-4 w-4" />
                 </div>
                 <h3 className="text-[14px] font-bold text-gray-900">
-                  Active Syllabus
+                  Enrolled Courses
                 </h3>
               </div>
               <Link
@@ -501,7 +495,7 @@ export function StudentDashboard({
                       href={`/courses/${item.course_id}`}
                       className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-0.5"
                     >
-                      Open <ChevronRight className="h-3 w-3" />
+                      Resume <ChevronRight className="h-3 w-3" />
                     </Link>
                   </div>
                 </div>
@@ -516,7 +510,7 @@ export function StudentDashboard({
           </div>
 
           <div className="pt-3 mt-3 border-t border-gray-100 flex items-center justify-between text-[12px]">
-            <span className="text-gray-500">Browse new syllabus</span>
+            <span className="text-gray-500">Browse new courses</span>
             <Link
               href="/courses"
               className="text-blue-600 hover:text-blue-700 font-medium"
@@ -527,7 +521,7 @@ export function StudentDashboard({
         </div>
       </div>
 
-      {/* ── ROW 3: Live Category Leaderboard Slate (12 cols) ── */}
+      {/* ── ROW 3: Student Leaderboard Slate (12 cols) ── */}
       <div className="bg-[#fafbfc] border border-gray-200 rounded-2xl p-6 shadow-none">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-gray-200">
           <div>
@@ -536,25 +530,24 @@ export function StudentDashboard({
                 <Trophy className="h-4 w-4" />
               </div>
               <h3 className="text-[16px] font-bold text-gray-900 tracking-tight">
-                Live Squadron Standings
+                Student Leaderboard
               </h3>
               <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-200">
-                {capitalize(profile.rank)} Cohort
+                {capitalize(profile.rank)} Category
               </span>
             </div>
             <p className="text-[12px] text-gray-500">
-              Live peer standings for {capitalize(profile.rank)} personnel.
-              Ranked dynamically by quiz proficiency and mastered syllabus
-              courses.
+              Top-ranking students in the {capitalize(profile.rank)} category
+              based on average quiz score and completed courses.
             </p>
           </div>
 
           <div className="flex items-center gap-2">
             <span className="text-[11px] text-gray-500 font-medium">
-              Rank filter:
+              Category filter:
             </span>
             <span className="px-2.5 py-1 rounded-md text-[12px] font-semibold bg-white border border-gray-200 text-gray-800">
-              {capitalize(profile.rank)} Wing
+              {capitalize(profile.rank)}
             </span>
           </div>
         </div>
@@ -564,11 +557,11 @@ export function StudentDashboard({
           <table className="w-full text-left text-[13px]">
             <thead>
               <tr className="border-b border-gray-200 text-[11px] uppercase tracking-wider text-gray-500 font-semibold bg-gray-50/50">
-                <th className="py-3 px-4 w-16">Standing</th>
-                <th className="py-3 px-4">Cadet Name</th>
+                <th className="py-3 px-4 w-16">Rank</th>
+                <th className="py-3 px-4">Student Name</th>
                 <th className="py-3 px-4">Service Number</th>
-                <th className="py-3 px-4">Cadet Wing</th>
-                <th className="py-3 px-4 text-center">Courses Mastered</th>
+                <th className="py-3 px-4">Category</th>
+                <th className="py-3 px-4 text-center">Courses Completed</th>
                 <th className="py-3 px-4 text-right">Avg Score</th>
                 <th className="py-3 px-4 text-right">Status</th>
               </tr>
@@ -662,7 +655,7 @@ export function StudentDashboard({
                     <td className="py-3.5 px-4 text-right">
                       <span className="text-[11px] font-medium text-emerald-600 flex items-center justify-end gap-1">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                        Qualified
+                        Active
                       </span>
                     </td>
                   </tr>
@@ -675,8 +668,8 @@ export function StudentDashboard({
                     colSpan={7}
                     className="py-8 text-center text-gray-400 text-[13px]"
                   >
-                    No squadron standings recorded yet. Complete quizzes to
-                    appear on the leaderboard.
+                    No students on the leaderboard yet. Complete quizzes to see
+                    your standing.
                   </td>
                 </tr>
               )}

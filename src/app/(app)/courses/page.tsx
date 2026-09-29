@@ -28,9 +28,14 @@ export default async function CoursesPage() {
   return (
     <div className="h-[calc(100vh-4rem)] -mx-6 -my-6 flex flex-col font-sans bg-[#f3f4f6] p-6">
       <div className="flex items-center justify-between mb-6 px-2">
-        <h1 className="text-[20px] font-bold text-gray-900 tracking-tight">
-          All your learning essentials...
-        </h1>
+        <div>
+          <h1 className="text-[20px] font-bold text-gray-900 tracking-tight">
+            All your learning essentials...
+          </h1>
+          <p className="text-[13px] text-gray-500 mt-0.5">
+            Explore available courses, follow your curriculum, and access study materials
+          </p>
+        </div>
         {isInstructor && (
           <Link 
             href="/courses/new"

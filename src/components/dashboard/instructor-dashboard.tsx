@@ -2,17 +2,11 @@
 
 import Link from "next/link";
 import {
-  ArrowRight,
   BarChart3,
   BookOpen,
-  CheckCircle2,
   ChevronRight,
   Clock,
-  GraduationCap,
   Plus,
-  ShieldCheck,
-  TrendingUp,
-  Users,
 } from "lucide-react";
 import { capitalize, cn } from "@/lib/utils";
 import { Logo } from "@/components/icons/Logo";
@@ -81,7 +75,7 @@ export function InstructorDashboard({
 
   return (
     <div className="space-y-6">
-      {/* ── ROW 1: Instructor Command Banner (8 cols) & Cohort Telemetry (4 cols) ── */}
+      {/* ── ROW 1: Instructor Overview Banner (8 cols) & Cohort Performance (4 cols) ── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Command Hero Card */}
         <div className="lg:col-span-8 bg-gradient-to-br from-gray-950 via-gray-900 to-slate-900 text-white rounded-2xl p-7 border border-gray-800 relative overflow-hidden flex flex-col justify-between min-h-[260px] shadow-sm">
@@ -97,19 +91,19 @@ export function InstructorDashboard({
               </div>
               <div>
                 <span className="text-[11px] font-semibold uppercase tracking-wider text-blue-300">
-                  Flight Instructor Authority
+                  Course Instructor
                 </span>
                 <span className="mx-2 text-white/30">•</span>
                 <span className="text-[12px] font-mono text-gray-300">
-                  Command Telemetry
+                  Instructor Dashboard
                 </span>
               </div>
             </div>
 
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-blue-500/20 text-blue-300 border border-blue-500/30 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-                Live Supervision
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                Active
               </span>
             </div>
           </div>
@@ -120,8 +114,8 @@ export function InstructorDashboard({
               Welcome, {user.name?.split(" ")[0] || "Instructor"}
             </h2>
             <p className="text-[13px] text-gray-400 mt-1 max-w-xl leading-relaxed">
-              Curriculum telemetry, cadet engagement, and evaluation performance
-              are aggregated across all authored flight modules.
+              Here is an overview of student enrollment, quiz performance, and
+              completion rates across all your courses.
             </p>
           </div>
 
@@ -130,7 +124,7 @@ export function InstructorDashboard({
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 flex-1">
               <div>
                 <span className="text-[11px] uppercase tracking-wider text-gray-400">
-                  Authored Courses
+                  Created Courses
                 </span>
                 <p className="text-[22px] font-black text-white mt-0.5">
                   {stats.total_courses}
@@ -139,7 +133,7 @@ export function InstructorDashboard({
 
               <div>
                 <span className="text-[11px] uppercase tracking-wider text-gray-400">
-                  Active Cadets
+                  Active Students
                 </span>
                 <p className="text-[22px] font-black text-white mt-0.5">
                   {stats.total_students_active}
@@ -148,7 +142,7 @@ export function InstructorDashboard({
 
               <div>
                 <span className="text-[11px] uppercase tracking-wider text-gray-400">
-                  Graduates
+                  Graduated Students
                 </span>
                 <p className="text-[22px] font-black text-white mt-0.5">
                   {stats.total_graduates}
@@ -175,7 +169,7 @@ export function InstructorDashboard({
           </div>
         </div>
 
-        {/* Cohort Evaluation Telemetry Card (4 cols) */}
+        {/* Cohort Quiz Performance Card (4 cols) */}
         <div className="lg:col-span-4 bg-[#fafbfc] border border-gray-200 rounded-2xl p-6 flex flex-col justify-between shadow-none">
           <div className="flex items-center justify-between pb-3 border-b border-gray-100">
             <div className="flex items-center gap-2">
@@ -183,11 +177,11 @@ export function InstructorDashboard({
                 <BarChart3 className="h-4 w-4" />
               </div>
               <h3 className="text-[14px] font-bold text-gray-900">
-                Cohort Quiz Telemetry
+                Cohort Quiz Performance
               </h3>
             </div>
             <span className="text-[11px] font-medium text-gray-400 uppercase">
-              Proficiency
+              Average
             </span>
           </div>
 
@@ -195,7 +189,7 @@ export function InstructorDashboard({
             <div className="bg-white border border-gray-200 rounded-xl p-4 flex items-center justify-between">
               <div>
                 <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
-                  Overall Cohort Average
+                  Overall Student Average
                 </span>
                 <div className="text-[28px] font-black text-gray-900 leading-tight">
                   {stats.overall_avg_quiz_score > 0
@@ -216,8 +210,8 @@ export function InstructorDashboard({
                 {stats.overall_avg_quiz_score >= 80
                   ? "Superior"
                   : stats.overall_avg_quiz_score >= 60
-                  ? "Standard"
-                  : "Needs Reinforcement"}
+                  ? "Good"
+                  : "Needs Improvement"}
               </span>
             </div>
 
@@ -226,7 +220,7 @@ export function InstructorDashboard({
               <div>
                 <div className="flex items-center justify-between text-[12px] mb-1">
                   <span className="text-gray-600 font-medium">
-                    Lesson Quizzes Cohort Avg
+                    Lesson Quizzes Average
                   </span>
                   <span className="font-bold text-gray-900">
                     {stats.cohort_lesson_quiz_avg > 0
@@ -245,7 +239,7 @@ export function InstructorDashboard({
               <div>
                 <div className="flex items-center justify-between text-[12px] mb-1">
                   <span className="text-gray-600 font-medium">
-                    Course Assessments Cohort Avg
+                    Course Quizzes Average
                   </span>
                   <span className="font-bold text-gray-900">
                     {stats.cohort_course_quiz_avg > 0
@@ -264,9 +258,9 @@ export function InstructorDashboard({
           </div>
 
           <div className="pt-3 border-t border-gray-100 flex items-center justify-between text-[12px]">
-            <span className="text-gray-500">Evaluation Accuracy</span>
+            <span className="text-gray-500">Quiz Scores</span>
             <span className="font-semibold text-gray-900">
-              Aggregated across all attempts
+              Aggregated across all student attempts
             </span>
           </div>
         </div>
@@ -299,7 +293,7 @@ export function InstructorDashboard({
                 <tr className="border-b border-gray-200 text-[11px] uppercase tracking-wider text-gray-500 font-semibold bg-gray-50/50">
                   <th className="py-2.5 px-3">Course</th>
                   <th className="py-2.5 px-3">Lessons</th>
-                  <th className="py-2.5 px-3">Cadets</th>
+                  <th className="py-2.5 px-3">Students</th>
                   <th className="py-2.5 px-3">Completion Rate</th>
                   <th className="py-2.5 px-3 text-right">Lesson Quiz Avg</th>
                   <th className="py-2.5 px-3 text-right">Course Quiz Avg</th>
@@ -391,8 +385,8 @@ export function InstructorDashboard({
                       colSpan={7}
                       className="py-8 text-center text-gray-400 text-[13px]"
                     >
-                      No courses authored yet. Create your first course to begin
-                      training cadets.
+                      No courses created yet. Create your first course to begin
+                      teaching students.
                     </td>
                   </tr>
                 )}
@@ -410,7 +404,7 @@ export function InstructorDashboard({
                   <Clock className="h-4 w-4" />
                 </div>
                 <h3 className="text-[15px] font-bold text-gray-900">
-                  Recent Cadet Activity
+                  Recent Student Activity
                 </h3>
               </div>
               <span className="text-[11px] font-mono text-gray-400">Live</span>
@@ -460,14 +454,14 @@ export function InstructorDashboard({
 
               {recentActivity.length === 0 && (
                 <div className="p-8 text-center text-gray-400 text-[13px]">
-                  No recent activity logged yet.
+                  No recent student activity yet.
                 </div>
               )}
             </div>
           </div>
 
           <div className="pt-3 mt-3 border-t border-gray-100 text-[11px] text-gray-500">
-            Real-time assessment completions
+            Real-time quiz completions
           </div>
         </div>
       </div>

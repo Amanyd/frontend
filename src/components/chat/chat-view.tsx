@@ -406,7 +406,7 @@ export function ChatView({ initialSessionId }: ChatViewProps) {
         {/* Main Chat Area */}
         <div className="flex-[4] min-w-0 bg-white border border-gray-200 rounded-xl flex flex-col relative overflow-hidden">
           {/* Background Image */}
-          <div className="absolute inset-0 bg-[url('/images/bg.png')] bg-[center_top_14rem] bg-cover bg-no-repeat opacity-100 pointer-events-none" />
+          <div className="absolute inset-0 bg-[url('/images/bg.webp')] bg-[center_top_14rem] bg-cover bg-no-repeat opacity-100 pointer-events-none" />
 
           {/* Dynamic Messages Area */}
           <div

@@ -35,7 +35,7 @@ export default function HomePage() {
                CTA (.nav-btn-primary), just stretched. */} <a href="/register" className="nav-btn-primary mobile-nav-cta mt-3 flex" data-astro-cid-5blmo7yk=""> <span className="nav-btn-primary-label" data-astro-cid-5blmo7yk="">Register</span> <span className="nav-btn-primary-arrow" aria-hidden="true" data-astro-cid-5blmo7yk=""> <svg viewBox="0 0 14 14" className="w-3.5 h-3.5" data-astro-cid-5blmo7yk=""><path d="M3 7h8m0 0L7.5 3.5M11 7l-3.5 3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" data-astro-cid-5blmo7yk=""></path></svg> </span> </a> </div> </div> </div> </div> </nav>  <main className="relative z-[2] flex flex-col items-center w-full" data-astro-cid-j7pv25f6=""> {/* Hero — FULL BLEED, outside container.
 			     Pad-top clears the fixed navbar; Hero owns its own breathing room.
 			     The ASCII hands plate now lives INSIDE the Hero, above the
-			     headline, so there's no separate band below. */} <div className="w-full pt-[56px]" data-astro-cid-j7pv25f6=""> <section className="hero-wrap relative z-[1] w-full flex flex-col items-stretch text-center pt-4 max-md:pt-3 overflow-hidden" style={{ minHeight: '100vh' }} data-astro-cid-bbe6dxrz=""> <img src="/images/realhero.png" alt="AeroMentor Hero" className="absolute inset-0 w-full h-full object-cover object-center z-[-2]" fetchPriority="high" /> <div className="absolute inset-0 w-full h-full bg-white/65 z-[-1]"></div> {/* Hero dot backdrop — WebGL ordered-dither halftone.
+			     headline, so there's no separate band below. */} <div className="w-full pt-[56px]" data-astro-cid-j7pv25f6=""> <section className="hero-wrap relative z-[1] w-full flex flex-col items-stretch text-center pt-4 max-md:pt-3 overflow-hidden" style={{ minHeight: '100vh' }} data-astro-cid-bbe6dxrz=""> <img src="/images/realhero.webp" alt="AeroMentor Hero" className="absolute inset-0 w-full h-full object-cover object-center z-[-2]" fetchPriority="high" /> <div className="absolute inset-0 w-full h-full bg-white/65 z-[-1]"></div> {/* Hero dot backdrop — WebGL ordered-dither halftone.
        A fragment shader renders a grid of dots whose survival is gated by a
        Bayer 8×8 ordered-dither threshold compared against a smooth radial
        intensity field (densest at the bottom-center, fading toward the top).
@@ -55,7 +55,7 @@ export default function HomePage() {
              max-xl:text-[60px]
              max-lg:text-[44px] max-lg:tracking-[-0.05em]
              max-md:text-[42px] max-md:leading-[1.06] max-md:tracking-[-0.046em]" data-astro-cid-bbe6dxrz="">
-                AI-driven training<br className="xl:hidden" data-astro-cid-bbe6dxrz="" /> for <span className="hero-headline-brain-wrap" aria-hidden="true" data-astro-cid-bbe6dxrz=""> <img src="/Gemini_Generated_Image_lu4xmqlu4xmqlu4x-removebg-preview.png" alt="" className="hero-headline-brain" loading="eager" fetchPriority="high" data-astro-cid-bbe6dxrz="" /> <canvas id="headline-brain-canvas" width="363" height="363" className="hero-headline-brain-canvas" data-astro-cid-bbe6dxrz=""></canvas> </span> Naval officers<span className="text-blue" data-astro-cid-bbe6dxrz="">.</span> </h1> {/* Subhead */} <p className="hero-step hero-subhead max-w-[600px] font-body text-text-muted
+                AI-driven training<br className="xl:hidden" data-astro-cid-bbe6dxrz="" /> for <span className="hero-headline-brain-wrap" aria-hidden="true" data-astro-cid-bbe6dxrz=""> <img src="/Gemini_Generated_Image_lu4xmqlu4xmqlu4x-removebg-preview.webp" alt="" className="hero-headline-brain" loading="eager" fetchPriority="high" data-astro-cid-bbe6dxrz="" /> <canvas id="headline-brain-canvas" width="363" height="363" className="hero-headline-brain-canvas" data-astro-cid-bbe6dxrz=""></canvas> </span> Naval officers<span className="text-blue" data-astro-cid-bbe6dxrz="">.</span> </h1> {/* Subhead */} <p className="hero-step hero-subhead max-w-[600px] font-body text-text-muted
              text-[15px] leading-[1.6] tracking-[-0.012em]
              max-md:text-[14px] max-md:max-w-[420px]" style={{ textWrap: 'pretty' }} data-astro-cid-bbe6dxrz="">
                 AeroMentor gives your training programs state-of-the-art AI assistance, smart quizzes,
@@ -506,7 +506,7 @@ export default function HomePage() {
                       {/* Step 01: Image Left, Text Right */}
                       <div className="hiw-cell grid grid-cols-2 max-md:grid-cols-1 border-b border-border" data-astro-cid-cmgpsf2k="">
                         <div className="hiw-illo border-r max-md:border-r-0 max-md:border-b border-border relative flex items-center justify-center overflow-hidden bg-[#e4effd]" style={{ aspectRatio: '2840/2123' }} data-astro-cid-cmgpsf2k="">
-                          <img src="/Supermemory_files/ingest_fIE5.png" alt="" loading="lazy" decoding="async" className="hiw-fig" data-astro-cid-cmgpsf2k="" />
+                          <img src="/Supermemory_files/ingest_fIE5.webp" alt="" loading="lazy" decoding="async" className="hiw-fig" data-astro-cid-cmgpsf2k="" />
                         </div>
                         <div className="hiw-copy flex flex-col justify-center gap-[14px] p-10 max-md:p-8" data-astro-cid-cmgpsf2k="">
                           <span className="font-mono" style={{ fontSize: '11px', fontWeight: '500', letterSpacing: '0.18em', lineHeight: '14px', color: '#0562ef', textTransform: 'uppercase' }} data-astro-cid-cmgpsf2k="">
@@ -535,13 +535,13 @@ export default function HomePage() {
                           </p>
                         </div>
                         <div className="hiw-illo border-l max-md:border-l-0 max-md:border-b border-border relative flex items-center justify-center overflow-hidden max-md:order-1" style={{ background: `linear-gradient(0deg, #f9fcff 53.533%, #89bdff 165.59%)`, aspectRatio: '2840/2123' }} data-astro-cid-cmgpsf2k="">
-                          <img src="/Supermemory_files/retrieve_fIE5.png" alt="" loading="lazy" decoding="async" className="hiw-fig" data-astro-cid-cmgpsf2k="" />
+                          <img src="/Supermemory_files/retrieve_fIE5.webp" alt="" loading="lazy" decoding="async" className="hiw-fig" data-astro-cid-cmgpsf2k="" />
                         </div>
                       </div>
 
                       {/* Step 03: Payoff */}
-                      <div className="hiw-payoff relative w-full overflow-clip" style={{ height: '340px', backgroundColor: '#07224f', backgroundImage: 'url("/Supermemory_files/payoff-bg.png")', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', color: '#faf7f2' }} data-astro-cid-cmgpsf2k="">
-                        <img src="/Supermemory_files/payoff-phone-mockup_fIE5.png" alt="" loading="lazy" decoding="async" className="hiw-payoff-phone" style={{ position: 'absolute', right: '40px', bottom: '-480px', height: '820px', width: 'auto', display: 'block', pointerEvents: 'none', zIndex: '1' }} data-astro-cid-cmgpsf2k="" />
+                      <div className="hiw-payoff relative w-full overflow-clip" style={{ height: '340px', backgroundColor: '#07224f', color: '#faf7f2' }} data-astro-cid-cmgpsf2k="">
+                        <img src="/Supermemory_files/payoff-phone-mockup_fIE5.webp" alt="" loading="lazy" decoding="async" className="hiw-payoff-phone" style={{ position: 'absolute', right: '40px', bottom: '-480px', height: '820px', width: 'auto', display: 'block', pointerEvents: 'none', zIndex: '1' }} data-astro-cid-cmgpsf2k="" />
                         <div className="hiw-payoff-text relative z-[2] flex flex-col justify-center gap-[18px] p-[48px_0_48px_40px] h-full box-border" style={{ width: '680px' }} data-astro-cid-cmgpsf2k="">
                           <div className="flex items-center gap-[10px]" data-astro-cid-cmgpsf2k="">
                             <span className="font-mono text-white whitespace-nowrap uppercase" style={{ fontSize: '11px', fontWeight: '500', letterSpacing: '0.18em', lineHeight: '14px' }} data-astro-cid-cmgpsf2k="">03 / COMBAT READINESS</span>
@@ -698,7 +698,7 @@ export default function HomePage() {
                         </span>
                       </div>
                       <div className="enterprise-visual-slot relative" style={{ height: '101px', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', flexShrink: '0', zIndex: '1' }} data-astro-cid-5pummn72="">
-                        <img src="/Supermemory_files/on-prem_fIE5.png" alt="" loading="lazy" decoding="async" style={{ display: 'block', objectFit: 'contain', flexShrink: '0', width: '101px', height: '101px', marginLeft: '-28px' }} data-astro-cid-5pummn72="" />
+                        <img src="/Supermemory_files/on-prem_fIE5.webp" alt="" loading="lazy" decoding="async" style={{ display: 'block', objectFit: 'contain', flexShrink: '0', width: '101px', height: '101px', marginLeft: '-28px' }} data-astro-cid-5pummn72="" />
                       </div>
                       <div className="relative" style={{ display: 'flex', flexDirection: 'column', gap: '8px', zIndex: '1' }} data-astro-cid-5pummn72="">
                         <h4 className="font-heading text-text" style={{ fontSize: '22px', fontWeight: '500', letterSpacing: '-0.02em', lineHeight: '1.15', margin: '0' }} data-astro-cid-5pummn72="">
@@ -717,7 +717,7 @@ export default function HomePage() {
                         </span>
                       </div>
                       <div className="enterprise-visual-slot relative" style={{ height: '101px', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', flexShrink: '0', zIndex: '1' }} data-astro-cid-5pummn72="">
-                        <img src="/Supermemory_files/your-cloud_fIE5.png" alt="" loading="lazy" decoding="async" style={{ display: 'block', objectFit: 'contain', flexShrink: '0', width: '67px', height: '67px' }} data-astro-cid-5pummn72="" />
+                        <img src="/Supermemory_files/your-cloud_fIE5.webp" alt="" loading="lazy" decoding="async" style={{ display: 'block', objectFit: 'contain', flexShrink: '0', width: '67px', height: '67px' }} data-astro-cid-5pummn72="" />
                       </div>
                       <div className="relative" style={{ display: 'flex', flexDirection: 'column', gap: '8px', zIndex: '1' }} data-astro-cid-5pummn72="">
                         <h4 className="font-heading text-text" style={{ fontSize: '22px', fontWeight: '500', letterSpacing: '-0.02em', lineHeight: '1.15', margin: '0' }} data-astro-cid-5pummn72="">
@@ -736,7 +736,7 @@ export default function HomePage() {
                         </span>
                       </div>
                       <div className="enterprise-visual-slot relative" style={{ height: '101px', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', flexShrink: '0', zIndex: '1' }} data-astro-cid-5pummn72="">
-                        <img src="/Supermemory_files/local_fIE5.png" alt="" loading="lazy" decoding="async" style={{ display: 'block', objectFit: 'contain', flexShrink: '0', width: '88px', height: '81px' }} data-astro-cid-5pummn72="" />
+                        <img src="/Supermemory_files/local_fIE5.webp" alt="" loading="lazy" decoding="async" style={{ display: 'block', objectFit: 'contain', flexShrink: '0', width: '88px', height: '81px' }} data-astro-cid-5pummn72="" />
                       </div>
                       <div className="relative" style={{ display: 'flex', flexDirection: 'column', gap: '8px', zIndex: '1' }} data-astro-cid-5pummn72="">
                         <h4 className="font-heading text-text" style={{ fontSize: '22px', fontWeight: '500', letterSpacing: '-0.02em', lineHeight: '1.15', margin: '0' }} data-astro-cid-5pummn72="">
@@ -883,15 +883,15 @@ export default function HomePage() {
             </div>
           </div>
         </main>
-        <footer className="footer-drenched relative z-10 overflow-clip" data-astro-cid-sz7xmlte="" style={{ backgroundImage: 'url(/images/after.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <footer className="footer-drenched relative z-10 overflow-clip" data-astro-cid-sz7xmlte="" style={{ backgroundImage: 'url(/images/after.webp)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
           {/* Top band: editorial copy + link columns. Editorial flex-grows 1.4,
        column container flex-grows 2 → editorial gets ~41% of width. */}
           <div className="footer-top" data-astro-cid-sz7xmlte="" style={{ justifyContent: 'space-between', width: '100%' }}>
             <div className="footer-editorial" data-astro-cid-sz7xmlte="">
               <div className="footer-editorial-stack" data-astro-cid-sz7xmlte="">
                 <div className="flex items-center gap-4 mb-4">
-                  <img src="/images/crest.png" alt="Crest" className="h-20 w-auto object-contain" />
-                  <img src="/images/niat.png" alt="NIAT Logo" className="h-20 w-auto object-contain" />
+                  <img src="/images/crest.webp" alt="Crest" className="h-20 w-auto object-contain" loading="lazy" decoding="async" />
+                  <img src="/images/niat.webp" alt="NIAT Logo" className="h-20 w-auto object-contain" loading="lazy" decoding="async" />
                 </div>
                 <h2 className="footer-h2" style={{ fontSize: '36px', lineHeight: 1.2 }} data-astro-cid-sz7xmlte="">
                   N.I.A.T

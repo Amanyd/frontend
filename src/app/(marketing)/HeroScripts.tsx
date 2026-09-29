@@ -151,7 +151,7 @@ export default function HeroScripts() {
       if (i) {
         U({
           canvas: i,
-          imageSrc: "/Supermemory_files/brain-head_fIE5.png",
+          imageSrc: "/Supermemory_files/brain-head_fIE5.webp",
           glitchRegion: 0.36,
         });
       }

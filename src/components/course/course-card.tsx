@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { cn, capitalize } from "@/lib/utils";
 import type { Course } from "@/types/course";
@@ -8,12 +9,12 @@ interface CourseCardProps {
 }
 
 export const IMAGES = [
-  '/images/suk2.png',
-  '/images/1.png',
-  '/images/2.png',
-  '/images/3.png',
-  '/images/4.png',
-  '/images/5.png',
+  '/images/suk2.webp',
+  '/images/1.webp',
+  '/images/2.webp',
+  '/images/3.webp',
+  '/images/4.webp',
+  '/images/5.webp',
 ];
 
 export const getCourseImage = (id: string) => {
@@ -33,9 +34,13 @@ export function CourseCard({ course, index }: CourseCardProps) {
         
         {/* Image Container with initial scale to hide white edges and parallax zoom on hover */}
         <div className="absolute inset-0 w-full h-full overflow-hidden bg-gray-100">
-          <div 
-            className="w-full h-full scale-[1.15] group-hover:scale-[1.22] group-hover:-translate-y-2 transition-transform duration-300 ease-out bg-center bg-cover bg-no-repeat"
-            style={{ backgroundImage: `url(${bgImage})` }}
+          <Image
+            src={bgImage}
+            alt={course.title}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            priority={index < 4}
+            className="object-cover object-center scale-[1.15] group-hover:scale-[1.22] group-hover:-translate-y-2 transition-transform duration-300 ease-out"
           />
         </div>
 

@@ -123,8 +123,21 @@ export interface InstructorStats {
   cohort_course_quiz_avg: number;
 }
 
+export interface StudentDirectoryItem {
+  id: string;
+  name: string;
+  rank: string;
+  enrollment_id: string;
+  courses_completed: number;
+  courses_enrolled: number;
+  lessons_completed: number;
+  avg_score: number;
+  readiness_score: number;
+}
+
 export interface InstructorAnalytics {
   stats: InstructorStats;
   courses: InstructorCourseItem[];
   recent_activity: RecentActivityItem[];
+  students: StudentDirectoryItem[];
 }

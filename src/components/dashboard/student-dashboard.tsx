@@ -26,12 +26,18 @@ interface StudentDashboardProps {
   };
   analytics: StudentAnalytics | null;
   courses: Course[];
+  isInstructorView?: boolean;
+  titleOverride?: string;
+  descriptionOverride?: string;
 }
 
 export function StudentDashboard({
   user,
   analytics,
   courses,
+  isInstructorView = false,
+  titleOverride,
+  descriptionOverride,
 }: StudentDashboardProps) {
   // Graceful defaults if analytics hasn't loaded or is empty
   const profile = analytics?.user_profile ?? {
@@ -116,11 +122,13 @@ export function StudentDashboard({
           {/* Center greetings */}
           <div className="relative z-10 my-4">
             <h2 className="text-[24px] font-bold text-white tracking-tight">
-              Welcome back, {profile.name.split(" ")[0] || "Student"}
+              {titleOverride || (isInstructorView ? profile.name : `Welcome back, ${profile.name.split(" ")[0] || "Student"}`)}
             </h2>
             <p className="text-[13px] text-gray-400 mt-1 max-w-xl leading-relaxed">
-              Here is a summary of your learning progress, completed lessons, and
-              quiz scores across all enrolled courses.
+              {descriptionOverride ||
+                (isInstructorView
+                  ? "Comprehensive learning progress, completed lessons, and quiz scores across all enrolled courses."
+                  : "Here is a summary of your learning progress, completed lessons, and quiz scores across all enrolled courses.")}
             </p>
           </div>
 
@@ -145,7 +153,7 @@ export function StudentDashboard({
             </div>
 
             <div className="flex items-center gap-2.5">
-              {nextCourse && (
+              {!isInstructorView && nextCourse && (
                 <Link
                   href={`/courses/${nextCourse.course_id}`}
                   className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[13px] font-medium transition-all shadow-none"
@@ -154,12 +162,19 @@ export function StudentDashboard({
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               )}
-              <Link
-                href="/quizzes"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white text-[13px] font-medium transition-all border border-white/10"
-              >
-                Quizzes
-              </Link>
+              {!isInstructorView && (
+                <Link
+                  href="/quizzes"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white text-[13px] font-medium transition-all border border-white/10 shadow-none"
+                >
+                  Quizzes
+                </Link>
+              )}
+              {isInstructorView && (
+                <span className="px-3.5 py-1.5 rounded-lg bg-white/10 text-white text-[13px] font-medium border border-white/15">
+                  Full Student Record
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -429,7 +444,7 @@ export function StudentDashboard({
           </div>
 
           <div className="pt-3 mt-3 border-t border-gray-100 text-[11px] text-gray-500">
-            Personalized insights based on your quiz results
+            Personalized insights based on quiz evaluations
           </div>
         </div>
 
@@ -668,8 +683,7 @@ export function StudentDashboard({
                     colSpan={7}
                     className="py-8 text-center text-gray-400 text-[13px]"
                   >
-                    No students on the leaderboard yet. Complete quizzes to see
-                    your standing.
+                    No students on the leaderboard yet.
                   </td>
                 </tr>
               )}

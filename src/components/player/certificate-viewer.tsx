@@ -32,7 +32,7 @@ export function CertificateViewer({ courseId, onComplete, isCompleted }: Certifi
       )}
 
       <div className="max-w-lg w-full bg-white border border-gray-200 rounded-xl p-8 text-center shadow-none relative z-10 animate-in zoom-in-95 duration-300">
-        <div className="w-[52px] h-[52px] rounded-[14px] bg-white border border-gray-200 shadow-sm flex items-center justify-center mx-auto mb-4">
+        <div className="w-[52px] h-[52px] rounded-[14px] bg-white border border-gray-200 shadow-none flex items-center justify-center mx-auto mb-4">
           <Logo className="w-[26px] h-[26px] text-blue-500" />
         </div>
 

@@ -78,7 +78,7 @@ export function InstructorDashboard({
       {/* ── ROW 1: Instructor Overview Banner (8 cols) & Cohort Performance (4 cols) ── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Command Hero Card */}
-        <div className="lg:col-span-8 bg-gradient-to-br from-gray-950 via-gray-900 to-slate-900 text-white rounded-2xl p-7 border border-gray-800 relative overflow-hidden flex flex-col justify-between min-h-[260px] shadow-sm">
+        <div className="lg:col-span-8 bg-gradient-to-br from-gray-950 via-gray-900 to-slate-900 text-white rounded-2xl p-7 border border-gray-800 relative overflow-hidden flex flex-col justify-between min-h-[260px] shadow-none">
           {/* Subtle glow background */}
           <div className="absolute top-0 right-0 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
           <div className="absolute bottom-0 right-1/4 w-60 h-60 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none" />
@@ -161,7 +161,7 @@ export function InstructorDashboard({
 
             <Link
               href="/courses/new"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[13px] font-medium transition-all shrink-0 shadow-sm"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[13px] font-medium transition-all shrink-0 shadow-none"
             >
               <Plus className="h-4 w-4" />
               Create Course

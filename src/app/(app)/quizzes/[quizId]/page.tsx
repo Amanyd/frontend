@@ -111,7 +111,7 @@ export default function QuizTakePage() {
         <div className="flex items-center gap-3">
           <Link
             href="/quizzes"
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 text-[13px] font-medium rounded-lg transition-colors shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 text-[13px] font-medium rounded-lg transition-colors shadow-none"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Quizzes
@@ -161,7 +161,7 @@ export default function QuizTakePage() {
               "flex items-center gap-1.5 px-4 py-2 text-[13px] font-medium rounded-lg transition-colors border",
               isFirst
                 ? "border-transparent text-gray-300 cursor-not-allowed"
-                : "border-gray-200 bg-white hover:bg-gray-50 text-gray-700 shadow-sm"
+                : "border-gray-200 bg-white hover:bg-gray-50 text-gray-700 shadow-none"
             )}
           >
             <ArrowLeft className="h-4 w-4" />
@@ -172,7 +172,7 @@ export default function QuizTakePage() {
             <button
               onClick={handleSubmit}
               disabled={submitting}
-              className="flex items-center gap-1.5 px-5 py-2 text-[13px] font-medium rounded-lg transition-colors bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
+              className="flex items-center gap-1.5 px-5 py-2 text-[13px] font-medium rounded-lg transition-colors bg-emerald-600 hover:bg-emerald-700 text-white shadow-none"
             >
               {submitting ? (
                 <>
@@ -189,7 +189,7 @@ export default function QuizTakePage() {
           ) : (
             <button
               onClick={nextQuestion}
-              className="flex items-center gap-1.5 px-5 py-2 text-[13px] font-medium rounded-lg transition-colors bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+              className="flex items-center gap-1.5 px-5 py-2 text-[13px] font-medium rounded-lg transition-colors bg-blue-600 hover:bg-blue-700 text-white shadow-none"
             >
               Next Question
               <ArrowRight className="h-4 w-4" />

@@ -87,7 +87,7 @@ export default function QuizResultsPage() {
         <div className="flex items-center gap-3">
           <Link
             href="/quizzes"
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 text-[13px] font-medium rounded-lg transition-colors shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 text-[13px] font-medium rounded-lg transition-colors shadow-none"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Quizzes
@@ -101,7 +101,7 @@ export default function QuizResultsPage() {
         <div className="flex items-center gap-2">
           <Link
             href={`/quizzes/${quizId}`}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-medium rounded-lg transition-colors shadow-sm"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-medium rounded-lg transition-colors shadow-none"
           >
             <RotateCw className="h-3.5 w-3.5" />
             Retake Quiz
@@ -113,7 +113,7 @@ export default function QuizResultsPage() {
       <div className="flex-1 min-h-0 bg-white border border-gray-200 rounded-xl overflow-y-auto p-8 scrollbar-hide">
         <div className="max-w-3xl mx-auto space-y-8">
           {/* Score Hero Card */}
-          <div className="bg-gradient-to-br from-gray-950 via-gray-900 to-slate-900 text-white rounded-2xl p-7 border border-gray-800 shadow-sm relative overflow-hidden flex flex-wrap items-center justify-between gap-6">
+          <div className="bg-gradient-to-br from-gray-950 via-gray-900 to-slate-900 text-white rounded-2xl p-7 border border-gray-800 shadow-none relative overflow-hidden flex flex-wrap items-center justify-between gap-6">
             <div className="relative z-10 flex items-center gap-6">
               <div className="flex flex-col">
                 <span className="text-[11px] uppercase tracking-wider text-emerald-400 font-bold mb-1">
@@ -145,14 +145,14 @@ export default function QuizResultsPage() {
             <div className="relative z-10 flex items-center gap-2.5">
               <Link
                 href={`/quizzes/${quizId}`}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[13px] font-medium transition-colors shadow-sm"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[13px] font-medium transition-colors shadow-none"
               >
                 <RotateCw className="h-3.5 w-3.5" />
                 Retake
               </Link>
               <Link
                 href="/quizzes"
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-white text-[13px] font-medium transition-colors border border-white/10"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-white text-[13px] font-medium transition-colors border border-white/10 shadow-none"
               >
                 Back to Quizzes
               </Link>

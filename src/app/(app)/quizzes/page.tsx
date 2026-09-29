@@ -207,7 +207,7 @@ function renderQuizBox(difficulty: "easy" | "medium" | "hard", quiz?: Quiz) {
           <Link
             href={`/quizzes/${quiz.id}`}
             className={cn(
-              "w-full text-center py-2 px-3 rounded-lg text-[13px] font-medium transition-colors flex items-center justify-center gap-1.5 shadow-sm",
+              "w-full text-center py-2 px-3 rounded-lg text-[13px] font-medium transition-colors flex items-center justify-center gap-1.5 shadow-none",
               isAttempted
                 ? "bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-200"
                 : "bg-blue-600 hover:bg-blue-700 text-white"

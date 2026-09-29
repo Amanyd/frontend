@@ -40,7 +40,7 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
                 className={cn(
                   "relative flex items-center p-4 rounded-xl cursor-pointer border transition-all",
                   isSelected
-                    ? "border-blue-600 bg-blue-50/40 ring-1 ring-blue-600 shadow-sm"
+                    ? "border-blue-600 bg-blue-50/40 ring-1 ring-blue-600 shadow-none"
                     : "border-gray-200 bg-white hover:border-blue-300 hover:bg-gray-50/70"
                 )}
               >

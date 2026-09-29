@@ -103,7 +103,7 @@ export function QuizViewer({ quiz }: QuizViewerProps) {
 
   const renderIdle = () => (
     <div className="flex-1 flex flex-col items-center justify-center text-center">
-      <div className="w-[48px] h-[48px] rounded-[14px] bg-white border border-gray-200 shadow-sm flex items-center justify-center mb-5 shrink-0">
+      <div className="w-[48px] h-[48px] rounded-[14px] bg-white border border-gray-200 shadow-none flex items-center justify-center mb-5 shrink-0">
         <Logo className="w-[24px] h-[24px] text-blue-500" />
       </div>
       <button
@@ -233,7 +233,7 @@ export function QuizViewer({ quiz }: QuizViewerProps) {
   const renderResults = () => {
     return (
       <div className="flex-1 flex flex-col items-center justify-center text-center">
-        <div className="w-[48px] h-[48px] rounded-[14px] bg-white border border-gray-200 shadow-sm flex items-center justify-center mb-4 shrink-0">
+        <div className="w-[48px] h-[48px] rounded-[14px] bg-white border border-gray-200 shadow-none flex items-center justify-center mb-4 shrink-0">
           <Logo className="w-[24px] h-[24px] text-blue-500" />
         </div>
 

@@ -80,7 +80,7 @@ export function StudentDashboard({
       {/* ── ROW 1: Hero Identity Banner (8 cols) & Milestones Matrix (4 cols) ── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Student Profile & Progress Hero Card */}
-        <div className="lg:col-span-8 bg-gradient-to-br from-gray-950 via-gray-900 to-slate-900 text-white rounded-2xl p-7 border border-gray-800 relative overflow-hidden flex flex-col justify-between min-h-[260px] shadow-sm">
+        <div className="lg:col-span-8 bg-gradient-to-br from-gray-950 via-gray-900 to-slate-900 text-white rounded-2xl p-7 border border-gray-800 relative overflow-hidden flex flex-col justify-between min-h-[260px] shadow-none">
           {/* Subtle background glow */}
           <div className="absolute top-0 right-0 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
           <div className="absolute bottom-0 right-1/4 w-60 h-60 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none" />
@@ -148,7 +148,7 @@ export function StudentDashboard({
               {nextCourse && (
                 <Link
                   href={`/courses/${nextCourse.course_id}`}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[13px] font-medium transition-all shadow-sm"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[13px] font-medium transition-all shadow-none"
                 >
                   Resume Course
                   <ArrowRight className="h-3.5 w-3.5" />
@@ -582,7 +582,7 @@ export function StudentDashboard({
                     {/* Rank standing badge */}
                     <td className="py-3.5 px-4 font-bold">
                       {entry.rank_position === 1 ? (
-                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-400 text-amber-950 font-black text-[12px] shadow-sm">
+                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-400 text-amber-950 font-black text-[12px] shadow-none">
                           1
                         </span>
                       ) : entry.rank_position === 2 ? (

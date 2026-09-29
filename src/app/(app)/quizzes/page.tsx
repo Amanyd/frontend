@@ -29,7 +29,7 @@ export default async function QuizzesPage() {
       const quizzes = await api.get<Quiz[]>(
         `/api/v1/courses/${course.id}/quizzes`
       );
-      const courseQuizzes = quizzes.filter(q => q.lesson_id === null);
+      const courseQuizzes = quizzes.filter(q => !q.lesson_id);
       if (courseQuizzes.length > 0) {
         courseQuizGroups.push({ course, quizzes: courseQuizzes });
       }

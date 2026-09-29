@@ -78,7 +78,10 @@ export interface LeaderboardEntry {
   enrollment_id: string;
   rank: string;
   courses_completed: number;
+  courses_enrolled: number;
+  lessons_completed: number;
   avg_score: number;
+  readiness_score: number;
   is_current_user: boolean;
 }
 

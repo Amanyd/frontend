@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -74,6 +75,34 @@ export function StudentDashboard({
 
   const spotlight = analytics?.spotlight;
   const leaderboard = analytics?.leaderboard ?? [];
+
+  // On instructor view, filter to ONLY that specific student's entry; on student dashboard show all
+  const entriesToShow = useMemo(() => {
+    if (!isInstructorView) {
+      return leaderboard;
+    }
+    const studentEntry = leaderboard.find(
+      (e) => e.is_current_user || e.enrollment_id === profile.enrollment_id
+    );
+    if (studentEntry) {
+      return [studentEntry];
+    }
+    return [
+      {
+        rank_position: 1,
+        user_id: "",
+        name: profile.name,
+        enrollment_id: profile.enrollment_id,
+        rank: profile.rank,
+        courses_completed: stats.courses_completed,
+        courses_enrolled: stats.courses_enrolled,
+        lessons_completed: stats.lessons_completed,
+        avg_score: stats.overall_avg_score,
+        readiness_score: profile.readiness_score,
+        is_current_user: true,
+      },
+    ];
+  }, [isInstructorView, leaderboard, profile, stats]);
 
   // Active or next course to resume
   const nextCourse =
@@ -536,7 +565,7 @@ export function StudentDashboard({
         </div>
       </div>
 
-      {/* ── ROW 3: Student Leaderboard Slate (12 cols) ── */}
+      {/* ── ROW 3: Student Leaderboard / Standing Slate (12 cols) ── */}
       <div className="bg-[#fafbfc] border border-gray-200 rounded-2xl p-6 shadow-none">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-gray-200">
           <div>
@@ -545,21 +574,22 @@ export function StudentDashboard({
                 <Trophy className="h-4 w-4" />
               </div>
               <h3 className="text-[16px] font-bold text-gray-900 tracking-tight">
-                Student Leaderboard
+                {isInstructorView ? "Student Category Standing" : "Student Leaderboard"}
               </h3>
               <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-200">
                 {capitalize(profile.rank)} Category
               </span>
             </div>
             <p className="text-[12px] text-gray-500">
-              Top-ranking students in the {capitalize(profile.rank)} category
-              based on average quiz score and completed courses.
+              {isInstructorView
+                ? `Official standing for ${profile.name} in the ${capitalize(profile.rank)} cohort.`
+                : `Top-ranking students in the ${capitalize(profile.rank)} category based on average quiz score and completed courses.`}
             </p>
           </div>
 
           <div className="flex items-center gap-2">
             <span className="text-[11px] text-gray-500 font-medium">
-              Category filter:
+              {isInstructorView ? "Cohort Category:" : "Category filter:"}
             </span>
             <span className="px-2.5 py-1 rounded-md text-[12px] font-semibold bg-white border border-gray-200 text-gray-800">
               {capitalize(profile.rank)}
@@ -567,108 +597,150 @@ export function StudentDashboard({
           </div>
         </div>
 
-        {/* Leaderboard Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-[13px]">
+        {/* Directory-Style Table */}
+        <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+          <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-gray-200 text-[11px] uppercase tracking-wider text-gray-500 font-semibold bg-gray-50/50">
+              <tr className="border-b border-gray-200 bg-gray-50/75 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
                 <th className="py-3 px-4 w-16">Rank</th>
-                <th className="py-3 px-4">Student Name</th>
-                <th className="py-3 px-4">Service Number</th>
+                <th className="py-3 px-4">Student</th>
                 <th className="py-3 px-4">Category</th>
-                <th className="py-3 px-4 text-center">Courses Completed</th>
-                <th className="py-3 px-4 text-right">Avg Score</th>
+                <th className="py-3 px-4">Courses Done</th>
+                <th className="py-3 px-4">Lessons Done</th>
+                <th className="py-3 px-4">Quiz Average</th>
+                <th className="py-3 px-4">Readiness Index</th>
                 <th className="py-3 px-4 text-right">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
-              {leaderboard.map((entry) => {
+            <tbody className="divide-y divide-gray-100 text-[13px]">
+              {entriesToShow.map((entry) => {
+                const rankPos = entry.rank_position;
+                const readiness = Math.round(entry.readiness_score || 0);
+                const avgScore = Math.round(entry.avg_score || 0);
                 const isUser = entry.is_current_user;
+
                 return (
                   <tr
-                    key={entry.user_id}
+                    key={entry.user_id || entry.enrollment_id}
                     className={cn(
                       "transition-colors",
                       isUser
-                        ? "bg-blue-50/80 font-medium border-l-4 border-l-blue-600"
-                        : "hover:bg-white bg-transparent"
+                        ? "bg-blue-50/60 font-medium"
+                        : "hover:bg-blue-50/30"
                     )}
                   >
-                    {/* Rank standing badge */}
-                    <td className="py-3.5 px-4 font-bold">
-                      {entry.rank_position === 1 ? (
-                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-400 text-amber-950 font-black text-[12px] shadow-none">
+                    {/* Rank Position */}
+                    <td className="py-3.5 px-4 font-mono">
+                      {rankPos === 1 ? (
+                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-100 text-amber-800 text-[11px] font-black border border-amber-300">
                           1
                         </span>
-                      ) : entry.rank_position === 2 ? (
-                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-300 text-slate-900 font-black text-[12px]">
+                      ) : rankPos === 2 ? (
+                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-200 text-slate-800 text-[11px] font-black border border-slate-300">
                           2
                         </span>
-                      ) : entry.rank_position === 3 ? (
-                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-700/80 text-white font-black text-[12px]">
+                      ) : rankPos === 3 ? (
+                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-orange-100 text-orange-800 text-[11px] font-black border border-orange-200">
                           3
                         </span>
                       ) : (
-                        <span className="text-gray-500 pl-1 font-mono text-[12px]">
-                          #{entry.rank_position}
+                        <span className="text-gray-400 font-bold ml-1.5">
+                          {rankPos}
                         </span>
                       )}
                     </td>
 
-                    {/* Name */}
+                    {/* Student Info */}
                     <td className="py-3.5 px-4">
                       <div className="flex items-center gap-2">
                         <span className="font-semibold text-gray-900">
                           {entry.name}
                         </span>
-                        {isUser && (
+                        {isUser && !isInstructorView && (
                           <span className="px-1.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-blue-600 text-white">
                             YOU
                           </span>
                         )}
                       </div>
+                      <div className="text-[11px] font-mono text-gray-400 mt-0.5">
+                        {entry.enrollment_id}
+                      </div>
                     </td>
 
-                    {/* Enrollment / Service No */}
-                    <td className="py-3.5 px-4 font-mono text-[12px] text-gray-600">
-                      {entry.enrollment_id || "AF-2026-9041"}
-                    </td>
-
-                    {/* Category / Rank */}
+                    {/* Category */}
                     <td className="py-3.5 px-4">
-                      <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-gray-100 text-gray-700 border border-gray-200">
+                      <span
+                        className={cn(
+                          "px-2 py-0.5 rounded-full text-[11px] font-medium border",
+                          entry.rank.toLowerCase() === "officer"
+                            ? "bg-blue-50 text-blue-700 border-blue-200"
+                            : "bg-purple-50 text-purple-700 border-purple-200"
+                        )}
+                      >
                         {capitalize(entry.rank)}
                       </span>
                     </td>
 
-                    {/* Courses Completed */}
-                    <td className="py-3.5 px-4 text-center">
-                      <span className="font-bold text-gray-900">
+                    {/* Courses Done */}
+                    <td className="py-3.5 px-4 text-gray-700 font-medium">
+                      <span className="text-gray-900 font-bold">
                         {entry.courses_completed}
+                      </span>
+                      <span className="text-gray-400 font-normal">
+                        {" "}/ {entry.courses_enrolled || courses.length}
                       </span>
                     </td>
 
-                    {/* Score */}
-                    <td className="py-3.5 px-4 text-right">
+                    {/* Lessons Done */}
+                    <td className="py-3.5 px-4 text-gray-700 font-medium">
+                      {entry.lessons_completed}
+                    </td>
+
+                    {/* Quiz Average */}
+                    <td className="py-3.5 px-4">
                       <span
                         className={cn(
-                          "px-2 py-0.5 rounded text-[11px] font-bold",
-                          entry.avg_score >= 80
-                            ? "bg-emerald-100 text-emerald-800"
-                            : entry.avg_score >= 60
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-gray-100 text-gray-700"
+                          "px-2 py-0.5 rounded text-[12px] font-bold border",
+                          avgScore >= 80
+                            ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                            : avgScore >= 60
+                            ? "bg-blue-50 text-blue-700 border-blue-200"
+                            : avgScore > 0
+                            ? "bg-amber-50 text-amber-700 border-amber-200"
+                            : "bg-gray-100 text-gray-500 border-gray-200"
                         )}
                       >
-                        {entry.avg_score > 0
-                          ? `${Math.round(entry.avg_score)}%`
-                          : "0%"}
+                        {avgScore > 0 ? `${avgScore}%` : "No Attempts"}
                       </span>
+                    </td>
+
+                    {/* Readiness Index */}
+                    <td className="py-3.5 px-4">
+                      <div className="flex items-center gap-2">
+                        <span className="font-extrabold text-gray-900 w-8">
+                          {readiness}%
+                        </span>
+                        <div className="w-20 h-1.5 rounded-full bg-gray-200 overflow-hidden hidden sm:block">
+                          <div
+                            className={cn(
+                              "h-full rounded-full transition-all",
+                              readiness >= 75
+                                ? "bg-emerald-500"
+                                : readiness >= 50
+                                ? "bg-blue-500"
+                                : "bg-amber-500"
+                            )}
+                            style={{
+                              width: `${Math.min(100, Math.max(0, readiness))}%`,
+                            }}
+                          />
+                        </div>
+                      </div>
                     </td>
 
                     {/* Status */}
                     <td className="py-3.5 px-4 text-right">
-                      <span className="text-[11px] font-medium text-emerald-600 flex items-center justify-end gap-1">
+                      <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                         Active
                       </span>
@@ -677,10 +749,10 @@ export function StudentDashboard({
                 );
               })}
 
-              {leaderboard.length === 0 && (
+              {entriesToShow.length === 0 && (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={8}
                     className="py-8 text-center text-gray-400 text-[13px]"
                   >
                     No students on the leaderboard yet.

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { api } from "@/lib/api-client";
 import Link from "next/link";
 import { ArrowLeft, UserX } from "lucide-react";
-import { capitalize } from "@/lib/utils";
+import { capitalize, cn } from "@/lib/utils";
 import { StudentDashboard } from "@/components/dashboard/student-dashboard";
 import type { StudentAnalytics } from "@/types/analytics";
 import type { Course } from "@/types/course";
@@ -45,21 +45,29 @@ export default async function StudentDetailPage({ params }: PageProps) {
             <ArrowLeft className="w-3.5 h-3.5" />
             Back to Analytics
           </Link>
-          <div>
+          <div className="flex items-center gap-3 flex-wrap">
             <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
               {studentAnalytics?.user_profile?.name || "Student Profile"}
             </h1>
-            <p className="text-sm text-gray-500 mt-0.5">
-              {studentAnalytics?.user_profile ? (
-                <>
-                  Service No: <span className="font-mono text-gray-700 font-medium">{studentAnalytics.user_profile.enrollment_id}</span>
-                  <span className="mx-2">•</span>
-                  Category: <span className="font-medium text-gray-700">{capitalize(studentAnalytics.user_profile.rank)}</span>
-                </>
-              ) : (
-                "Individual student performance and training metrics."
-              )}
-            </p>
+            {studentAnalytics?.user_profile && (
+              <>
+                <span className="text-gray-300 font-light text-xl select-none">•</span>
+                <span className="text-sm font-mono font-medium text-gray-700 bg-white px-3 py-1 rounded-lg border border-gray-200">
+                  {studentAnalytics.user_profile.enrollment_id}
+                </span>
+                <span className="text-gray-300 font-light text-xl select-none">•</span>
+                <span
+                  className={cn(
+                    "px-3 py-1 rounded-lg text-xs font-semibold border",
+                    studentAnalytics.user_profile.rank.toLowerCase() === "officer"
+                      ? "bg-blue-50 text-blue-700 border-blue-200"
+                      : "bg-purple-50 text-purple-700 border-purple-200"
+                  )}
+                >
+                  {capitalize(studentAnalytics.user_profile.rank)}
+                </span>
+              </>
+            )}
           </div>
         </div>
       </div>

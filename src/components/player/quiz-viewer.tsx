@@ -268,7 +268,7 @@ export function QuizViewer({ quiz }: QuizViewerProps) {
 
   return (
     <div className="w-full h-full flex items-center justify-center p-6 bg-gray-50/50 overflow-hidden">
-      <div className="w-full max-w-2xl bg-white rounded-xl border border-gray-200 shadow-none h-[460px] flex flex-col p-6 overflow-hidden shrink-0">
+      <div className="w-full max-w-3xl bg-white rounded-xl border border-gray-200 shadow-none h-[500px] flex flex-col p-7 overflow-hidden shrink-0">
         {state === "idle" && renderIdle()}
         {(state === "loading" || (state === "attempting" && isLoadingDetail)) && (
           <div className="flex-1 flex items-center justify-center">

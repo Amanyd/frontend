@@ -31,16 +31,16 @@ export function CertificateViewer({ courseId, onComplete, isCompleted }: Certifi
         <Confetti width={width} height={height} recycle={false} numberOfPieces={300} />
       )}
 
-      <div className="max-w-md w-full bg-white border border-gray-200 rounded-xl p-6 text-center shadow-none relative z-10 animate-in zoom-in-95 duration-300">
-        <div className="w-[48px] h-[48px] rounded-[14px] bg-white border border-gray-200 shadow-sm flex items-center justify-center mx-auto mb-4">
-          <Logo className="w-[24px] h-[24px] text-blue-500" />
+      <div className="max-w-lg w-full bg-white border border-gray-200 rounded-xl p-8 text-center shadow-none relative z-10 animate-in zoom-in-95 duration-300">
+        <div className="w-[52px] h-[52px] rounded-[14px] bg-white border border-gray-200 shadow-sm flex items-center justify-center mx-auto mb-4">
+          <Logo className="w-[26px] h-[26px] text-blue-500" />
         </div>
 
-        <h1 className="text-[20px] font-bold text-gray-900 mb-1.5 tracking-tight">
+        <h1 className="text-[22px] font-bold text-gray-900 mb-2 tracking-tight">
           Congratulations!
         </h1>
 
-        <p className="text-[13px] text-gray-500 mb-4 max-w-sm mx-auto leading-relaxed">
+        <p className="text-[14px] text-gray-500 mb-5 max-w-md mx-auto leading-relaxed">
           You have successfully completed this course. Your dedication and hard work have paid off!
         </p>
 

@@ -8,10 +8,11 @@ interface SourceCitationProps {
   citations: Citation[];
 }
 
-export function SourceCitation({ citations }: SourceCitationProps) {
+export function SourceCitation({ citations = [] }: SourceCitationProps) {
   const [expanded, setExpanded] = useState(false);
 
-  if (citations.length === 0) return null;
+  const safeCitations = Array.isArray(citations) ? citations : [];
+  if (safeCitations.length === 0) return null;
 
   return (
     <div className="bg-brand-mint px-5 py-4 rounded-2xl text-ink text-[15px] leading-relaxed shadow-sm border border-ink/10">
@@ -24,11 +25,11 @@ export function SourceCitation({ citations }: SourceCitationProps) {
         ) : (
           <ChevronRight className="h-4 w-4" />
         )}
-        {citations.length} {citations.length === 1 ? "source" : "sources"} referenced
+        {safeCitations.length} {safeCitations.length === 1 ? "source" : "sources"} referenced
       </button>
       {expanded && (
         <div className="mt-3 space-y-2 animate-fade-in">
-          {citations.map((citation, i) => (
+          {safeCitations.map((citation, i) => (
             <div
               key={`${citation.file_id}-${i}`}
               className="flex items-center gap-2 text-sm text-ink/80"

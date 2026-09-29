@@ -112,13 +112,14 @@ export function ChatView({ initialSessionId }: ChatViewProps) {
   }, [initialSessionId]);
 
   // Fetch previous conversations for the right sidebar
-  const { data: sessions = [], isLoading: isLoadingSessions } = useQuery({
+  const { data: rawSessions, isLoading: isLoadingSessions } = useQuery({
     queryKey: ["chat-sessions"],
     queryFn: () => clientApi.get<ChatSession[]>("/api/v1/chat/sessions"),
   });
+  const sessions = Array.isArray(rawSessions) ? rawSessions : [];
 
   // Fetch history if we have an active session ID
-  const { data: history, isLoading: isLoadingHistory } = useQuery({
+  const { data: rawHistory, isLoading: isLoadingHistory } = useQuery({
     queryKey: ["chat-history", currentSessionId],
     queryFn: () =>
       clientApi.get<Message[]>(
@@ -126,16 +127,17 @@ export function ChatView({ initialSessionId }: ChatViewProps) {
       ),
     enabled: !!currentSessionId,
   });
+  const history = Array.isArray(rawHistory) ? rawHistory : [];
 
   // Populate messages when history loads
   useEffect(() => {
-    if (history && !isStreaming) {
+    if (history.length > 0 && !isStreaming) {
       setMessages(
         history.map((m) => ({
           id: m.id,
           role: m.role,
           content: m.content,
-          citations: m.citations,
+          citations: Array.isArray(m.citations) ? m.citations : [],
           isGenerating: false,
         }))
       );
@@ -427,7 +429,7 @@ export function ChatView({ initialSessionId }: ChatViewProps) {
                       <div className="whitespace-pre-wrap">{msg.content}</div>
 
                       {/* Assistant citation sources */}
-                      {msg.citations && msg.citations.length > 0 && (
+                      {msg.citations && Array.isArray(msg.citations) && msg.citations.length > 0 && (
                         <div className="mt-2">
                           <SourceCitation citations={msg.citations} />
                         </div>

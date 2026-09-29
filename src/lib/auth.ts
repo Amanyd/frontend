@@ -81,6 +81,8 @@ const nextAuthResult = NextAuth({
           name: result.user.name,
           role: result.user.role,
           rank: result.user.rank,
+          enrollment_id: result.user.enrollment_id,
+          serviceNumber: result.user.enrollment_id,
           accessToken: result.tokens.access_token,
           refreshToken: result.tokens.refresh_token,
         };
@@ -93,6 +95,8 @@ const nextAuthResult = NextAuth({
         token.id = user.id!;
         token.role = (user as Record<string, unknown>).role as string;
         token.rank = (user as Record<string, unknown>).rank as string;
+        token.enrollment_id = (user as Record<string, unknown>).enrollment_id as string;
+        token.serviceNumber = (user as Record<string, unknown>).serviceNumber as string;
         token.accessToken = (user as Record<string, unknown>).accessToken as string;
         token.refreshToken = (user as Record<string, unknown>).refreshToken as string;
       }
@@ -112,6 +116,8 @@ const nextAuthResult = NextAuth({
       session.user.id = token.id as string;
       session.user.role = (token.role as string) ?? "student";
       session.user.rank = (token.rank as string) ?? "";
+      session.user.enrollment_id = (token.enrollment_id as string) ?? "";
+      session.user.serviceNumber = (token.serviceNumber as string) ?? (token.enrollment_id as string) ?? "";
       session.user.accessToken = token.accessToken as string;
       return session;
     },

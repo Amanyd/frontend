@@ -17,6 +17,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     name: session.user.name,
     role: session.user.role,
     rank: session.user.rank,
+    serviceNumber: session.user.serviceNumber || session.user.enrollment_id || "",
   };
 
   return (

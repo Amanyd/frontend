@@ -5,7 +5,20 @@ import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { clientApi } from "@/lib/api-client.client";
 import { formatDate, cn } from "@/lib/utils";
-import { Plus, ArrowUp, Copy, Check, MessageSquare, AlertCircle } from "lucide-react";
+import {
+  Plus,
+  ArrowUp,
+  Copy,
+  Check,
+  MessageSquare,
+  AlertCircle,
+  Volume2,
+  VolumeX,
+  Mic,
+  Square,
+  Loader2,
+} from "lucide-react";
+import { MarkdownRenderer } from "./markdown-renderer";
 import type { ChatSession, Message, Citation } from "@/types/chat";
 
 interface ChatViewProps {
@@ -90,6 +103,233 @@ export function ChatView({ initialSessionId }: ChatViewProps) {
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  // Audio / TTS State
+  const [speakingMessageId, setSpeakingMessageId] = useState<string | null>(null);
+  const [isLoadingTTS, setIsLoadingTTS] = useState<string | null>(null);
+  const audioPlayerRef = useRef<HTMLAudioElement | null>(null);
+
+  // Audio / STT State
+  const [isRecording, setIsRecording] = useState(false);
+  const [isTranscribing, setIsTranscribing] = useState(false);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const speechRecognitionRef = useRef<any>(null);
+
+  const stopSpeaking = useCallback(() => {
+    if (audioPlayerRef.current) {
+      audioPlayerRef.current.pause();
+      audioPlayerRef.current = null;
+    }
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+    setSpeakingMessageId(null);
+    setIsLoadingTTS(null);
+  }, []);
+
+  const fallbackBrowserSpeech = useCallback((text: string, msgId: string) => {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1.0;
+      utterance.pitch = 1.0;
+      utterance.onstart = () => {
+        setIsLoadingTTS(null);
+        setSpeakingMessageId(msgId);
+      };
+      utterance.onend = () => {
+        setSpeakingMessageId(null);
+      };
+      utterance.onerror = () => {
+        setSpeakingMessageId(null);
+        setIsLoadingTTS(null);
+      };
+      window.speechSynthesis.speak(utterance);
+    } else {
+      setIsLoadingTTS(null);
+      setSpeakingMessageId(null);
+    }
+  }, []);
+
+  const handleSpeak = async (msgId: string, text: string) => {
+    if (speakingMessageId === msgId) {
+      stopSpeaking();
+      return;
+    }
+
+    stopSpeaking();
+    setIsLoadingTTS(msgId);
+
+    // Clean markdown formatting for clean audio pronunciation
+    const cleanText = text
+      .replace(/```[\s\S]*?```/g, "Code block omitted.")
+      .replace(/`([^`]+)`/g, "$1")
+      .replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1")
+      .replace(/[#*_~>]/g, "")
+      .replace(/\n+/g, " ")
+      .trim();
+
+    try {
+      const res = await fetch("/api/audio/speak", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: cleanText }),
+      });
+
+      if (!res.ok) {
+        throw new Error("TTS endpoint failed");
+      }
+
+      const blob = await res.blob();
+      const audioUrl = URL.createObjectURL(blob);
+      const audio = new Audio(audioUrl);
+      audioPlayerRef.current = audio;
+
+      audio.onplay = () => {
+        setIsLoadingTTS(null);
+        setSpeakingMessageId(msgId);
+      };
+
+      audio.onended = () => {
+        setSpeakingMessageId(null);
+        URL.revokeObjectURL(audioUrl);
+        audioPlayerRef.current = null;
+      };
+
+      audio.onerror = () => {
+        fallbackBrowserSpeech(cleanText, msgId);
+      };
+
+      await audio.play();
+    } catch (err) {
+      console.warn("API TTS error, falling back to Web Speech:", err);
+      fallbackBrowserSpeech(cleanText, msgId);
+    }
+  };
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunksRef.current = [];
+
+      let mimeType = "audio/webm";
+      if (MediaRecorder.isTypeSupported("audio/webm;codecs=opus")) {
+        mimeType = "audio/webm;codecs=opus";
+      } else if (MediaRecorder.isTypeSupported("audio/mp4")) {
+        mimeType = "audio/mp4";
+      }
+
+      const mediaRecorder = new MediaRecorder(stream, { mimeType });
+      mediaRecorderRef.current = mediaRecorder;
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = async () => {
+        stream.getTracks().forEach((track) => track.stop());
+
+        const audioBlob = new Blob(audioChunksRef.current, { type: mimeType });
+        if (audioBlob.size === 0) return;
+
+        setIsTranscribing(true);
+        try {
+          const formData = new FormData();
+          const ext = mimeType.includes("mp4") ? "mp4" : "webm";
+          formData.append("file", audioBlob, `speech.${ext}`);
+
+          const res = await fetch("/api/audio/transcribe", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!res.ok) {
+            throw new Error("STT failed");
+          }
+
+          const data = await res.json();
+          if (data.text) {
+            setInputStr((prev) => {
+              const trimmed = prev.trim();
+              return trimmed ? `${trimmed} ${data.text.trim()}` : data.text.trim();
+            });
+          }
+        } catch (err) {
+          console.error("Transcribe failed:", err);
+        } finally {
+          setIsTranscribing(false);
+          inputRef.current?.focus();
+        }
+      };
+
+      mediaRecorder.start(250);
+      setIsRecording(true);
+
+      // Start Web Speech API in parallel for live streaming feedback if available
+      const SpeechRecognition =
+        (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        try {
+          const recognition = new SpeechRecognition();
+          recognition.continuous = true;
+          recognition.interimResults = true;
+          recognition.lang = "en-US";
+          recognition.onresult = (event: any) => {
+            let interim = "";
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+              interim += event.results[i][0].transcript;
+            }
+            if (interim.trim()) {
+              setInputStr(interim.trim());
+            }
+          };
+          recognition.start();
+          speechRecognitionRef.current = recognition;
+        } catch (e) {}
+      }
+    } catch (err) {
+      console.error("Microphone access error:", err);
+      alert("Microphone permission was denied or is not supported in this browser.");
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+      mediaRecorderRef.current.stop();
+    }
+    if (speechRecognitionRef.current) {
+      try {
+        speechRecognitionRef.current.stop();
+      } catch (e) {}
+      speechRecognitionRef.current = null;
+    }
+    setIsRecording(false);
+  };
+
+  const handleToggleRecord = () => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      stopSpeaking();
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+        mediaRecorderRef.current.stop();
+      }
+      if (speechRecognitionRef.current) {
+        try {
+          speechRecognitionRef.current.stop();
+        } catch (e) {}
+      }
+    };
+  }, [stopSpeaking]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -437,7 +677,11 @@ export function ChatView({ initialSessionId }: ChatViewProps) {
                           : "text-gray-900 text-[15px] max-w-[90%] leading-relaxed pt-1.5 flex flex-col gap-2"
                       }
                     >
-                      <div className="whitespace-pre-wrap">{msg.content}</div>
+                      {msg.role === "user" ? (
+                        <div className="whitespace-pre-wrap">{msg.content}</div>
+                      ) : (
+                        <MarkdownRenderer content={msg.content} />
+                      )}
 
                       {/* Action buttons on completed assistant response */}
                       {msg.role === "assistant" && !msg.isGenerating && msg.content && (
@@ -453,6 +697,33 @@ export function ChatView({ initialSessionId }: ChatViewProps) {
                               <Copy className="h-3.5 w-3.5" />
                             )}
                             <span>{copiedId === msg.id ? "Copied" : "Copy"}</span>
+                          </button>
+
+                          {/* Speaker button right to copy button */}
+                          <button
+                            onClick={() => handleSpeak(msg.id, msg.content)}
+                            className={cn(
+                              "flex items-center gap-1.5 transition-colors text-xs font-medium shadow-none cursor-pointer",
+                              speakingMessageId === msg.id
+                                ? "text-blue-600 font-semibold"
+                                : "hover:text-gray-700"
+                            )}
+                            title={speakingMessageId === msg.id ? "Stop audio" : "Listen to response"}
+                          >
+                            {isLoadingTTS === msg.id ? (
+                              <Loader2 className="h-3.5 w-3.5 animate-spin text-blue-600" />
+                            ) : speakingMessageId === msg.id ? (
+                              <VolumeX className="h-3.5 w-3.5 text-blue-600 animate-pulse" />
+                            ) : (
+                              <Volume2 className="h-3.5 w-3.5" />
+                            )}
+                            <span>
+                              {isLoadingTTS === msg.id
+                                ? "Loading..."
+                                : speakingMessageId === msg.id
+                                ? "Stop"
+                                : "Listen"}
+                            </span>
                           </button>
                         </div>
                       )}
@@ -536,14 +807,26 @@ export function ChatView({ initialSessionId }: ChatViewProps) {
                 <input
                   ref={inputRef}
                   type="text"
-                  placeholder="Enter your message..."
+                  placeholder={
+                    isTranscribing
+                      ? "Transcribing with Whisper..."
+                      : isRecording
+                      ? "Listening... Speak your message now..."
+                      : "Enter your message..."
+                  }
                   value={inputStr}
                   onChange={(e) => setInputStr(e.target.value)}
-                  disabled={isStreaming}
-                  className="w-full bg-transparent text-[15px] text-gray-900 placeholder-gray-400 outline-none border-none py-2 px-3 pb-10 disabled:opacity-60"
+                  disabled={isStreaming || isTranscribing}
+                  className={cn(
+                    "w-full bg-transparent text-[15px] placeholder-gray-400 outline-none border-none py-2 px-3 pb-10 disabled:opacity-60",
+                    isRecording ? "text-red-600 font-medium placeholder-red-400" : "text-gray-900"
+                  )}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && !e.shiftKey) {
                       e.preventDefault();
+                      if (isRecording) {
+                        stopRecording();
+                      }
                       handleSendMessage();
                     }
                   }}
@@ -558,16 +841,61 @@ export function ChatView({ initialSessionId }: ChatViewProps) {
                       <Plus className="h-4 w-4" />
                       Add context
                     </button>
+                    {isRecording && (
+                      <span className="flex items-center gap-1.5 text-xs font-semibold text-red-600 animate-pulse bg-red-50 px-2 py-0.5 rounded-full border border-red-200">
+                        <span className="w-1.5 h-1.5 rounded-full bg-red-600"></span>
+                        Recording audio...
+                      </span>
+                    )}
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={handleSendMessage}
-                    disabled={isStreaming || !inputStr.trim()}
-                    className="w-[32px] h-[32px] rounded-full bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-none cursor-pointer"
-                  >
-                    <ArrowUp className="h-4 w-4" strokeWidth={2.5} />
-                  </button>
+                  <div className="flex items-center gap-1.5">
+                    {/* Mic button just left of send arrow */}
+                    <button
+                      type="button"
+                      onClick={handleToggleRecord}
+                      disabled={isStreaming || isTranscribing}
+                      className={cn(
+                        "w-[32px] h-[32px] rounded-full flex items-center justify-center transition-all shadow-none cursor-pointer",
+                        isRecording
+                          ? "bg-red-500 text-white shadow-md ring-4 ring-red-100 animate-pulse"
+                          : isTranscribing
+                          ? "bg-blue-50 text-blue-600"
+                          : "bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900"
+                      )}
+                      title={
+                        isTranscribing
+                          ? "Transcribing..."
+                          : isRecording
+                          ? "Stop recording"
+                          : "Speak message (Speech to Text)"
+                      }
+                    >
+                      {isTranscribing ? (
+                        <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+                      ) : isRecording ? (
+                        <Square className="h-3 w-3 fill-current" />
+                      ) : (
+                        <Mic className="h-4 w-4" />
+                      )}
+                    </button>
+
+                    {/* Send arrow button */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (isRecording) {
+                          stopRecording();
+                        }
+                        handleSendMessage();
+                      }}
+                      disabled={isStreaming || !inputStr.trim() || isRecording || isTranscribing}
+                      className="w-[32px] h-[32px] rounded-full bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-none cursor-pointer"
+                      title="Send message"
+                    >
+                      <ArrowUp className="h-4 w-4" strokeWidth={2.5} />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

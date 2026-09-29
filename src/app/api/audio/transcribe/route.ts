@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     const upstream = await fetch(`${RAG_URL}/api/v1/audio/transcribe`, {
       method: "POST",
       headers: {
-        "X-Internal-Token": process.env.INTERNAL_TOKEN || "development_secret_token",
+        "X-Internal-Token": process.env.INTERNAL_TOKEN || "changeme-internal-token",
       },
       body: formData,
     });

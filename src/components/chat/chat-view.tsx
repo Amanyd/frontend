@@ -108,6 +108,9 @@ export function ChatView({ initialSessionId }: ChatViewProps) {
   const [speakingMessageId, setSpeakingMessageId] = useState<string | null>(null);
   const [isLoadingTTS, setIsLoadingTTS] = useState<string | null>(null);
   const audioPlayerRef = useRef<HTMLAudioElement | null>(null);
+  const ttsAbortControllerRef = useRef<AbortController | null>(null);
+  const audioQueueRef = useRef<{ id: number; audio: HTMLAudioElement; url: string }[]>([]);
+  const isPlayingQueueRef = useRef<boolean>(false);
 
   // Audio / STT State
   const [isRecording, setIsRecording] = useState(false);
@@ -117,15 +120,56 @@ export function ChatView({ initialSessionId }: ChatViewProps) {
   const speechRecognitionRef = useRef<any>(null);
 
   const stopSpeaking = useCallback(() => {
+    if (ttsAbortControllerRef.current) {
+      ttsAbortControllerRef.current.abort();
+      ttsAbortControllerRef.current = null;
+    }
     if (audioPlayerRef.current) {
       audioPlayerRef.current.pause();
       audioPlayerRef.current = null;
     }
+    while (audioQueueRef.current.length > 0) {
+      const item = audioQueueRef.current.shift();
+      if (item) {
+        item.audio.pause();
+        URL.revokeObjectURL(item.url);
+      }
+    }
+    isPlayingQueueRef.current = false;
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       window.speechSynthesis.cancel();
     }
     setSpeakingMessageId(null);
     setIsLoadingTTS(null);
+  }, []);
+
+  const playNextInQueue = useCallback((msgId: string) => {
+    if (audioQueueRef.current.length === 0) {
+      isPlayingQueueRef.current = false;
+      setSpeakingMessageId((curr) => (curr === msgId ? null : curr));
+      return;
+    }
+
+    isPlayingQueueRef.current = true;
+    const nextItem = audioQueueRef.current.shift()!;
+    audioPlayerRef.current = nextItem.audio;
+    setSpeakingMessageId(msgId);
+    setIsLoadingTTS(null);
+
+    nextItem.audio.onended = () => {
+      URL.revokeObjectURL(nextItem.url);
+      playNextInQueue(msgId);
+    };
+
+    nextItem.audio.onerror = () => {
+      URL.revokeObjectURL(nextItem.url);
+      playNextInQueue(msgId);
+    };
+
+    nextItem.audio.play().catch((e) => {
+      console.warn("Audio play prevented:", e);
+      playNextInQueue(msgId);
+    });
   }, []);
 
   const fallbackBrowserSpeech = useCallback((text: string, msgId: string) => {
@@ -161,6 +205,9 @@ export function ChatView({ initialSessionId }: ChatViewProps) {
     stopSpeaking();
     setIsLoadingTTS(msgId);
 
+    const controller = new AbortController();
+    ttsAbortControllerRef.current = controller;
+
     // Clean markdown formatting for clean audio pronunciation
     const cleanText = text
       .replace(/```[\s\S]*?```/g, "Code block omitted.")
@@ -175,35 +222,71 @@ export function ChatView({ initialSessionId }: ChatViewProps) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: cleanText }),
+        signal: controller.signal,
       });
 
-      if (!res.ok) {
+      if (!res.ok || !res.body) {
         throw new Error("TTS endpoint failed");
       }
 
-      const blob = await res.blob();
-      const audioUrl = URL.createObjectURL(blob);
-      const audio = new Audio(audioUrl);
-      audioPlayerRef.current = audio;
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
 
-      audio.onplay = () => {
-        setIsLoadingTTS(null);
-        setSpeakingMessageId(msgId);
+      const enqueueChunk = (audioBase64: string, index: number) => {
+        try {
+          const byteCharacters = atob(audioBase64);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], { type: "audio/wav" });
+          const url = URL.createObjectURL(blob);
+          const audio = new Audio(url);
+          audioQueueRef.current.push({ id: index, audio, url });
+
+          if (!isPlayingQueueRef.current) {
+            playNextInQueue(msgId);
+          }
+        } catch (err) {
+          console.warn("Failed to create audio chunk:", err);
+        }
       };
 
-      audio.onended = () => {
-        setSpeakingMessageId(null);
-        URL.revokeObjectURL(audioUrl);
-        audioPlayerRef.current = null;
-      };
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
 
-      audio.onerror = () => {
-        fallbackBrowserSpeech(cleanText, msgId);
-      };
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
 
-      await audio.play();
-    } catch (err) {
-      console.warn("API TTS error, falling back to Web Speech:", err);
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed) continue;
+          try {
+            const data = JSON.parse(trimmed);
+            if (data.audio) {
+              enqueueChunk(data.audio, data.index);
+            }
+          } catch (e) {
+            console.warn("Parse chunk JSON error:", e);
+          }
+        }
+      }
+
+      if (buffer.trim()) {
+        try {
+          const data = JSON.parse(buffer.trim());
+          if (data.audio) {
+            enqueueChunk(data.audio, data.index);
+          }
+        } catch (e) {}
+      }
+    } catch (err: any) {
+      if (err.name === "AbortError") return;
+      console.warn("TTS stream error, falling back to Web Speech:", err);
       fallbackBrowserSpeech(cleanText, msgId);
     }
   };
@@ -368,20 +451,26 @@ export function ChatView({ initialSessionId }: ChatViewProps) {
   });
   const history = Array.isArray(rawHistory) ? rawHistory : [];
 
-  // Populate messages when history loads
+  // Track which session history was last loaded into messages
+  const lastLoadedSessionIdRef = useRef<string | null>(null);
+
+  // Populate messages when history loads (only on initial load or switching sessions)
   useEffect(() => {
     if (history.length > 0 && !isStreaming) {
-      setMessages(
-        history.map((m) => ({
-          id: m.id,
-          role: m.role,
-          content: m.content,
-          citations: Array.isArray(m.citations) ? m.citations : [],
-          isGenerating: false,
-        }))
-      );
+      if (lastLoadedSessionIdRef.current !== currentSessionId || messages.length === 0) {
+        lastLoadedSessionIdRef.current = currentSessionId || null;
+        setMessages(
+          history.map((m) => ({
+            id: m.id,
+            role: m.role,
+            content: m.content,
+            citations: Array.isArray(m.citations) ? m.citations : [],
+            isGenerating: false,
+          }))
+        );
+      }
     }
-  }, [history, isStreaming]);
+  }, [history, isStreaming, currentSessionId, messages.length]);
 
   // Focus input when idle
   useEffect(() => {
@@ -400,6 +489,7 @@ export function ChatView({ initialSessionId }: ChatViewProps) {
     if (isStreaming && abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
+    lastLoadedSessionIdRef.current = null;
     setCurrentSessionId(undefined);
     setMessages([]);
     setInputStr("");
@@ -412,6 +502,7 @@ export function ChatView({ initialSessionId }: ChatViewProps) {
     if (isStreaming && abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
+    lastLoadedSessionIdRef.current = null;
     setCurrentSessionId(sessionId);
     setMessages([]);
     setError(null);
@@ -461,12 +552,15 @@ export function ChatView({ initialSessionId }: ChatViewProps) {
         );
         activeId = newSession.id;
         setCurrentSessionId(activeId);
+        lastLoadedSessionIdRef.current = activeId;
 
         // Update URL cleanly without triggering unmount
         window.history.replaceState(null, "", `/chat/${activeId}`);
 
         // Invalidate sidebar list so the new conversation immediately shows
         queryClient.invalidateQueries({ queryKey: ["chat-sessions"] });
+      } else {
+        lastLoadedSessionIdRef.current = activeId;
       }
 
       // Connect directly to SSE endpoint

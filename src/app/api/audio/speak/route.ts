@@ -22,10 +22,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Upstream error" }, { status: upstream.status });
     }
     
-    const arrayBuffer = await upstream.arrayBuffer();
-    return new Response(arrayBuffer, {
+    return new Response(upstream.body, {
       headers: {
-        "Content-Type": "audio/wav",
+        "Content-Type": "application/x-ndjson",
       },
     });
   } catch (error) {

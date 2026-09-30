@@ -72,7 +72,11 @@ export function InstructorDashboard({
         course_quiz_avg: 0,
       }));
 
-  const recentActivity = Array.isArray(analytics?.recent_activity) ? analytics.recent_activity : [];
+  const recentActivity = (
+    Array.isArray(analytics?.recent_activity)
+      ? analytics.recent_activity
+      : []
+  ).slice(0, 5);
 
   return (
     <div className="space-y-6">

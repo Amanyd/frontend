@@ -22,9 +22,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Upstream error" }, { status: upstream.status });
     }
     
+    const contentType = upstream.headers.get("content-type") || "application/x-ndjson";
+    
     return new Response(upstream.body, {
       headers: {
-        "Content-Type": "application/x-ndjson",
+        "Content-Type": contentType,
       },
     });
   } catch (error) {

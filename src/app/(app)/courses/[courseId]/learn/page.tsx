@@ -36,11 +36,15 @@ export default async function LearnPage({ params }: PageProps) {
     const safeQuizzes = Array.isArray(quizzes) ? quizzes : [];
 
     const lessonsWithContentPromises = safeLessons.map(async (lesson) => {
-      const files = await api.get<any[]>(`/api/v1/lessons/${lesson.id}/files`).catch(() => []);
+      const [files, topics] = await Promise.all([
+        api.get<any[]>(`/api/v1/lessons/${lesson.id}/files`).catch(() => []),
+        api.get<any[]>(`/api/v1/lessons/${lesson.id}/topics`).catch(() => []),
+      ]);
       const safeFiles = Array.isArray(files) ? files : [];
+      const safeTopics = Array.isArray(topics) ? topics : [];
       // Find quiz for this lesson
       const quiz = safeQuizzes.find((q) => q.lesson_id === lesson.id) || null;
-      return { ...lesson, files: safeFiles, quiz } as LessonWithContent;
+      return { ...lesson, files: safeFiles, topics: safeTopics, quiz } as LessonWithContent;
     });
     lessonsWithContent = await Promise.all(lessonsWithContentPromises);
   } catch (e) {

@@ -1,3 +1,5 @@
+import type { LessonTopic } from "./quiz";
+
 /** File reference within a lesson for the course player */
 export interface LessonFile {
   id: string;
@@ -6,11 +8,12 @@ export interface LessonFile {
   file_type: "docx" | "pptx" | "ppt" | "pdf";
 }
 
-/** Lesson with its associated files and quiz */
+/** Lesson with its associated files, topics, and quiz */
 export interface LessonWithContent {
   id: string;
   title: string;
   files: LessonFile[];
+  topics?: LessonTopic[];
   quiz: any | null; // using any for now, could type Quiz later
 }
 

@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, ChevronLeft, ChevronRight, Send } from "lucide-react";
+import { Loader2, ChevronLeft, ChevronRight, Send, Clock, Timer, Award } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { clientApi } from "@/lib/api-client.client";
 import {
@@ -38,6 +38,10 @@ export function QuizViewer({ quiz }: QuizViewerProps) {
   const [state, setState] = useState<"idle" | "loading" | "attempting" | "submitting" | "results">("idle");
   const [resultsScore, setResultsScore] = useState<{ score: number; total: number } | null>(null);
 
+  // Examination countdown timer: 10 mins for lesson quiz, 25 mins for course final exam
+  const initialTimeSeconds = quiz.lesson_id ? 10 * 60 : 25 * 60;
+  const [timeLeft, setTimeLeft] = useState<number>(initialTimeSeconds);
+
   const startAttempt = useStartAttempt();
   const submitAnswer = useSubmitAnswer();
   const finishAttempt = useFinishAttempt();
@@ -53,7 +57,8 @@ export function QuizViewer({ quiz }: QuizViewerProps) {
     reset();
     setState("idle");
     setResultsScore(null);
-  }, [quiz.id, reset]);
+    setTimeLeft(initialTimeSeconds);
+  }, [quiz.id, reset, initialTimeSeconds]);
 
   const handleStart = async (e?: React.MouseEvent) => {
     e?.preventDefault();
@@ -61,6 +66,7 @@ export function QuizViewer({ quiz }: QuizViewerProps) {
     try {
       const attempt = await startAttempt.mutateAsync(quiz.id);
       setAttemptId(attempt.id);
+      setTimeLeft(initialTimeSeconds);
       setState("attempting");
     } catch (err) {
       console.error("Failed to start attempt", err);
@@ -68,14 +74,13 @@ export function QuizViewer({ quiz }: QuizViewerProps) {
     }
   };
 
-  const handleSubmit = async (e?: React.MouseEvent) => {
+  const handleSubmit = useCallback(async (e?: React.MouseEvent) => {
     e?.preventDefault();
     e?.stopPropagation();
     if (!attemptId) return;
     setState("submitting");
 
     try {
-      // Submit all recorded answers with individual safety catches
       const submitPromises = Object.entries(answers).map(([questionId, answer]) =>
         submitAnswer
           .mutateAsync({
@@ -88,7 +93,6 @@ export function QuizViewer({ quiz }: QuizViewerProps) {
       );
       await Promise.all(submitPromises);
 
-      // Finish attempt - returns domain.Attempt containing score and total
       const resultAttempt = await finishAttempt.mutateAsync(attemptId);
       setResultsScore({
         score: Math.round(resultAttempt.score),
@@ -99,19 +103,69 @@ export function QuizViewer({ quiz }: QuizViewerProps) {
       console.error("Failed to submit quiz", err);
       setState("attempting");
     }
-  };
+  }, [attemptId, answers, submitAnswer, finishAttempt]);
+
+  // Countdown ticker
+  useEffect(() => {
+    if (state !== "attempting") return;
+
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          handleSubmit();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [state, handleSubmit]);
+
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+  const timeString = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  const isUrgent = timeLeft < 120;
 
   const renderIdle = () => (
-    <div className="flex-1 flex flex-col items-center justify-center text-center">
-      <div className="w-[48px] h-[48px] rounded-[14px] bg-white border border-gray-200 shadow-none flex items-center justify-center mb-5 shrink-0">
-        <Logo className="w-[24px] h-[24px] text-blue-500" />
+    <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
+      <div className="w-[52px] h-[52px] rounded-2xl bg-white border border-gray-200/80 shadow-sm flex items-center justify-center mb-4 shrink-0">
+        <Logo className="w-[28px] h-[28px] text-blue-600" />
       </div>
+
+      <div className="mb-2">
+        <span className="text-[11px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-100">
+          {quiz.lesson_id ? "Lesson Knowledge Check" : "Course Final Assessment"}
+        </span>
+      </div>
+
+      <h2 className="text-xl font-bold text-gray-900 mb-1">
+        {quiz.lesson_id ? "Flight Lesson Examination" : "Comprehensive Naval Flight Assessment"}
+      </h2>
+      <p className="text-[13px] text-gray-500 max-w-sm mb-6 leading-relaxed">
+        {quiz.lesson_id
+          ? "5 questions drawn at random from the 30-question bank. Difficulty calibrated via Bloom's taxonomy. 10 minutes time limit."
+          : "20 questions covering all course flight modules. 25 minutes time limit. Automated submission on expiry."}
+      </p>
+
+      <div className="flex items-center gap-3 mb-6">
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-50 border border-gray-200 text-[12px] font-semibold text-gray-700">
+          <Clock className="w-3.5 h-3.5 text-blue-600" />
+          <span>{quiz.lesson_id ? "10 Minutes" : "25 Minutes"}</span>
+        </div>
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-50 border border-gray-200 text-[12px] font-semibold text-gray-700 capitalize">
+          <span>Difficulty: {quiz.difficulty}</span>
+        </div>
+      </div>
+
       <button
         type="button"
         onClick={handleStart}
-        className="h-8 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-[13px] font-medium transition-colors shadow-none cursor-pointer"
+        className="h-10 px-6 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-[13px] font-semibold transition-colors shadow-sm cursor-pointer flex items-center gap-2"
       >
-        Start Quiz
+        <span>Begin Examination</span>
+        <ChevronRight className="w-4 h-4" />
       </button>
     </div>
   );
@@ -131,12 +185,33 @@ export function QuizViewer({ quiz }: QuizViewerProps) {
       <div className="flex-1 flex flex-col justify-between min-h-0">
         {/* Top header */}
         <div className="flex items-center justify-between pb-3 border-b border-gray-100 shrink-0">
-          <span className="text-[12px] font-medium text-gray-500 uppercase tracking-wider">
-            Question {currentQuestion + 1} of {total}
-          </span>
-          <span className="text-[12px] font-medium text-gray-600 capitalize bg-gray-50 px-2 py-0.5 rounded border border-gray-200/80">
-            {quiz.difficulty}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-[12px] font-bold text-gray-700 uppercase tracking-wider">
+              Question {currentQuestion + 1} of {total}
+            </span>
+            {current.topic_phrase && (
+              <span className="text-[11px] font-medium text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-100 max-w-[220px] truncate" title={current.topic_phrase}>
+                {current.topic_phrase}
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            <span className="text-[11px] font-semibold text-gray-600 uppercase bg-gray-50 px-2 py-0.5 rounded border border-gray-200">
+              {current.difficulty || quiz.difficulty}
+            </span>
+
+            {/* Sticky Countdown Timer */}
+            <div className={cn(
+              "flex items-center gap-1.5 px-3 py-1 rounded-full border text-[12px] font-mono font-bold transition-all",
+              isUrgent 
+                ? "bg-amber-50 border-amber-300 text-amber-800 animate-pulse" 
+                : "bg-slate-50 border-slate-200 text-slate-700"
+            )}>
+              <Clock className={cn("w-3.5 h-3.5", isUrgent ? "text-amber-600" : "text-slate-500")} />
+              <span>{timeString}</span>
+            </div>
+          </div>
         </div>
 
         {/* Question + Choices */}
@@ -147,7 +222,7 @@ export function QuizViewer({ quiz }: QuizViewerProps) {
 
           <div className="flex flex-col gap-2">
             {current.choices?.map((choice) => {
-              const isSelected = selectedAnswer === choice.label;
+              const isSelected = selectedAnswer === choice.text || selectedAnswer === choice.label;
               return (
                 <label
                   key={choice.label}
@@ -161,9 +236,9 @@ export function QuizViewer({ quiz }: QuizViewerProps) {
                   <input
                     type="radio"
                     name={`question-${current.id}`}
-                    value={choice.label}
+                    value={choice.text || choice.label}
                     checked={isSelected}
-                    onChange={() => setAnswer(current.id, choice.label)}
+                    onChange={() => setAnswer(current.id, choice.text || choice.label)}
                     className="sr-only"
                   />
                   <div

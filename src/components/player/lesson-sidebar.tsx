@@ -12,19 +12,24 @@ import {
   Circle,
   HelpCircle,
   Award,
+  Sparkles,
+  BookOpen,
+  Timer,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { LessonWithContent, LessonFile } from "@/types/progress";
+import type { LessonWithContent } from "@/types/progress";
 
 interface LessonSidebarProps {
   lessons: LessonWithContent[];
   currentLessonIdx: number;
   currentFileIdx: number;
-  viewState: "file" | "quiz" | "certificate";
+  currentTopicIdx?: number;
+  viewState: "slides" | "file" | "quiz" | "certificate";
   isLessonComplete: (lessonId: string) => boolean;
   isFileViewed: (lessonId: string, fileId: string) => boolean;
   percentage: number;
   completedCount: number;
+  onTopicSelect?: (lessonIdx: number, topicIdx: number) => void;
   onFileSelect: (lessonIdx: number, fileIdx: number) => void;
   onQuizSelect: (lessonIdx: number) => void;
   onCertificateSelect: () => void;
@@ -46,11 +51,13 @@ export function LessonSidebar({
   lessons,
   currentLessonIdx,
   currentFileIdx,
+  currentTopicIdx = 0,
   viewState,
   isLessonComplete,
   isFileViewed,
   percentage,
   completedCount,
+  onTopicSelect,
   onFileSelect,
   onQuizSelect,
   onCertificateSelect,
@@ -167,94 +174,140 @@ export function LessonSidebar({
                 </div>
               </button>
 
-              {/* Expanded file list */}
+              {/* Expanded lesson content */}
               {isExpanded && (
-                <div className="pb-2 animate-in slide-in-from-top-1 duration-200">
-                  {lesson.files.map((file, fileIdx) => {
-                    const isCurrentFile =
-                      lessonIdx === currentLessonIdx &&
-                      fileIdx === currentFileIdx &&
-                      viewState === "file";
-                    const isViewed = isFileViewed(lesson.id, file.id);
-                    const Icon = FILE_TYPE_ICON[file.file_type] ?? FileText;
+                <div className="pb-3 animate-in slide-in-from-top-1 duration-200 space-y-2">
+                  {/* 1. AI Topics Briefing */}
+                  {lesson.topics && lesson.topics.length > 0 && (
+                    <div>
+                      <div className="px-5 py-1 text-[10px] font-bold uppercase tracking-wider text-blue-600 flex items-center gap-1.5">
+                        <Sparkles className="w-3 h-3 text-blue-500" />
+                        <span>AI Briefing Topics</span>
+                      </div>
+                      <div className="mt-0.5 space-y-0.5">
+                        {lesson.topics.map((topic, topicIdx) => {
+                          const isCurrentTopic =
+                            lessonIdx === currentLessonIdx &&
+                            topicIdx === currentTopicIdx &&
+                            viewState === "slides";
 
-                    return (
-                      <button
-                        key={file.id}
-                        onClick={() => onFileSelect(lessonIdx, fileIdx)}
-                        className={cn(
-                          "w-full flex items-center gap-2.5 pl-12 pr-5 py-2 text-left transition-all",
-                          isCurrentFile
-                            ? "bg-blue-50 border-l-2 border-blue-500"
-                            : "hover:bg-gray-50 border-l-2 border-transparent",
-                        )}
-                      >
-                        {/* File status */}
-                        {isCurrentFile ? (
-                          <div className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center shrink-0">
-                            <Play className="w-2.5 h-2.5 text-white ml-[1px]" fill="white" />
-                          </div>
-                        ) : isViewed ? (
-                          <div className="w-4 h-4 rounded-full bg-green-500 flex items-center justify-center shrink-0">
-                            <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
-                          </div>
-                        ) : (
-                          <Circle className="w-4 h-4 text-gray-300 shrink-0" strokeWidth={1.5} />
-                        )}
+                          return (
+                            <button
+                              key={topic.id || topicIdx}
+                              onClick={() => onTopicSelect?.(lessonIdx, topicIdx)}
+                              className={cn(
+                                "w-full flex items-center gap-2.5 pl-8 pr-5 py-2 text-left transition-all",
+                                isCurrentTopic
+                                  ? "bg-blue-50/80 border-l-2 border-blue-600 text-blue-900 font-semibold"
+                                  : "hover:bg-gray-50 border-l-2 border-transparent text-gray-700",
+                              )}
+                            >
+                              <BookOpen
+                                className={cn(
+                                  "w-3.5 h-3.5 shrink-0",
+                                  isCurrentTopic ? "text-blue-600" : "text-gray-400"
+                                )}
+                              />
+                              <span className="text-[12px] truncate">
+                                {topic.title}
+                              </span>
+                              <span className="ml-auto text-[10px] font-semibold text-blue-600/70 bg-blue-50 px-1 rounded shrink-0">
+                                {topic.slides?.length || 4}s
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
 
-                        {/* File icon + name */}
-                        <Icon
+                  {/* 2. Reference Manuals / Files */}
+                  {lesson.files && lesson.files.length > 0 && (
+                    <div>
+                      <div className="px-5 py-1 text-[10px] font-bold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">
+                        <FileText className="w-3 h-3 text-gray-400" />
+                        <span>Reference Manuals</span>
+                      </div>
+                      <div className="mt-0.5 space-y-0.5">
+                        {lesson.files.map((file, fileIdx) => {
+                          const isCurrentFile =
+                            lessonIdx === currentLessonIdx &&
+                            fileIdx === currentFileIdx &&
+                            viewState === "file";
+                          const isViewed = isFileViewed(lesson.id, file.id);
+                          const Icon = FILE_TYPE_ICON[file.file_type] ?? FileText;
+
+                          return (
+                            <button
+                              key={file.id}
+                              onClick={() => onFileSelect(lessonIdx, fileIdx)}
+                              className={cn(
+                                "w-full flex items-center gap-2.5 pl-8 pr-5 py-2 text-left transition-all",
+                                isCurrentFile
+                                  ? "bg-blue-50 border-l-2 border-blue-500 font-semibold text-blue-700"
+                                  : "hover:bg-gray-50 border-l-2 border-transparent text-gray-700",
+                              )}
+                            >
+                              {isCurrentFile ? (
+                                <div className="w-3.5 h-3.5 rounded-full bg-blue-500 flex items-center justify-center shrink-0">
+                                  <Play className="w-2 h-2 text-white ml-[1px]" fill="white" />
+                                </div>
+                              ) : isViewed ? (
+                                <div className="w-3.5 h-3.5 rounded-full bg-green-500 flex items-center justify-center shrink-0">
+                                  <Check className="w-2 h-2 text-white" strokeWidth={3} />
+                                </div>
+                              ) : (
+                                <Circle className="w-3.5 h-3.5 text-gray-300 shrink-0" strokeWidth={1.5} />
+                              )}
+
+                              <Icon
+                                className={cn(
+                                  "w-3.5 h-3.5 shrink-0",
+                                  FILE_TYPE_COLOR[file.file_type] ?? "text-gray-400",
+                                )}
+                              />
+                              <span className="text-[12px] truncate">
+                                {file.file_name}
+                              </span>
+                              <span className="ml-auto text-[10px] font-medium text-gray-400 uppercase shrink-0">
+                                {file.file_type}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 3. Quiz / Examination */}
+                  {lesson.quiz && (
+                    <div>
+                      <div className="px-5 py-1 text-[10px] font-bold uppercase tracking-wider text-purple-600 flex items-center gap-1.5">
+                        <Timer className="w-3 h-3 text-purple-500" />
+                        <span>Examination</span>
+                      </div>
+                      <div className="mt-0.5">
+                        <button
+                          onClick={() => onQuizSelect(lessonIdx)}
                           className={cn(
-                            "w-3.5 h-3.5 shrink-0",
-                            FILE_TYPE_COLOR[file.file_type] ?? "text-gray-400",
-                          )}
-                        />
-                        <span
-                          className={cn(
-                            "text-[12px] truncate",
-                            isCurrentFile
-                              ? "font-semibold text-blue-700"
-                              : isViewed
-                                ? "text-gray-500"
-                                : "text-gray-700",
+                            "w-full flex items-center gap-2.5 pl-8 pr-5 py-2 text-left transition-all",
+                            lessonIdx === currentLessonIdx && viewState === "quiz"
+                              ? "bg-purple-50 border-l-2 border-purple-500 text-purple-900 font-semibold"
+                              : "hover:bg-gray-50 border-l-2 border-transparent text-gray-700",
                           )}
                         >
-                          {file.file_name}
-                        </span>
-
-                        {/* Type badge */}
-                        <span className="ml-auto text-[10px] font-medium text-gray-400 uppercase shrink-0">
-                          {file.file_type}
-                        </span>
-                      </button>
-                    );
-                  })}
-
-                  {/* Quiz Item */}
-                  {lesson.quiz && (
-                    <button
-                      onClick={() => onQuizSelect(lessonIdx)}
-                      className={cn(
-                        "w-full flex items-center gap-2.5 pl-12 pr-5 py-2 text-left transition-all mt-1",
-                        lessonIdx === currentLessonIdx && viewState === "quiz"
-                          ? "bg-purple-50 border-l-2 border-purple-500"
-                          : "hover:bg-gray-50 border-l-2 border-transparent",
-                      )}
-                    >
-                      <div className="w-4 h-4 shrink-0 flex items-center justify-center">
-                        <HelpCircle className="w-4 h-4 text-purple-500" />
+                          <div className="w-3.5 h-3.5 shrink-0 flex items-center justify-center">
+                            <HelpCircle className="w-3.5 h-3.5 text-purple-500" />
+                          </div>
+                          <span className="text-[12px] truncate font-medium">
+                            Lesson Examination
+                          </span>
+                          <span className="ml-auto text-[10px] font-medium text-purple-600 bg-purple-100/70 px-1.5 py-0.5 rounded shrink-0">
+                            10m Exam
+                          </span>
+                        </button>
                       </div>
-                      <span
-                        className={cn(
-                          "text-[12px] truncate font-medium",
-                          lessonIdx === currentLessonIdx && viewState === "quiz"
-                            ? "text-purple-900"
-                            : "text-gray-700",
-                        )}
-                      >
-                        Lesson Quiz
-                      </span>
-                    </button>
+                    </div>
                   )}
                 </div>
               )}

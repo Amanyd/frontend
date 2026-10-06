@@ -10,6 +10,7 @@ import {
   XCircle,
   Award,
   Loader2,
+  HelpCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -18,6 +19,7 @@ import type { Attempt, Answer, Question, Quiz } from "@/types/quiz";
 interface AttemptResults {
   attempt: Attempt;
   answers: Answer[];
+  questions?: Question[];
 }
 
 interface QuizDetail {
@@ -76,7 +78,12 @@ export default function QuizResultsPage() {
 
   const attempt = results.attempt;
   const answers = Array.isArray(results?.answers) ? results.answers : [];
-  const questions = Array.isArray(quizDetail?.questions) ? quizDetail.questions : [];
+  const questions =
+    Array.isArray(results?.questions) && results.questions.length > 0
+      ? results.questions
+      : Array.isArray(quizDetail?.questions)
+      ? quizDetail.questions
+      : [];
   const score = attempt ? Math.round(attempt.score) : 0;
   const questionsMap = new Map(questions.map((q) => [q.id, q]));
   const correctCount = answers.filter((a) => a.is_correct).length;
@@ -224,7 +231,8 @@ export default function QuizResultsPage() {
                           const isUserSelection =
                             answer.user_answer === choice.label;
                           const isCorrectChoice =
-                            question.answer === choice.label;
+                            (question.answer && question.answer === choice.label) ||
+                            (answer.is_correct && isUserSelection);
 
                           return (
                             <div
@@ -295,7 +303,7 @@ export default function QuizResultsPage() {
                             {answer.user_answer || "No answer provided"}
                           </span>
                         </p>
-                        {!answer.is_correct && (
+                        {!answer.is_correct && question.answer && (
                           <p>
                             <span className="text-gray-500">
                               Expected answer:{" "}
@@ -305,6 +313,19 @@ export default function QuizResultsPage() {
                             </span>
                           </p>
                         )}
+                      </div>
+                    )}
+
+                    {/* Question Technical Explanation */}
+                    {question.explanation && (
+                      <div className="mt-4 p-3.5 rounded-xl bg-blue-50/70 border border-blue-100 flex items-start gap-2.5">
+                        <HelpCircle className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                        <div className="text-[12px] text-blue-950 leading-relaxed">
+                          <span className="font-semibold text-blue-900 block mb-0.5">
+                            Explanation
+                          </span>
+                          {question.explanation}
+                        </div>
                       </div>
                     )}
                   </div>

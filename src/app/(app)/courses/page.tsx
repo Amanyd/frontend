@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { api } from "@/lib/api-client";
-import { CourseGrid } from "@/components/course/course-grid";
+import { CoursePhasesView } from "@/components/course/course-phases-view";
 import type { Course } from "@/types/course";
 import Link from "next/link";
 import { Plus } from "lucide-react";
@@ -50,7 +50,7 @@ export default async function CoursesPage() {
 
       <div className="flex-1 min-h-0 bg-white border border-gray-200 rounded-xl overflow-y-auto p-6 scrollbar-hide">
         <div className="h-full">
-          <CourseGrid courses={courses} isInstructor={isInstructor} />
+          <CoursePhasesView courses={courses} isInstructor={isInstructor} />
         </div>
       </div>
     </div>

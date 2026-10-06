@@ -3,17 +3,15 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { api } from "@/lib/api-client";
 import { CourseCard } from "@/components/course/course-card";
-import { DifficultyBadge } from "@/components/quiz/difficulty-badge";
-import { ArrowRight, CheckCircle2, HelpCircle, Loader2 } from "lucide-react";
-import { capitalize, cn } from "@/lib/utils";
+import { ArrowRight, HelpCircle, Loader2, Sparkles, Award } from "lucide-react";
+import { cn } from "@/lib/utils";
 import type { Quiz } from "@/types/quiz";
 import type { Course } from "@/types/course";
 
 interface CourseQuizRow {
   course: Course;
-  easyQuiz?: Quiz;
-  mediumQuiz?: Quiz;
-  hardQuiz?: Quiz;
+  basicQuiz?: Quiz;
+  advancedQuiz?: Quiz;
 }
 
 export default async function QuizzesPage() {
@@ -41,15 +39,15 @@ export default async function QuizzesPage() {
       // Filter out lesson quizzes; keep course-level comprehensive quizzes
       const courseQuizzes = safeQuizzes.filter((q) => !q.lesson_id);
 
-      const easyQuiz = courseQuizzes.find((q) => q.difficulty === "easy");
-      const mediumQuiz = courseQuizzes.find((q) => q.difficulty === "medium");
-      const hardQuiz = courseQuizzes.find((q) => q.difficulty === "hard");
+      // Basic assessment maps to medium difficulty questions in the question bank
+      const basicQuiz = courseQuizzes.find((q) => q.difficulty === "medium") || courseQuizzes.find((q) => q.difficulty === "easy");
+      // Advanced assessment maps to hard difficulty questions in the question bank
+      const advancedQuiz = courseQuizzes.find((q) => q.difficulty === "hard");
 
       courseRows.push({
         course,
-        easyQuiz,
-        mediumQuiz,
-        hardQuiz,
+        basicQuiz,
+        advancedQuiz,
       });
     } catch {
       courseRows.push({ course });
@@ -65,7 +63,7 @@ export default async function QuizzesPage() {
             Assessments & Quizzes
           </h1>
           <p className="text-[13px] text-gray-500 mt-0.5">
-            Course evaluations and topic assessments
+            Course-wide Basic and Advanced evaluations drawn from lesson question banks
           </p>
         </div>
       </div>
@@ -86,7 +84,7 @@ export default async function QuizzesPage() {
           </div>
         ) : (
           <div className="space-y-6">
-            {courseRows.map(({ course, easyQuiz, mediumQuiz, hardQuiz }, index) => (
+            {courseRows.map(({ course, basicQuiz, advancedQuiz }, index) => (
               <div
                 key={course.id}
                 className="border border-gray-200 rounded-2xl p-5 bg-[#fafbfc]/60 hover:bg-[#fafbfc] transition-colors"
@@ -97,21 +95,20 @@ export default async function QuizzesPage() {
                     <CourseCard course={course} index={index} />
                   </div>
 
-                  {/* Right: 3 Difficulty Boxes (Easy, Medium, Hard) */}
+                  {/* Right: 2 Assessment Boxes (Basic, Advanced) */}
                   <div className="xl:col-span-8 lg:col-span-7 flex flex-col justify-between">
                     <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-100">
                       <span className="text-[13px] font-bold text-gray-800">
-                        Course Assessments
+                        Course Examinations
                       </span>
-                      <span className="text-[11px] text-gray-400 uppercase font-medium">
-                        Tiered Evaluations
+                      <span className="text-[11px] text-gray-400 uppercase font-semibold">
+                        2 Tiers: Basic & Advanced
                       </span>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1">
-                      {renderQuizBox("easy", easyQuiz)}
-                      {renderQuizBox("medium", mediumQuiz)}
-                      {renderQuizBox("hard", hardQuiz)}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1">
+                      {renderQuizBox("basic", basicQuiz)}
+                      {renderQuizBox("advanced", advancedQuiz)}
                     </div>
                   </div>
                 </div>
@@ -124,13 +121,22 @@ export default async function QuizzesPage() {
   );
 }
 
-function renderQuizBox(difficulty: "easy" | "medium" | "hard", quiz?: Quiz) {
+function renderQuizBox(tier: "basic" | "advanced", quiz?: Quiz) {
+  const isBasic = tier === "basic";
+
   if (!quiz) {
     return (
-      <div className="bg-white border border-gray-200 rounded-xl p-4 flex flex-col justify-between min-h-[170px] opacity-60">
+      <div className="bg-white border border-gray-200 rounded-xl p-5 flex flex-col justify-between min-h-[170px] opacity-60">
         <div>
           <div className="flex items-center justify-between mb-3">
-            <DifficultyBadge difficulty={difficulty} />
+            <span className={cn(
+              "text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md border",
+              isBasic
+                ? "bg-blue-50 text-blue-700 border-blue-200"
+                : "bg-purple-50 text-purple-700 border-purple-200"
+            )}>
+              {isBasic ? "Basic Assessment" : "Advanced Assessment"}
+            </span>
             <span className="text-[11px] text-gray-400 font-medium">—</span>
           </div>
           <p className="text-[13px] text-gray-400 mt-4">Not generated</p>
@@ -147,23 +153,37 @@ function renderQuizBox(difficulty: "easy" | "medium" | "hard", quiz?: Quiz) {
 
   const isReady = quiz.status === "ready";
   const isGenerating = quiz.status === "generating";
-  const questionCount = quiz.question_count ?? 10;
+  const questionCount = quiz.question_count ?? (isBasic ? 20 : 15);
   const lastScore = quiz.last_score;
   const isAttempted = quiz.is_attempted;
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-4 flex flex-col justify-between min-h-[170px] hover:border-gray-300 transition-all shadow-none">
+    <div className="bg-white border border-gray-200 rounded-xl p-5 flex flex-col justify-between min-h-[170px] hover:border-gray-300 transition-all shadow-none">
       <div>
-        {/* Top: Difficulty and Questions Count */}
-        <div className="flex items-center justify-between mb-3">
-          <DifficultyBadge difficulty={difficulty} />
+        {/* Top: Tier Badge and Questions Count */}
+        <div className="flex items-center justify-between mb-2">
+          <span className={cn(
+            "text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md border flex items-center gap-1",
+            isBasic
+              ? "bg-blue-50 text-blue-700 border-blue-200"
+              : "bg-purple-50 text-purple-700 border-purple-200"
+          )}>
+            {isBasic ? <Sparkles className="w-3 h-3 text-blue-600" /> : <Award className="w-3 h-3 text-purple-600" />}
+            {isBasic ? "Basic Assessment" : "Advanced Assessment"}
+          </span>
           <span className="text-[11px] text-gray-500 font-medium">
             {questionCount} Questions
           </span>
         </div>
 
+        <p className="text-[12px] text-gray-400 mb-3">
+          {isBasic
+            ? "Comprehensive test with core application & parameter questions"
+            : "Multi-step complex reasoning & analytical scenarios"}
+        </p>
+
         {/* Middle: User's Last Attempt */}
-        <div className="my-2">
+        <div className="my-1">
           <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">
             Last Attempt
           </span>
@@ -203,7 +223,7 @@ function renderQuizBox(difficulty: "easy" | "medium" | "hard", quiz?: Quiz) {
       </div>
 
       {/* Action Button */}
-      <div className="mt-3">
+      <div className="mt-4">
         {isReady ? (
           <Link
             href={`/quizzes/${quiz.id}`}
@@ -211,10 +231,12 @@ function renderQuizBox(difficulty: "easy" | "medium" | "hard", quiz?: Quiz) {
               "w-full text-center py-2 px-3 rounded-lg text-[13px] font-medium transition-colors flex items-center justify-center gap-1.5 shadow-none",
               isAttempted
                 ? "bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-200"
-                : "bg-blue-600 hover:bg-blue-700 text-white"
+                : isBasic
+                ? "bg-blue-600 hover:bg-blue-700 text-white"
+                : "bg-purple-600 hover:bg-purple-700 text-white"
             )}
           >
-            {isAttempted ? "Retake Quiz" : "Start Quiz"}
+            {isAttempted ? "Retake Examination" : "Start Examination"}
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         ) : isGenerating ? (

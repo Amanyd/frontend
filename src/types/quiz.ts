@@ -38,7 +38,7 @@ export type QuestionType = "mcq" | "open_ended";
 
 export interface TopicSlide {
   slide_number: number;
-  slide_type: "concept" | "technical_limits" | "diagram" | "emergency";
+  slide_type: "concept" | "technical_limits" | "diagram" | "emergency" | "summary";
   title: string;
   bullets: string[];
   formula_or_rule?: string;

@@ -392,7 +392,10 @@ export function CoursePlayer({
         )}
 
         {/* Content Area */}
-        <div className="flex-1 min-h-0 overflow-hidden bg-gray-50/50 p-3">
+        <div className={cn(
+          "flex-1 min-h-0 overflow-hidden",
+          viewState === "slides" ? "bg-white p-0" : "bg-gray-50/50 p-3"
+        )}>
           {viewState === "slides" && (
             <TopicSlidesViewer
               key={`slides-${currentLesson?.id}-${currentTopicIdx}`}

@@ -5,14 +5,11 @@ import {
   ChevronLeft,
   ChevronRight,
   BookOpen,
-  Calculator,
-  GitBranch,
-  AlertTriangle,
   CheckCircle2,
-  Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MermaidDiagram } from "./mermaid-diagram";
+import { MathEquation } from "./math-equation";
 import type { LessonTopic, TopicSlide } from "@/types/quiz";
 
 interface TopicSlidesViewerProps {
@@ -39,11 +36,11 @@ export function TopicSlidesViewer({
 
   if (!topics || topics.length === 0) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center p-12 text-center text-gray-400">
+      <div className="flex-1 flex flex-col items-center justify-center p-12 text-center text-gray-400 h-full">
         <BookOpen className="w-12 h-12 text-gray-300 mb-3" />
         <h3 className="text-base font-semibold text-gray-700">No AI Briefing Slides Available</h3>
         <p className="text-[13px] text-gray-400 max-w-sm mt-1">
-          Briefing slides are generated automatically when a lesson plan is uploaded. You can view the original reference document in the next tab.
+          Briefing slides are generated automatically from course manuals. You can view reference files in the next tab.
         </p>
       </div>
     );
@@ -85,102 +82,59 @@ export function TopicSlidesViewer({
     }
   };
 
-  const getSlideIcon = (type: string) => {
-    switch (type) {
-      case "concept":
-        return <BookOpen className="w-4 h-4 text-blue-600" />;
-      case "technical_limits":
-        return <Calculator className="w-4 h-4 text-indigo-600" />;
-      case "diagram":
-        return <GitBranch className="w-4 h-4 text-emerald-600" />;
-      case "emergency":
-        return <AlertTriangle className="w-4 h-4 text-amber-600" />;
-      default:
-        return <Sparkles className="w-4 h-4 text-blue-600" />;
-    }
-  };
-
-  const getSlideLabel = (type: string) => {
-    switch (type) {
-      case "concept":
-        return "Core Concept & Principle";
-      case "technical_limits":
-        return "Formulas & Operating Limits";
-      case "diagram":
-        return "System Schematic & Flow";
-      case "emergency":
-        return "Malfunctions & Emergency Action";
-      default:
-        return "Educational Briefing";
-    }
-  };
-
   return (
-    <div className="flex-1 flex flex-col h-full bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden">
-      {/* Header bar */}
-      <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-slate-50/50 shrink-0">
-        <div>
-          <div className="flex items-center gap-2 mb-0.5">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
-              Topic {topicIdx + 1} of {topics.length}
-            </span>
-            <span className="text-gray-300">•</span>
-            <span className="text-[12px] font-medium text-gray-500">
-              Slide {slideIdx + 1} of {Math.max(1, totalSlides)}
-            </span>
-          </div>
-          <h2 className="text-[16px] font-bold text-gray-900 tracking-tight">
+    <div className="flex-1 flex flex-col h-full bg-white select-text">
+      {/* Running Topic Header */}
+      <div className="px-8 py-3.5 border-b border-gray-100 flex items-center justify-between shrink-0 bg-white">
+        <div className="flex items-center gap-3 min-w-0">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-100 shrink-0">
+            Topic {topicIdx + 1} of {topics.length}
+          </span>
+          <span className="text-[14px] font-semibold text-gray-800 truncate">
             {currentTopic.title}
-          </h2>
+          </span>
         </div>
 
-        {/* Progress pills for slides */}
-        <div className="flex items-center gap-1.5">
-          {slides.map((s, idx) => (
-            <button
-              key={idx}
-              onClick={() => goToSlide(idx)}
-              className={cn(
-                "h-2 rounded-full transition-all cursor-pointer",
-                idx === slideIdx
-                  ? "w-8 bg-blue-600"
-                  : "w-2 bg-gray-200 hover:bg-gray-300"
-              )}
-              title={`Slide ${idx + 1}: ${s.title}`}
-            />
-          ))}
+        {/* Progress indicator */}
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="text-[12px] font-medium text-gray-400">
+            Slide {slideIdx + 1} of {Math.max(1, totalSlides)}
+          </span>
+          <div className="flex items-center gap-1.5 ml-2">
+            {slides.map((s, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => goToSlide(idx)}
+                className={cn(
+                  "h-1.5 rounded-full transition-all cursor-pointer",
+                  idx === slideIdx
+                    ? "w-6 bg-blue-600"
+                    : "w-1.5 bg-gray-200 hover:bg-gray-300"
+                )}
+                title={`Slide ${idx + 1}: ${s.title}`}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Main Slide Content Area */}
-      <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col justify-between">
+      <div className="flex-1 overflow-y-auto px-8 py-6 md:px-12 md:py-8 flex flex-col justify-between">
         {currentSlide ? (
-          <div className="space-y-6 max-w-3xl mx-auto w-full">
-            {/* Slide Type Badge */}
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gray-50 border border-gray-200/80 flex items-center justify-center shrink-0">
-                {getSlideIcon(currentSlide.slide_type)}
-              </div>
-              <div>
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 block">
-                  {getSlideLabel(currentSlide.slide_type)}
-                </span>
-                <h3 className="text-xl font-bold text-gray-900">
-                  {currentSlide.title}
-                </h3>
-              </div>
-            </div>
+          <div className="max-w-3xl w-full mx-auto">
+            {/* Single Slide Heading */}
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight mb-6">
+              {currentSlide.title}
+            </h2>
 
-            {/* Bullets */}
+            {/* Bullets: Clean open typography with subtle check icons */}
             {currentSlide.bullets && currentSlide.bullets.length > 0 && (
-              <div className="space-y-3">
+              <div className="space-y-4 mb-6">
                 {currentSlide.bullets.map((bullet, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-start gap-3 p-3.5 rounded-xl bg-gray-50/70 border border-gray-100 hover:border-blue-100 transition-colors"
-                  >
-                    <CheckCircle2 className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
-                    <p className="text-[14px] leading-relaxed text-gray-700">
+                  <div key={idx} className="flex items-start gap-3">
+                    <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-1" />
+                    <p className="text-[15px] leading-relaxed text-gray-700 font-normal">
                       {bullet}
                     </p>
                   </div>
@@ -188,34 +142,25 @@ export function TopicSlidesViewer({
               </div>
             )}
 
-            {/* Formula / Rule Callout */}
+            {/* Formula / Equations: Rendered with KaTeX */}
             {currentSlide.formula_or_rule && (
-              <div className="p-4 rounded-xl bg-gradient-to-r from-blue-50/80 to-indigo-50/60 border border-blue-200/60 shadow-sm">
-                <div className="flex items-center gap-2 mb-1.5 text-blue-900 font-semibold text-[13px]">
-                  <Calculator className="w-4 h-4 text-blue-600" />
-                  <span>Aviation Formula & Operating Limit</span>
-                </div>
-                <div className="font-mono text-[14px] font-bold text-blue-950 bg-white/80 p-3 rounded-lg border border-blue-100/80">
-                  {currentSlide.formula_or_rule}
-                </div>
-              </div>
+              <MathEquation formula={currentSlide.formula_or_rule} />
             )}
 
-            {/* Diagram (Mermaid.js) */}
+            {/* Mermaid Diagram */}
             {currentSlide.diagram_mermaid && (
-              <div className="my-4">
+              <div className="my-6 p-4 rounded-xl border border-gray-100 bg-slate-50/50">
                 <MermaidDiagram code={currentSlide.diagram_mermaid} />
               </div>
             )}
 
-            {/* In-Flight Warning / Emergency Box */}
+            {/* Warning / Emergency / Summary Callout */}
             {currentSlide.warning && (
-              <div className="p-4 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50/50 border border-amber-200 shadow-sm">
-                <div className="flex items-center gap-2 mb-1 text-amber-900 font-bold text-[13px]">
-                  <AlertTriangle className="w-4 h-4 text-amber-600" />
-                  <span>OPERATIONAL WARNING / COCKPIT ACTION</span>
-                </div>
-                <p className="text-[13px] leading-relaxed text-amber-950 font-medium">
+              <div className="my-5 p-4 rounded-xl border border-amber-200 bg-amber-50/60 shadow-2xs">
+                <p className="text-xs font-bold text-amber-900 uppercase tracking-wider mb-1">
+                  Operational Note
+                </p>
+                <p className="text-[13px] text-amber-950 font-medium leading-relaxed">
                   {currentSlide.warning}
                 </p>
               </div>
@@ -227,16 +172,16 @@ export function TopicSlidesViewer({
           </div>
         )}
 
-        {/* Footer Navigation Bar */}
-        <div className="pt-6 border-t border-gray-100 flex items-center justify-between mt-8 max-w-3xl mx-auto w-full">
+        {/* Clean Slide Navigation Footer */}
+        <div className="pt-6 border-t border-gray-100 flex items-center justify-between max-w-3xl w-full mx-auto mt-8 shrink-0">
           <button
             type="button"
             onClick={goToPrev}
             disabled={slideIdx === 0 && topicIdx === 0}
-            className="h-9 px-4 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-xl text-[13px] font-medium transition-colors flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+            className="h-9 px-4 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-lg text-[13px] font-medium transition-colors flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
           >
             <ChevronLeft className="w-4 h-4" />
-            Previous
+            Previous Slide
           </button>
 
           <span className="text-[12px] font-medium text-gray-400">
@@ -246,7 +191,7 @@ export function TopicSlidesViewer({
           <button
             type="button"
             onClick={goToNext}
-            className="h-9 px-5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-[13px] font-medium transition-colors shadow-sm flex items-center gap-1.5 cursor-pointer"
+            className="h-9 px-5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-[13px] font-medium transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer"
           >
             {slideIdx === totalSlides - 1 && topicIdx === topics.length - 1 ? (
               "Finish Briefing"

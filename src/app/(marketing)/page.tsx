@@ -339,7 +339,7 @@ export default function HomePage() {
             </div>
           </div>
         </main>
-        <footer className="footer-drenched relative z-10 overflow-clip" data-astro-cid-sz7xmlte="" style={{ backgroundImage: 'url(/images/after.webp)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <footer className="footer-drenched relative z-10 overflow-hidden rounded-t-2xl border-t border-border shadow-xs" data-astro-cid-sz7xmlte="" style={{ backgroundImage: 'url(/images/after.webp)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
           {/* Top band: editorial copy + link columns. Editorial flex-grows 1.4,
        column container flex-grows 2 → editorial gets ~41% of width. */}
           <div className="footer-top" data-astro-cid-sz7xmlte="" style={{ justifyContent: 'space-between', width: '100%' }}>

@@ -16,7 +16,7 @@ import {
   BookOpen,
   Timer,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, toTitleCase } from "@/lib/utils";
 import type { LessonWithContent } from "@/types/progress";
 
 interface LessonSidebarProps {
@@ -209,7 +209,7 @@ export function LessonSidebar({
                                 )}
                               />
                               <span className="text-[12px] truncate">
-                                {topic.title}
+                                {toTitleCase(topic.title)}
                               </span>
                               <span className="ml-auto text-[10px] font-semibold text-blue-600/70 bg-blue-50 px-1 rounded shrink-0">
                                 {topic.slides?.length || 4}s

@@ -7,7 +7,7 @@ import {
   BookOpen,
   CheckCircle2,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, toTitleCase } from "@/lib/utils";
 import { MermaidDiagram } from "./mermaid-diagram";
 import { MathEquation } from "./math-equation";
 import type { LessonTopic, TopicSlide } from "@/types/quiz";
@@ -91,7 +91,7 @@ export function TopicSlidesViewer({
             Topic {topicIdx + 1} of {topics.length}
           </span>
           <span className="text-[14px] font-semibold text-gray-800 truncate">
-            {currentTopic.title}
+            {toTitleCase(currentTopic.title)}
           </span>
         </div>
 

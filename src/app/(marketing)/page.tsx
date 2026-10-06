@@ -70,16 +70,16 @@ export default function HomePage() {
                     Trusted by elite engineers at
                   </p>
                   <div className="font-heading text-3xl md:text-4xl mt-3 font-medium text-text tracking-tight" data-astro-cid-3rtzm5mn="">
-                    Naval Institute of Aviation Technology
+                    Naval Institute of Aeronautical Technology
                   </div>
                 </div>
 
               </div>
             </div>
           </section>
-        </div>
-        {/* Main content container */}
-        <div className="w-full max-w-[1232px] px-6 max-md:px-4 py-12" data-astro-cid-j7pv25f6="">
+          </div>
+          {/* Main content container */}
+          <div className="w-full max-w-[1232px] px-6 max-md:px-4 py-12" data-astro-cid-j7pv25f6="">
             <div className="w-full flex flex-col items-center gap-10" data-astro-cid-j7pv25f6="">
               <section className="w-full border border-border rounded-2xl overflow-hidden bg-bg shadow-xs" id="catalog-section" data-astro-cid-p4n2ralz="">
                 <div className="w-full bg-bg" data-astro-cid-p4n2ralz="">

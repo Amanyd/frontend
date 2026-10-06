@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, ChevronLeft, ChevronRight, Send, Clock, Timer, Award } from "lucide-react";
+import { Loader2, ChevronLeft, ChevronRight, Send, Clock, Timer, Award, CheckCircle2, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { clientApi } from "@/lib/api-client.client";
 import {
@@ -21,9 +21,10 @@ interface QuizDetail {
 
 interface QuizViewerProps {
   quiz: Quiz;
+  onPass?: (score: number) => void;
 }
 
-export function QuizViewer({ quiz }: QuizViewerProps) {
+export function QuizViewer({ quiz, onPass }: QuizViewerProps) {
   const {
     attemptId,
     currentQuestion,
@@ -94,16 +95,20 @@ export function QuizViewer({ quiz }: QuizViewerProps) {
       await Promise.all(submitPromises);
 
       const resultAttempt = await finishAttempt.mutateAsync(attemptId);
+      const finalScore = Math.round(resultAttempt.score);
       setResultsScore({
-        score: Math.round(resultAttempt.score),
+        score: finalScore,
         total: resultAttempt.total,
       });
       setState("results");
+      if (finalScore >= 50) {
+        onPass?.(finalScore);
+      }
     } catch (err) {
       console.error("Failed to submit quiz", err);
       setState("attempting");
     }
-  }, [attemptId, answers, submitAnswer, finishAttempt]);
+  }, [attemptId, answers, submitAnswer, finishAttempt, onPass]);
 
   // Countdown ticker
   useEffect(() => {
@@ -312,11 +317,25 @@ export function QuizViewer({ quiz }: QuizViewerProps) {
           <Logo className="w-[24px] h-[24px] text-blue-500" />
         </div>
 
-        <div className="flex items-baseline justify-center gap-1 mb-1.5">
+        <div className="flex items-baseline justify-center gap-1 mb-2">
           <span className="text-4xl font-bold text-gray-900 tracking-tight">
             {resultsScore?.score ?? 0}
           </span>
           <span className="text-xl font-semibold text-gray-400">%</span>
+        </div>
+
+        <div className="mb-4">
+          {(resultsScore?.score ?? 0) >= 50 ? (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[12px] font-semibold bg-green-50 text-green-700 border border-green-200">
+              <CheckCircle2 className="w-3.5 h-3.5 text-green-600" />
+              Passed (≥ 50%) — Next Lesson Unlocked
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[12px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+              <XCircle className="w-3.5 h-3.5 text-amber-600" />
+              Score below 50% — Score at least 50% to pass & unlock next lesson
+            </span>
+          )}
         </div>
 
         <p className="text-[13px] text-gray-500 mb-6">
@@ -333,7 +352,7 @@ export function QuizViewer({ quiz }: QuizViewerProps) {
             setState("idle");
             setResultsScore(null);
           }}
-          className="h-8 px-3 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-lg text-[13px] font-medium transition-colors shadow-none cursor-pointer"
+          className="h-8 px-4 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-lg text-[13px] font-medium transition-colors shadow-none cursor-pointer"
         >
           Retake Quiz
         </button>

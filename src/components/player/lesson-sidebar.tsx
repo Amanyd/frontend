@@ -15,6 +15,7 @@ import {
   Sparkles,
   BookOpen,
   Timer,
+  Lock,
 } from "lucide-react";
 import { cn, toTitleCase } from "@/lib/utils";
 import type { LessonWithContent } from "@/types/progress";
@@ -27,6 +28,8 @@ interface LessonSidebarProps {
   viewState: "slides" | "file" | "quiz" | "certificate";
   isLessonComplete: (lessonId: string) => boolean;
   isFileViewed: (lessonId: string, fileId: string) => boolean;
+  isLessonUnlocked?: (lessonIdx: number) => boolean;
+  allLessonsPassed?: boolean;
   percentage: number;
   completedCount: number;
   onTopicSelect?: (lessonIdx: number, topicIdx: number) => void;
@@ -55,6 +58,8 @@ export function LessonSidebar({
   viewState,
   isLessonComplete,
   isFileViewed,
+  isLessonUnlocked,
+  allLessonsPassed = false,
   percentage,
   completedCount,
   onTopicSelect,
@@ -121,6 +126,7 @@ export function LessonSidebar({
           const isExpanded = expandedIds.has(lesson.id);
           const isCurrent = lessonIdx === currentLessonIdx;
           const isComplete = isLessonComplete(lesson.id);
+          const isUnlocked = isLessonUnlocked ? isLessonUnlocked(lessonIdx) : lessonIdx === 0;
 
           return (
             <div key={lesson.id} className="border-b border-gray-100 last:border-b-0">
@@ -128,15 +134,21 @@ export function LessonSidebar({
               <button
                 onClick={() => toggleExpand(lesson.id)}
                 className={cn(
-                  "w-full flex items-center gap-3 px-5 py-3.5 text-left transition-colors",
-                  isCurrent
+                  "w-full flex items-center gap-3 px-5 py-3.5 text-left transition-colors cursor-pointer",
+                  !isUnlocked
+                    ? "hover:bg-gray-50/70"
+                    : isCurrent
                     ? "bg-blue-50/50"
                     : "hover:bg-gray-50",
                 )}
               >
                 {/* Status icon */}
                 <div className="shrink-0">
-                  {isComplete ? (
+                  {!isUnlocked ? (
+                    <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center">
+                      <Lock className="w-3 h-3 text-gray-400" />
+                    </div>
+                  ) : isComplete ? (
                     <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
                       <Check className="w-3 h-3 text-white" strokeWidth={3} />
                     </div>
@@ -151,14 +163,27 @@ export function LessonSidebar({
 
                 {/* Lesson info */}
                 <div className="flex-1 min-w-0">
-                  <p
-                    className={cn(
-                      "text-[13px] font-semibold truncate",
-                      isCurrent ? "text-blue-700" : isComplete ? "text-gray-500" : "text-gray-900",
+                  <div className="flex items-center gap-1.5">
+                    <p
+                      className={cn(
+                        "text-[13px] font-semibold truncate",
+                        !isUnlocked
+                          ? "text-gray-400"
+                          : isCurrent
+                          ? "text-blue-700"
+                          : isComplete
+                          ? "text-gray-500"
+                          : "text-gray-900",
+                      )}
+                    >
+                      Lesson {lessonIdx + 1}
+                    </p>
+                    {!isUnlocked && (
+                      <span className="text-[9px] font-bold uppercase tracking-wider bg-gray-100 text-gray-500 px-1 py-0.2 rounded shrink-0">
+                        Locked
+                      </span>
                     )}
-                  >
-                    Lesson {lessonIdx + 1}
-                  </p>
+                  </div>
                   <p className="text-[11px] text-gray-500 truncate">
                     {lesson.title}
                   </p>
@@ -194,12 +219,15 @@ export function LessonSidebar({
                           return (
                             <button
                               key={topic.id || topicIdx}
-                              onClick={() => onTopicSelect?.(lessonIdx, topicIdx)}
+                              disabled={!isUnlocked}
+                              onClick={() => isUnlocked && onTopicSelect?.(lessonIdx, topicIdx)}
                               className={cn(
                                 "w-full flex items-center gap-2.5 pl-8 pr-5 py-2 text-left transition-all",
-                                isCurrentTopic
-                                  ? "bg-blue-50/80 border-l-2 border-blue-600 text-blue-900 font-semibold"
-                                  : "hover:bg-gray-50 border-l-2 border-transparent text-gray-700",
+                                !isUnlocked
+                                  ? "opacity-50 cursor-not-allowed"
+                                  : isCurrentTopic
+                                  ? "bg-blue-50/80 border-l-2 border-blue-600 text-blue-900 font-semibold cursor-pointer"
+                                  : "hover:bg-gray-50 border-l-2 border-transparent text-gray-700 cursor-pointer",
                               )}
                             >
                               <BookOpen
@@ -240,12 +268,15 @@ export function LessonSidebar({
                           return (
                             <button
                               key={file.id}
-                              onClick={() => onFileSelect(lessonIdx, fileIdx)}
+                              disabled={!isUnlocked}
+                              onClick={() => isUnlocked && onFileSelect(lessonIdx, fileIdx)}
                               className={cn(
                                 "w-full flex items-center gap-2.5 pl-8 pr-5 py-2 text-left transition-all",
-                                isCurrentFile
-                                  ? "bg-blue-50 border-l-2 border-blue-500 font-semibold text-blue-700"
-                                  : "hover:bg-gray-50 border-l-2 border-transparent text-gray-700",
+                                !isUnlocked
+                                  ? "opacity-50 cursor-not-allowed"
+                                  : isCurrentFile
+                                  ? "bg-blue-50 border-l-2 border-blue-500 font-semibold text-blue-700 cursor-pointer"
+                                  : "hover:bg-gray-50 border-l-2 border-transparent text-gray-700 cursor-pointer",
                               )}
                             >
                               {isCurrentFile ? (
@@ -288,12 +319,15 @@ export function LessonSidebar({
                       </div>
                       <div className="mt-0.5">
                         <button
-                          onClick={() => onQuizSelect(lessonIdx)}
+                          disabled={!isUnlocked}
+                          onClick={() => isUnlocked && onQuizSelect(lessonIdx)}
                           className={cn(
                             "w-full flex items-center gap-2.5 pl-8 pr-5 py-2 text-left transition-all",
-                            lessonIdx === currentLessonIdx && viewState === "quiz"
-                              ? "bg-purple-50 border-l-2 border-purple-500 text-purple-900 font-semibold"
-                              : "hover:bg-gray-50 border-l-2 border-transparent text-gray-700",
+                            !isUnlocked
+                              ? "opacity-50 cursor-not-allowed"
+                              : lessonIdx === currentLessonIdx && viewState === "quiz"
+                              ? "bg-purple-50 border-l-2 border-purple-500 text-purple-900 font-semibold cursor-pointer"
+                              : "hover:bg-gray-50 border-l-2 border-transparent text-gray-700 cursor-pointer",
                           )}
                         >
                           <div className="w-3.5 h-3.5 shrink-0 flex items-center justify-center">
@@ -318,28 +352,51 @@ export function LessonSidebar({
         {/* Certificate Item */}
         <div className="border-t border-gray-200">
           <button
-            onClick={onCertificateSelect}
+            onClick={allLessonsPassed ? onCertificateSelect : undefined}
+            disabled={!allLessonsPassed}
             className={cn(
               "w-full flex items-center gap-3 px-5 py-4 text-left transition-colors",
-              viewState === "certificate"
-                ? "bg-yellow-50 border-l-4 border-yellow-500"
-                : "hover:bg-gray-50 border-l-4 border-transparent",
+              !allLessonsPassed
+                ? "opacity-60 cursor-not-allowed bg-gray-50/50"
+                : viewState === "certificate"
+                ? "bg-yellow-50 border-l-4 border-yellow-500 cursor-pointer"
+                : "hover:bg-gray-50 border-l-4 border-transparent cursor-pointer",
             )}
           >
-            <div className="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center shrink-0">
-              <Award className="w-4 h-4 text-yellow-600" />
+            <div
+              className={cn(
+                "w-8 h-8 rounded-full flex items-center justify-center shrink-0",
+                allLessonsPassed ? "bg-yellow-100" : "bg-gray-200"
+              )}
+            >
+              {allLessonsPassed ? (
+                <Award className="w-4 h-4 text-yellow-600" />
+              ) : (
+                <Lock className="w-4 h-4 text-gray-500" />
+              )}
             </div>
             <div className="flex-1 min-w-0">
-              <p
-                className={cn(
-                  "text-[13px] font-bold",
-                  viewState === "certificate" ? "text-yellow-900" : "text-gray-900",
+              <div className="flex items-center gap-2">
+                <p
+                  className={cn(
+                    "text-[13px] font-bold",
+                    allLessonsPassed
+                      ? viewState === "certificate"
+                        ? "text-yellow-900"
+                        : "text-gray-900"
+                      : "text-gray-500",
+                  )}
+                >
+                  Course Certificate
+                </p>
+                {!allLessonsPassed && (
+                  <span className="text-[9px] font-bold uppercase tracking-wider bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded">
+                    Locked
+                  </span>
                 )}
-              >
-                Finish
-              </p>
+              </div>
               <p className="text-[11px] text-gray-500">
-                Claim Certificate
+                {allLessonsPassed ? "Claim Certificate" : "Score ≥ 50% on all exams to unlock"}
               </p>
             </div>
           </button>

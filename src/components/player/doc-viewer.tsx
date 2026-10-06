@@ -14,15 +14,41 @@ interface DocViewerProps {
 
 export function DocViewer({ file }: DocViewerProps) {
   const [url, setUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     setUrl(null);
-    clientApi.get<{url: string}>(`/api/v1/files/${file.id}/view`).then(res => {
-      if (!cancelled) setUrl(res.url);
-    }).catch(console.error);
-    return () => { cancelled = true; };
+    setError(null);
+
+    clientApi
+      .get<{ url: string }>(`/api/v1/files/${file.id}/view`)
+      .then((res) => {
+        if (!cancelled && res?.url) {
+          const proxiedUrl = `/api/files/proxy?url=${encodeURIComponent(res.url)}`;
+          setUrl(proxiedUrl);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to load file view URL:", err);
+        if (!cancelled) {
+          setError("Failed to generate secure preview link for this document.");
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [file.id]);
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full gap-3 text-gray-500 p-6 text-center">
+        <p className="text-[14px] font-medium text-gray-700">{error}</p>
+        <p className="text-[12px] text-gray-400">File: {file.file_name}</p>
+      </div>
+    );
+  }
 
   if (!url) {
     return (

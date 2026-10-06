@@ -1,15 +1,10 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import {
   ChevronLeft,
   ChevronRight,
   CheckCircle2,
-  Sparkles,
-  BookOpen,
-  FileText,
-  HelpCircle,
-  Timer,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DocViewer } from "./doc-viewer";
@@ -113,20 +108,37 @@ export function CoursePlayer({
     viewState === "quiz" ||
     viewState === "certificate";
 
+  const isCurrentLessonComplete = currentLesson
+    ? isLessonComplete(currentLesson.id)
+    : false;
+
+  // Lesson is unlocked if it's the first lesson, or if all previous lessons are complete (>= 50% score)
+  const isLessonUnlocked = useCallback(
+    (lessonIdx: number) => {
+      if (lessonIdx === 0) return true;
+      for (let i = 0; i < lessonIdx; i++) {
+        if (!isLessonComplete(lessons[i].id)) {
+          return false;
+        }
+      }
+      return true;
+    },
+    [lessons, isLessonComplete]
+  );
+
+  const allLessonsPassed = useMemo(() => {
+    return lessons.length > 0 && lessons.every((l) => isLessonComplete(l.id));
+  }, [lessons, isLessonComplete]);
+
   const canGoNext =
-    (viewState === "slides" && (currentTopicIdx < totalTopicsInLesson - 1 || totalFilesInLesson > 0 || hasQuiz || currentLessonIdx < lessons.length - 1)) ||
-    (viewState === "file" && (currentFileIdx < totalFilesInLesson - 1 || hasQuiz || currentLessonIdx < lessons.length - 1)) ||
-    (viewState === "quiz" && currentLessonIdx < lessons.length - 1) ||
-    (viewState === "slides" && currentLessonIdx < lessons.length - 1);
+    (viewState === "slides" && (currentTopicIdx < totalTopicsInLesson - 1 || totalFilesInLesson > 0 || hasQuiz || (currentLessonIdx < lessons.length - 1 && isCurrentLessonComplete))) ||
+    (viewState === "file" && (currentFileIdx < totalFilesInLesson - 1 || hasQuiz || (currentLessonIdx < lessons.length - 1 && isCurrentLessonComplete))) ||
+    (viewState === "quiz" && ((currentLessonIdx < lessons.length - 1 && isCurrentLessonComplete) || (currentLessonIdx === lessons.length - 1 && allLessonsPassed)));
 
   const isLastItemInLesson =
     viewState === "quiz" ||
     (!hasQuiz && viewState === "file" && currentFileIdx === totalFilesInLesson - 1) ||
     (!hasQuiz && totalFilesInLesson === 0 && viewState === "slides" && currentTopicIdx === totalTopicsInLesson - 1);
-
-  const isCurrentLessonComplete = currentLesson
-    ? isLessonComplete(currentLesson.id)
-    : false;
 
   const goNext = useCallback(() => {
     if (viewState === "slides") {
@@ -138,6 +150,7 @@ export function CoursePlayer({
       } else if (hasQuiz) {
         setViewState("quiz");
       } else if (currentLessonIdx < lessons.length - 1) {
+        if (!currentLesson || !isLessonComplete(currentLesson.id)) return;
         const nextIdx = currentLessonIdx + 1;
         setCurrentLessonIdx(nextIdx);
         setCurrentTopicIdx(0);
@@ -146,7 +159,9 @@ export function CoursePlayer({
         const nextTopics = topicsCache[nextLesson?.id] || nextLesson?.topics || [];
         setViewState(nextTopics.length > 0 ? "slides" : "file");
       } else {
-        setViewState("certificate");
+        if (allLessonsPassed) {
+          setViewState("certificate");
+        }
       }
     } else if (viewState === "file") {
       if (currentFileIdx < totalFilesInLesson - 1) {
@@ -154,6 +169,7 @@ export function CoursePlayer({
       } else if (hasQuiz) {
         setViewState("quiz");
       } else if (currentLessonIdx < lessons.length - 1) {
+        if (!currentLesson || !isLessonComplete(currentLesson.id)) return;
         const nextIdx = currentLessonIdx + 1;
         setCurrentLessonIdx(nextIdx);
         setCurrentTopicIdx(0);
@@ -162,10 +178,13 @@ export function CoursePlayer({
         const nextTopics = topicsCache[nextLesson?.id] || nextLesson?.topics || [];
         setViewState(nextTopics.length > 0 ? "slides" : "file");
       } else {
-        setViewState("certificate");
+        if (allLessonsPassed) {
+          setViewState("certificate");
+        }
       }
     } else if (viewState === "quiz") {
       if (currentLessonIdx < lessons.length - 1) {
+        if (!currentLesson || !isLessonComplete(currentLesson.id)) return;
         const nextIdx = currentLessonIdx + 1;
         setCurrentLessonIdx(nextIdx);
         setCurrentTopicIdx(0);
@@ -174,7 +193,9 @@ export function CoursePlayer({
         const nextTopics = topicsCache[nextLesson?.id] || nextLesson?.topics || [];
         setViewState(nextTopics.length > 0 ? "slides" : "file");
       } else {
-        setViewState("certificate");
+        if (allLessonsPassed) {
+          setViewState("certificate");
+        }
       }
     }
   }, [
@@ -185,8 +206,11 @@ export function CoursePlayer({
     totalFilesInLesson,
     hasQuiz,
     currentLessonIdx,
+    currentLesson,
     lessons,
     topicsCache,
+    isLessonComplete,
+    allLessonsPassed,
     setCurrentFileIdx,
     setCurrentLessonIdx,
   ]);
@@ -258,33 +282,37 @@ export function CoursePlayer({
 
   const goToTopic = useCallback(
     (lessonIdx: number, topicIdx: number) => {
+      if (!isLessonUnlocked(lessonIdx)) return;
       setCurrentLessonIdx(lessonIdx);
       setCurrentTopicIdx(topicIdx);
       setViewState("slides");
     },
-    [setCurrentLessonIdx]
+    [setCurrentLessonIdx, isLessonUnlocked]
   );
 
   const goToFile = useCallback(
     (lessonIdx: number, fileIdx: number) => {
+      if (!isLessonUnlocked(lessonIdx)) return;
       setCurrentLessonIdx(lessonIdx);
       setCurrentFileIdx(fileIdx);
       setViewState("file");
     },
-    [setCurrentLessonIdx, setCurrentFileIdx]
+    [setCurrentLessonIdx, setCurrentFileIdx, isLessonUnlocked]
   );
 
   const goToQuiz = useCallback(
     (lessonIdx: number) => {
+      if (!isLessonUnlocked(lessonIdx)) return;
       setCurrentLessonIdx(lessonIdx);
       setViewState("quiz");
     },
-    [setCurrentLessonIdx]
+    [setCurrentLessonIdx, isLessonUnlocked]
   );
 
   const goToCertificate = useCallback(() => {
+    if (!allLessonsPassed) return;
     setViewState("certificate");
-  }, []);
+  }, [allLessonsPassed]);
 
   const handleMarkComplete = useCallback(() => {
     if (currentLesson) {
@@ -301,43 +329,31 @@ export function CoursePlayer({
         {viewState !== "certificate" && (
           <div className="shrink-0 px-6 py-2.5 border-b border-gray-200 flex items-center justify-between bg-white gap-4">
             {/* Mode Switcher Tabs */}
-            <div className="flex items-center gap-1.5 p-1 bg-gray-100 rounded-xl">
+            <div className="flex items-center gap-1 p-1 bg-gray-100 rounded-xl">
               <button
                 type="button"
                 onClick={() => setViewState("slides")}
                 className={cn(
-                  "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all cursor-pointer",
+                  "px-3.5 py-1.5 rounded-lg text-[13px] font-semibold transition-all cursor-pointer",
                   viewState === "slides"
                     ? "bg-white text-blue-700 shadow-xs"
                     : "text-gray-600 hover:text-gray-900"
                 )}
               >
-                <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-                <span>AI Briefing</span>
-                {totalTopicsInLesson > 0 && (
-                  <span className="text-[10px] font-bold bg-blue-50 text-blue-600 px-1.5 py-0.2 rounded-full border border-blue-100">
-                    {totalTopicsInLesson}
-                  </span>
-                )}
+                AI Briefing
               </button>
 
               <button
                 type="button"
                 onClick={() => setViewState("file")}
                 className={cn(
-                  "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all cursor-pointer",
+                  "px-3.5 py-1.5 rounded-lg text-[13px] font-semibold transition-all cursor-pointer",
                   viewState === "file"
                     ? "bg-white text-gray-900 shadow-xs"
                     : "text-gray-600 hover:text-gray-900"
                 )}
               >
-                <FileText className="w-3.5 h-3.5 text-gray-500" />
-                <span>Reference Manuals</span>
-                {totalFilesInLesson > 0 && (
-                  <span className="text-[10px] font-bold bg-gray-200/80 text-gray-700 px-1.5 py-0.2 rounded-full">
-                    {totalFilesInLesson}
-                  </span>
-                )}
+                Reference Manuals
               </button>
 
               {hasQuiz && (
@@ -345,17 +361,13 @@ export function CoursePlayer({
                   type="button"
                   onClick={() => setViewState("quiz")}
                   className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all cursor-pointer",
+                    "px-3.5 py-1.5 rounded-lg text-[13px] font-semibold transition-all cursor-pointer",
                     viewState === "quiz"
                       ? "bg-white text-purple-700 shadow-xs"
                       : "text-gray-600 hover:text-purple-900"
                   )}
                 >
-                  <Timer className="w-3.5 h-3.5 text-purple-600" />
-                  <span>Exam</span>
-                  <span className="text-[10px] font-bold bg-purple-50 text-purple-600 px-1.5 py-0.2 rounded-full border border-purple-100">
-                    10m
-                  </span>
+                  Exam
                 </button>
               )}
             </div>
@@ -417,7 +429,15 @@ export function CoursePlayer({
           )}
 
           {viewState === "quiz" && currentLesson?.quiz && (
-            <QuizViewer key={`quiz-${currentLesson?.id}`} quiz={currentLesson.quiz} />
+            <QuizViewer
+              key={`quiz-${currentLesson?.id}`}
+              quiz={currentLesson.quiz}
+              onPass={(score) => {
+                if (currentLesson) {
+                  markLessonComplete(currentLesson.id);
+                }
+              }}
+            />
           )}
 
           {viewState === "certificate" && (
@@ -447,7 +467,7 @@ export function CoursePlayer({
 
           {/* Center: Mark Complete / Lesson info */}
           <div className="flex items-center gap-3">
-            {isLastItemInLesson && !isCurrentLessonComplete && (
+            {isLastItemInLesson && !hasQuiz && !isCurrentLessonComplete && (
               <button
                 onClick={handleMarkComplete}
                 className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-[13px] font-medium rounded-lg transition-colors cursor-pointer"
@@ -494,6 +514,8 @@ export function CoursePlayer({
         isFileViewed={isFileViewed}
         percentage={percentage}
         completedCount={completedCount}
+        isLessonUnlocked={isLessonUnlocked}
+        allLessonsPassed={allLessonsPassed}
         onTopicSelect={goToTopic}
         onFileSelect={goToFile}
         onQuizSelect={goToQuiz}

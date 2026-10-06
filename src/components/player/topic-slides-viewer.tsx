@@ -122,19 +122,19 @@ export function TopicSlidesViewer({
       {/* Main Slide Content Area */}
       <div className="flex-1 overflow-y-auto px-8 py-6 md:px-12 md:py-8 flex flex-col justify-between">
         {currentSlide ? (
-          <div className="max-w-3xl w-full mx-auto">
+          <div className="max-w-4xl w-full mx-auto my-auto py-6">
             {/* Single Slide Heading */}
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight mb-6">
+            <h2 className="text-3xl md:text-4xl lg:text-[38px] font-bold text-gray-900 tracking-tight mb-10 leading-snug">
               {currentSlide.title}
             </h2>
 
             {/* Bullets: Clean open typography with subtle check icons */}
             {currentSlide.bullets && currentSlide.bullets.length > 0 && (
-              <div className="space-y-4 mb-6">
+              <div className="space-y-7 mb-10">
                 {currentSlide.bullets.map((bullet, idx) => (
-                  <div key={idx} className="flex items-start gap-3">
-                    <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-1" />
-                    <p className="text-[15px] leading-relaxed text-gray-700 font-normal">
+                  <div key={idx} className="flex items-start gap-4">
+                    <CheckCircle2 className="w-6 h-6 text-blue-600 shrink-0 mt-1" />
+                    <p className="text-[20px] md:text-[22px] leading-[1.7] text-gray-800 font-normal">
                       {bullet}
                     </p>
                   </div>
@@ -156,24 +156,24 @@ export function TopicSlidesViewer({
 
             {/* Warning / Emergency / Summary Callout */}
             {currentSlide.warning && (
-              <div className="my-5 p-4 rounded-xl border border-amber-200 bg-amber-50/60 shadow-2xs">
-                <p className="text-xs font-bold text-amber-900 uppercase tracking-wider mb-1">
+              <div className="my-6 p-5 rounded-xl border border-amber-200 bg-amber-50/70 shadow-2xs">
+                <p className="text-[13px] font-bold text-amber-900 uppercase tracking-wider mb-1.5">
                   Operational Note
                 </p>
-                <p className="text-[13px] text-amber-950 font-medium leading-relaxed">
+                <p className="text-[17px] md:text-[18px] text-amber-950 font-medium leading-relaxed">
                   {currentSlide.warning}
                 </p>
               </div>
             )}
           </div>
         ) : (
-          <div className="flex items-center justify-center h-full text-gray-400">
+          <div className="flex items-center justify-center h-full text-gray-400 text-base">
             Slide content loading…
           </div>
         )}
 
         {/* Clean Slide Navigation Footer */}
-        <div className="pt-6 border-t border-gray-100 flex items-center justify-between max-w-3xl w-full mx-auto mt-8 shrink-0">
+        <div className="pt-6 border-t border-gray-100 flex items-center justify-between max-w-4xl w-full mx-auto mt-8 shrink-0">
           <button
             type="button"
             onClick={goToPrev}

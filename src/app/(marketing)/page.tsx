@@ -55,7 +55,7 @@ export default function HomePage() {
              max-xl:text-[60px]
              max-lg:text-[44px] max-lg:tracking-[-0.05em]
              max-md:text-[42px] max-md:leading-[1.06] max-md:tracking-[-0.046em]" data-astro-cid-bbe6dxrz="">
-                AI-driven training<br className="xl:hidden" data-astro-cid-bbe6dxrz="" /> for <span className="hero-headline-brain-wrap" aria-hidden="true" data-astro-cid-bbe6dxrz=""> <img src="/Gemini_Generated_Image_lu4xmqlu4xmqlu4x-removebg-preview.webp" alt="" className="hero-headline-brain" loading="eager" fetchPriority="high" data-astro-cid-bbe6dxrz="" /> <canvas id="headline-brain-canvas" width="363" height="363" className="hero-headline-brain-canvas" data-astro-cid-bbe6dxrz=""></canvas> </span> Naval officers<span className="text-blue" data-astro-cid-bbe6dxrz="">.</span> </h1> {/* Subhead */} <p className="hero-step hero-subhead max-w-[600px] font-body text-text-muted
+                AI-driven training<br className="xl:hidden" data-astro-cid-bbe6dxrz="" /> for <span className="inline-block align-baseline" aria-hidden="true"> <svg viewBox="0 0 30 24" fill="none" className="inline-block h-[0.82em] w-auto align-[-0.08em] mx-1 text-text" aria-hidden="true"> <path d="M29.3388 9.46767H18.448V0.00146484H14.9293V10.2725C14.9293 11.3634 15.36 12.411 16.1254 13.183L25.018 22.151L27.506 19.6419L20.938 13.0183H29.3408V9.46975L29.3388 9.46767Z" fill="currentColor"></path> <path d="M1.82839 4.36056L8.39633 10.9842H-0.00646973V14.5328H10.8843V23.999H14.403V13.728C14.403 12.637 13.9723 11.5894 13.2069 10.8175L4.31635 1.85147L1.82839 4.36056Z" fill="currentColor"></path> </svg> </span> Naval engineers<span className="text-blue" data-astro-cid-bbe6dxrz="">.</span> </h1> {/* Subhead */} <p className="hero-step hero-subhead max-w-[600px] font-body text-text-muted
              text-[15px] leading-[1.6] tracking-[-0.012em]
              max-md:text-[14px] max-md:max-w-[420px]" style={{ textWrap: 'pretty' }} data-astro-cid-bbe6dxrz="">
                 AeroMentor gives your training programs state-of-the-art AI assistance, smart quizzes,
@@ -67,7 +67,7 @@ export default function HomePage() {
               <div className="hero-step hero-ticker-step w-full" data-astro-cid-bbe6dxrz="">
                 <div className="hero-ticker" aria-label="Companies using Aeromentor" data-astro-cid-3rtzm5mn="">
                   <p className="hero-ticker-eyebrow font-body" data-astro-cid-3rtzm5mn="">
-                    Trusted by elite naval officers at
+                    Trusted by elite engineers at
                   </p>
                   <div className="font-heading text-2xl mt-3 font-medium text-text" data-astro-cid-3rtzm5mn="">
                     Naval Institute of Aviation Technology

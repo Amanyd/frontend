@@ -35,7 +35,7 @@ export default function HomePage() {
                 CTA (.nav-btn-primary), just stretched. */} <a href="/register" className="nav-btn-primary mobile-nav-cta mt-3 flex" data-astro-cid-5blmo7yk=""> <span className="nav-btn-primary-label" data-astro-cid-5blmo7yk="">Register</span> <span className="nav-btn-primary-arrow" aria-hidden="true" data-astro-cid-5blmo7yk=""> <svg viewBox="0 0 14 14" className="w-3.5 h-3.5" data-astro-cid-5blmo7yk=""><path d="M3 7h8m0 0L7.5 3.5M11 7l-3.5 3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" data-astro-cid-5blmo7yk=""></path></svg> </span> </a> </div> </div> </div> </div> </nav> </div>  <main className="relative z-[2] flex flex-col items-center w-full" data-astro-cid-j7pv25f6=""> {/* Hero — FULL BLEED, outside container.
 			     Pad-top clears the fixed navbar; Hero owns its own breathing room.
 			     The ASCII hands plate now lives INSIDE the Hero, above the
-			     headline, so there's no separate band below. */} <div className="w-full pt-[76px]" data-astro-cid-j7pv25f6=""> <section className="hero-wrap relative z-[1] w-full flex flex-col items-stretch text-center pt-4 max-md:pt-3 overflow-hidden rounded-b-2xl border-b border-border shadow-xs" style={{ minHeight: '100vh' }} data-astro-cid-bbe6dxrz=""> <img src="/images/navv.jpg" alt="AeroMentor Hero" className="absolute inset-0 w-full h-full object-cover object-center z-[-2] rounded-b-2xl" fetchPriority="high" /> <div className="absolute inset-0 w-full h-full bg-white/65 z-[-1] rounded-b-2xl"></div> {/* Hero dot backdrop — WebGL ordered-dither halftone.
+			     headline, so there's no separate band below. */} <div className="w-full" data-astro-cid-j7pv25f6=""> <section className="hero-wrap relative z-[1] w-full flex flex-col items-stretch text-center pt-28 max-md:pt-24 overflow-hidden rounded-b-2xl border-b border-border shadow-xs" style={{ minHeight: '100vh' }} data-astro-cid-bbe6dxrz=""> <img src="/images/navv.jpg" alt="AeroMentor Hero" className="absolute inset-0 w-full h-full object-cover object-center z-[-2] rounded-b-2xl" fetchPriority="high" /> <div className="absolute inset-0 w-full h-full bg-white/65 z-[-1] rounded-b-2xl"></div> {/* Hero dot backdrop — WebGL ordered-dither halftone.
        A fragment shader renders a grid of dots whose survival is gated by a
        Bayer 8×8 ordered-dither threshold compared against a smooth radial
        intensity field (densest at the bottom-center, fading toward the top).
@@ -49,27 +49,27 @@ export default function HomePage() {
              `for [brain] agents.` — brain anchors the second line
              with "for" and "agents" flanking it symmetrically.
          The <br className="xl:hidden"/> implements the break; on xl+ the
-         <br/> is `display: none` so the browser flows it as one line. */} <h1 className="hero-step hero-headline font-heading font-medium text-text max-w-[920px]
-             text-[72px] leading-[1.04] tracking-[-0.058em]
-             xl:max-w-[1100px]
-             max-xl:text-[60px]
-             max-lg:text-[44px] max-lg:tracking-[-0.05em]
-             max-md:text-[42px] max-md:leading-[1.06] max-md:tracking-[-0.046em]" data-astro-cid-bbe6dxrz="">
-                AI-driven training<br className="xl:hidden" data-astro-cid-bbe6dxrz="" /> for <span className="inline-block align-baseline" aria-hidden="true"> <svg viewBox="0 0 30 24" fill="none" className="inline-block h-[0.82em] w-auto align-[-0.08em] mx-1 text-text" aria-hidden="true"> <path d="M29.3388 9.46767H18.448V0.00146484H14.9293V10.2725C14.9293 11.3634 15.36 12.411 16.1254 13.183L25.018 22.151L27.506 19.6419L20.938 13.0183H29.3408V9.46975L29.3388 9.46767Z" fill="currentColor"></path> <path d="M1.82839 4.36056L8.39633 10.9842H-0.00646973V14.5328H10.8843V23.999H14.403V13.728C14.403 12.637 13.9723 11.5894 13.2069 10.8175L4.31635 1.85147L1.82839 4.36056Z" fill="currentColor"></path> </svg> </span> Naval engineers<span className="text-blue" data-astro-cid-bbe6dxrz="">.</span> </h1> {/* Subhead */} <p className="hero-step hero-subhead max-w-[600px] font-body text-text-muted
-             text-[15px] leading-[1.6] tracking-[-0.012em]
-             max-md:text-[14px] max-md:max-w-[420px]" style={{ textWrap: 'pretty' }} data-astro-cid-bbe6dxrz="">
+         <br/> is `display: none` so the browser flows it as one line. */} <h1 className="hero-step hero-headline font-heading font-medium text-text max-w-[1100px]
+             text-[88px] leading-[1.0] tracking-[-0.055em]
+             xl:max-w-[1300px] xl:text-[104px]
+             max-xl:text-[76px]
+             max-lg:text-[56px] max-lg:tracking-[-0.04em]
+             max-md:text-[46px] max-md:leading-[1.04]" data-astro-cid-bbe6dxrz="">
+                AI-driven training<br className="xl:hidden" data-astro-cid-bbe6dxrz="" /> for <span className="inline-block align-baseline" aria-hidden="true"> <svg viewBox="0 0 30 24" fill="none" className="inline-block h-[0.82em] w-auto align-[-0.08em] mx-1 text-text" aria-hidden="true"> <path d="M29.3388 9.46767H18.448V0.00146484H14.9293V10.2725C14.9293 11.3634 15.36 12.411 16.1254 13.183L25.018 22.151L27.506 19.6419L20.938 13.0183H29.3408V9.46975L29.3388 9.46767Z" fill="currentColor"></path> <path d="M1.82839 4.36056L8.39633 10.9842H-0.00646973V14.5328H10.8843V23.999H14.403V13.728C14.403 12.637 13.9723 11.5894 13.2069 10.8175L4.31635 1.85147L1.82839 4.36056Z" fill="currentColor"></path> </svg> </span> Naval engineers<span className="text-blue" data-astro-cid-bbe6dxrz="">.</span> </h1> {/* Subhead */} <p className="hero-step hero-subhead max-w-[760px] font-body text-text-muted
+             text-[20px] md:text-[22px] leading-[1.55] tracking-[-0.012em]
+             max-md:text-[17px] max-md:max-w-[500px]" style={{ textWrap: 'pretty' }} data-astro-cid-bbe6dxrz="">
                 AeroMentor gives your training programs state-of-the-art AI assistance, smart quizzes,
                 personalized progress tracking, and instant RAG-based feedback. Built for modern aviation.
               </p> {/* CTA group: 400px wide on desktop, contains a 2-col equal-width button
          row + npx pill + a quiet "personal supermemory" link beneath.
-         On mobile the columns collapse to a stack (still equal width). */} <div className="hero-step hero-cta-group cta-group flex flex-col items-stretch gap-3" data-astro-cid-bbe6dxrz=""> {/* Two equal-width CTAs */} <div className="grid grid-cols-2 gap-3 max-md:grid-cols-1 max-md:gap-2.5" data-astro-cid-bbe6dxrz=""> <a href="/register" className="btn-primary" data-astro-cid-bbe6dxrz=""> <span className="btn-primary-label" data-astro-cid-bbe6dxrz="">Register</span> <span className="btn-primary-arrow" aria-hidden="true" data-astro-cid-bbe6dxrz=""> <svg viewBox="0 0 14 14" className="w-3.5 h-3.5" data-astro-cid-bbe6dxrz=""><path d="M3 7h8m0 0L7.5 3.5M11 7l-3.5 3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" data-astro-cid-bbe6dxrz=""></path></svg> </span> </a> <a href="mailto:amaninsane139@gmail.com" target="_blank" rel="noopener" className="btn-secondary justify-center" data-astro-cid-bbe6dxrz=""> <span data-astro-cid-bbe6dxrz="">Talk to the team</span> </a> </div> </div> {/* Customer logo ticker{/* Customer logo ticker — lives inside `.hero-center` so it shares the
+         On mobile the columns collapse to a stack (still equal width). */} <div className="hero-step hero-cta-group cta-group flex flex-col items-stretch gap-3.5 w-full max-w-[460px]" data-astro-cid-bbe6dxrz=""> {/* Two equal-width CTAs */} <div className="grid grid-cols-2 gap-3.5 max-md:grid-cols-1 max-md:gap-2.5" data-astro-cid-bbe6dxrz=""> <a href="/register" className="btn-primary !h-12 !text-[17px]" data-astro-cid-bbe6dxrz=""> <span className="btn-primary-label !text-[17px] !font-medium" data-astro-cid-bbe6dxrz="">Register</span> <span className="btn-primary-arrow !w-12" aria-hidden="true" data-astro-cid-bbe6dxrz=""> <svg viewBox="0 0 14 14" className="w-4 h-4" data-astro-cid-bbe6dxrz=""><path d="M3 7h8m0 0L7.5 3.5M11 7l-3.5 3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" data-astro-cid-bbe6dxrz=""></path></svg> </span> </a> <a href="mailto:amaninsane139@gmail.com" target="_blank" rel="noopener" className="btn-secondary justify-center !h-12 !text-[17px] !font-medium" data-astro-cid-bbe6dxrz=""> <span data-astro-cid-bbe6dxrz="">Talk to the team</span> </a> </div> </div> {/* Customer logo ticker{/* Customer logo ticker — lives inside `.hero-center` so it shares the
          staggered entrance and breathes with the rest of the hero copy. */}
               <div className="hero-step hero-ticker-step w-full" data-astro-cid-bbe6dxrz="">
                 <div className="hero-ticker" aria-label="Companies using Aeromentor" data-astro-cid-3rtzm5mn="">
-                  <p className="hero-ticker-eyebrow font-body" data-astro-cid-3rtzm5mn="">
+                  <p className="hero-ticker-eyebrow font-body !text-[17px] md:!text-[19px] text-text-muted" data-astro-cid-3rtzm5mn="">
                     Trusted by elite engineers at
                   </p>
-                  <div className="font-heading text-2xl mt-3 font-medium text-text" data-astro-cid-3rtzm5mn="">
+                  <div className="font-heading text-3xl md:text-4xl mt-3 font-medium text-text tracking-tight" data-astro-cid-3rtzm5mn="">
                     Naval Institute of Aviation Technology
                   </div>
                 </div>

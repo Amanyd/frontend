@@ -82,6 +82,28 @@ export function TopicSlidesViewer({
     }
   };
 
+  // Keyboard navigation for slides
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        document.activeElement?.tagName === "INPUT" ||
+        document.activeElement?.tagName === "TEXTAREA"
+      ) {
+        return;
+      }
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        goToPrev();
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        goToNext();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [slideIdx, topicIdx, totalSlides, topics.length]);
+
   return (
     <div className="flex-1 flex flex-col h-full bg-white select-text">
       {/* Running Topic Header */}
@@ -119,61 +141,96 @@ export function TopicSlidesViewer({
         </div>
       </div>
 
-      {/* Main Slide Content Area */}
-      <div className="flex-1 overflow-y-auto px-8 py-6 md:px-12 md:py-8 flex flex-col justify-between">
-        {currentSlide ? (
-          <div className="max-w-4xl w-full mx-auto my-auto py-6">
-            {/* Single Slide Heading */}
-            <h2 className="text-3xl md:text-4xl lg:text-[38px] font-bold text-gray-900 tracking-tight mb-10 leading-snug">
-              {currentSlide.title}
-            </h2>
+      {/* Main Slide Content Area with Fixed Side & Bottom Navigation */}
+      <div className="relative flex-1 min-h-0 flex flex-col">
+        {/* Fixed Left End Floating Button */}
+        <button
+          type="button"
+          onClick={goToPrev}
+          disabled={slideIdx === 0 && topicIdx === 0}
+          aria-label="Previous Slide"
+          className={cn(
+            "absolute left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white/95 hover:bg-white border border-gray-200/90 shadow-md hover:shadow-lg flex items-center justify-center text-gray-700 hover:text-gray-900 transition-all hover:scale-105 active:scale-95 cursor-pointer",
+            slideIdx === 0 && topicIdx === 0 && "opacity-0 pointer-events-none"
+          )}
+          title="Previous Slide (←)"
+        >
+          <ChevronLeft className="w-5 h-5 text-gray-700" />
+        </button>
 
-            {/* Bullets: Clean open typography with subtle check icons */}
-            {currentSlide.bullets && currentSlide.bullets.length > 0 && (
-              <div className="space-y-7 mb-10">
-                {currentSlide.bullets.map((bullet, idx) => (
-                  <div key={idx} className="flex items-start gap-4">
-                    <CheckCircle2 className="w-6 h-6 text-blue-600 shrink-0 mt-1" />
-                    <p className="text-[20px] md:text-[22px] leading-[1.7] text-gray-800 font-normal">
-                      {bullet}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
+        {/* Fixed Right End Floating Button */}
+        <button
+          type="button"
+          onClick={goToNext}
+          aria-label="Next Slide"
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg flex items-center justify-center text-white transition-all hover:scale-105 active:scale-95 cursor-pointer"
+          title={
+            slideIdx === totalSlides - 1 && topicIdx === topics.length - 1
+              ? "Finish Briefing"
+              : slideIdx === totalSlides - 1
+              ? "Next Topic (→)"
+              : "Next Slide (→)"
+          }
+        >
+          <ChevronRight className="w-5 h-5 text-white" />
+        </button>
 
-            {/* Formula / Equations: Rendered with KaTeX */}
-            {currentSlide.formula_or_rule && (
-              <MathEquation formula={currentSlide.formula_or_rule} />
-            )}
+        {/* Scrollable Slide Content (isolated, buttons do not scroll with text) */}
+        <div className="flex-1 overflow-y-auto px-12 md:px-16 lg:px-20 py-8 flex flex-col">
+          {currentSlide ? (
+            <div className="max-w-4xl w-full mx-auto my-auto py-6">
+              {/* Single Slide Heading */}
+              <h2 className="text-3xl md:text-4xl lg:text-[38px] font-bold text-gray-900 tracking-tight mb-10 leading-snug">
+                {currentSlide.title}
+              </h2>
 
-            {/* Mermaid Diagram */}
-            {currentSlide.diagram_mermaid && (
-              <div className="my-6 p-4 rounded-xl border border-gray-100 bg-slate-50/50">
-                <MermaidDiagram code={currentSlide.diagram_mermaid} />
-              </div>
-            )}
+              {/* Bullets: Clean open typography with subtle check icons */}
+              {currentSlide.bullets && currentSlide.bullets.length > 0 && (
+                <div className="space-y-7 mb-10">
+                  {currentSlide.bullets.map((bullet, idx) => (
+                    <div key={idx} className="flex items-start gap-4">
+                      <CheckCircle2 className="w-6 h-6 text-blue-600 shrink-0 mt-1" />
+                      <p className="text-[20px] md:text-[22px] leading-[1.7] text-gray-800 font-normal">
+                        {bullet}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
 
-            {/* Warning / Emergency / Summary Callout */}
-            {currentSlide.warning && (
-              <div className="my-6 p-5 rounded-xl border border-amber-200 bg-amber-50/70 shadow-2xs">
-                <p className="text-[13px] font-bold text-amber-900 uppercase tracking-wider mb-1.5">
-                  Operational Note
-                </p>
-                <p className="text-[17px] md:text-[18px] text-amber-950 font-medium leading-relaxed">
-                  {currentSlide.warning}
-                </p>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="flex items-center justify-center h-full text-gray-400 text-base">
-            Slide content loading…
-          </div>
-        )}
+              {/* Formula / Equations: Rendered with KaTeX */}
+              {currentSlide.formula_or_rule && (
+                <MathEquation formula={currentSlide.formula_or_rule} />
+              )}
 
-        {/* Clean Slide Navigation Footer */}
-        <div className="pt-6 border-t border-gray-100 flex items-center justify-between max-w-4xl w-full mx-auto mt-8 shrink-0">
+              {/* Mermaid Diagram */}
+              {currentSlide.diagram_mermaid && (
+                <div className="my-6 p-4 rounded-xl border border-gray-100 bg-slate-50/50">
+                  <MermaidDiagram code={currentSlide.diagram_mermaid} />
+                </div>
+              )}
+
+              {/* Warning / Emergency / Summary Callout */}
+              {currentSlide.warning && (
+                <div className="my-6 p-5 rounded-xl border border-amber-200 bg-amber-50/70 shadow-2xs">
+                  <p className="text-[13px] font-bold text-amber-900 uppercase tracking-wider mb-1.5">
+                    Operational Note
+                  </p>
+                  <p className="text-[17px] md:text-[18px] text-amber-950 font-medium leading-relaxed">
+                    {currentSlide.warning}
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center justify-center h-full text-gray-400 text-base">
+              Slide content loading…
+            </div>
+          )}
+        </div>
+
+        {/* Fixed Slide Navigation Footer: Pinned at left & right ends, fixed & non-scrollable */}
+        <div className="shrink-0 px-8 py-3.5 border-t border-gray-100 flex items-center justify-between bg-white z-10 w-full">
           <button
             type="button"
             onClick={goToPrev}

@@ -23,6 +23,7 @@ interface CoursePlayerProps {
   lessons: LessonWithContent[];
   initialLessonIdx?: number;
   initialFileIdx?: number;
+  isInstructor?: boolean;
 }
 
 export function CoursePlayer({
@@ -32,6 +33,7 @@ export function CoursePlayer({
   initialProgress,
   initialLessonIdx = 0,
   initialFileIdx = 0,
+  isInstructor = false,
 }: CoursePlayerProps & { initialProgress: any }) {
   const {
     markFileViewed,
@@ -114,9 +116,10 @@ export function CoursePlayer({
     ? isLessonComplete(currentLesson.id)
     : false;
 
-  // Lesson is unlocked if it's the first lesson, or if all previous lessons are complete (>= 50% score)
+  // Lesson is unlocked if it's the first lesson, or if all previous lessons are complete (>= 50% score), or if instructor previewing
   const isLessonUnlocked = useCallback(
     (lessonIdx: number) => {
+      if (isInstructor) return true;
       if (lessonIdx === 0) return true;
       for (let i = 0; i < lessonIdx; i++) {
         if (!isLessonComplete(lessons[i].id)) {
@@ -125,12 +128,13 @@ export function CoursePlayer({
       }
       return true;
     },
-    [lessons, isLessonComplete]
+    [lessons, isLessonComplete, isInstructor]
   );
 
   const allLessonsPassed = useMemo(() => {
+    if (isInstructor) return true;
     return lessons.length > 0 && lessons.every((l) => isLessonComplete(l.id));
-  }, [lessons, isLessonComplete]);
+  }, [lessons, isLessonComplete, isInstructor]);
 
   const canGoNext =
     (viewState === "slides" && (currentTopicIdx < totalTopicsInLesson - 1 || totalFilesInLesson > 0 || hasQuiz || (currentLessonIdx < lessons.length - 1 && isCurrentLessonComplete))) ||

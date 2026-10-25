@@ -17,10 +17,8 @@ export async function POST(req: Request) {
   }
 
   const body = await req.json();
-  const { sessionId, query } = body as {
-    sessionId: string;
-    query: string;
-  };
+  const sessionId = body.sessionId;
+  const query = body.query || body.message;
 
   if (!sessionId || !query) {
     return NextResponse.json(

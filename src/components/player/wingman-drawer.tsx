@@ -109,22 +109,6 @@ export function WingmanDrawer({
     const trimmed = text.trim();
     if (!trimmed || isStreaming) return;
 
-    // Lazily create or reuse chat session in PostgreSQL
-    let activeSessionId = sessionId;
-    if (!activeSessionId) {
-      try {
-        const session = await clientApi.post<ChatSession>("/api/v1/chat/sessions", {
-          course_id: courseId || null,
-        });
-        activeSessionId = session.id;
-        setSessionId(session.id);
-      } catch (err) {
-        console.error("Failed to initialize session, using temp ID", err);
-        activeSessionId = "temp-" + Date.now();
-        setSessionId(activeSessionId);
-      }
-    }
-
     // Contextual prompt embedding the exact active slide content
     const contextualMessage = `[Current Context: Slide ${slideIndex + 1}/${totalSlides} of Topic "${topicTitle}"${
       subjectTitle ? ` in Subject "${subjectTitle}"` : ""
@@ -158,6 +142,46 @@ export function WingmanDrawer({
     setInput("");
     setIsStreaming(true);
 
+    // Lazily create or reuse chat session in PostgreSQL
+    let activeSessionId = sessionId;
+    if (!activeSessionId) {
+      try {
+        const payload = {
+          course_id: courseId && courseId.length === 36 ? courseId : null,
+        };
+        const session = await clientApi.post<ChatSession>("/api/v1/chat/sessions", payload);
+        activeSessionId = session.id;
+        setSessionId(session.id);
+      } catch (err) {
+        console.error("Failed to initialize session with course_id, retrying without course_id", err);
+        try {
+          const session = await clientApi.post<ChatSession>("/api/v1/chat/sessions", {
+            course_id: null,
+          });
+          activeSessionId = session.id;
+          setSessionId(session.id);
+        } catch (innerErr) {
+          console.error("Failed to initialize chat session", innerErr);
+        }
+      }
+    }
+
+    if (!activeSessionId) {
+      setMessages((prev) => {
+        const updated = [...prev];
+        const last = updated[updated.length - 1];
+        if (last && last.id === assistantMsgId) {
+          updated[updated.length - 1] = {
+            ...last,
+            content: "Unable to start a chat session. Please verify your connection and try again.",
+          };
+        }
+        return updated;
+      });
+      setIsStreaming(false);
+      return;
+    }
+
     const abortCtrl = new AbortController();
     abortRef.current = abortCtrl;
 
@@ -167,6 +191,7 @@ export function WingmanDrawer({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           sessionId: activeSessionId,
+          query: contextualMessage,
           message: contextualMessage,
           stream: true,
         }),
@@ -174,7 +199,12 @@ export function WingmanDrawer({
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
+        let errorDetail = `HTTP ${response.status}`;
+        try {
+          const errData = await response.json();
+          errorDetail = errData.error || errData.message || errorDetail;
+        } catch {}
+        throw new Error(errorDetail);
       }
 
       if (!response.body) {

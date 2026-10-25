@@ -246,9 +246,8 @@ export function TopicSlidesViewer({
               aria-label="Ask Wingman"
               className="absolute bottom-16 right-6 z-30 flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-slate-900/95 hover:bg-slate-950 text-white shadow-xl hover:shadow-2xl border border-slate-700/60 backdrop-blur-md transition-all hover:scale-105 active:scale-95 cursor-pointer group"
             >
-              <div className="relative w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white shrink-0 shadow-xs group-hover:bg-blue-500 transition-colors">
+              <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white shrink-0 shadow-xs group-hover:bg-blue-500 transition-colors">
                 <Logo className="w-3 h-3 text-white" />
-                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-slate-900 animate-pulse" />
               </div>
               <span className="text-[13px] font-semibold tracking-tight text-white pr-1">
                 Wingman

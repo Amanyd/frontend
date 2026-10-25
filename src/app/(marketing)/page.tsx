@@ -55,20 +55,14 @@ export default function HomePage() {
              max-xl:text-[76px]
              max-lg:text-[56px] max-lg:tracking-[-0.04em]
              max-md:text-[46px] max-md:leading-[1.04]" data-astro-cid-bbe6dxrz="">
-                AI-driven training<br className="xl:hidden" data-astro-cid-bbe6dxrz="" /> for <span className="inline-block align-baseline" aria-hidden="true"> <svg viewBox="0 0 30 24" fill="none" className="inline-block h-[0.82em] w-auto align-[-0.08em] mx-1 text-text" aria-hidden="true"> <path d="M29.3388 9.46767H18.448V0.00146484H14.9293V10.2725C14.9293 11.3634 15.36 12.411 16.1254 13.183L25.018 22.151L27.506 19.6419L20.938 13.0183H29.3408V9.46975L29.3388 9.46767Z" fill="currentColor"></path> <path d="M1.82839 4.36056L8.39633 10.9842H-0.00646973V14.5328H10.8843V23.999H14.403V13.728C14.403 12.637 13.9723 11.5894 13.2069 10.8175L4.31635 1.85147L1.82839 4.36056Z" fill="currentColor"></path> </svg> </span> Naval engineers<span className="text-blue" data-astro-cid-bbe6dxrz="">.</span> </h1> {/* Subhead */} <p className="hero-step hero-subhead max-w-[760px] font-body text-text-muted
+                AI-driven training<br className="xl:hidden" data-astro-cid-bbe6dxrz="" /> for <span className="inline-block align-baseline" aria-hidden="true"> <svg viewBox="0 0 30 24" fill="none" className="inline-block h-[0.82em] w-auto align-[-0.08em] mx-1 text-text" aria-hidden="true"> <path d="M29.3388 9.46767H18.448V0.00146484H14.9293V10.2725C14.9293 11.3634 15.36 12.411 16.1254 13.183L25.018 22.151L27.506 19.6419L20.938 13.0183H29.3408V9.46975L29.3388 9.46767Z" fill="currentColor"></path> <path d="M1.82839 4.36056L8.39633 10.9842H-0.00646973V14.5328H10.8843V23.999H14.403V13.728C14.403 12.637 13.9723 11.5894 13.2069 10.8175L4.31635 1.85147L1.82839 4.36056Z" fill="currentColor"></path> </svg> </span> Naval air mentors.</h1> {/* Subhead */} <p className="hero-step hero-subhead max-w-[760px] font-body text-text-muted
              text-[20px] md:text-[22px] leading-[1.55] tracking-[-0.012em]
              max-md:text-[17px] max-md:max-w-[500px]" style={{ textWrap: 'pretty' }} data-astro-cid-bbe6dxrz="">
-                AeroMentor gives your training programs state-of-the-art AI assistance, smart quizzes,
+                AeroMentor gives your training programs best AI assistance, smart quizzes,
                 personalized progress tracking, and instant RAG-based feedback. Built for modern aviation.
-              </p> {/* CTA group: 400px wide on desktop, contains a 2-col equal-width button
-         row + npx pill + a quiet "personal supermemory" link beneath.
-         On mobile the columns collapse to a stack (still equal width). */} <div className="hero-step hero-cta-group cta-group flex flex-col items-stretch gap-3.5 w-full max-w-[460px]" data-astro-cid-bbe6dxrz=""> {/* Two equal-width CTAs */} <div className="grid grid-cols-2 gap-3.5 max-md:grid-cols-1 max-md:gap-2.5" data-astro-cid-bbe6dxrz=""> <a href="/register" className="btn-primary !h-12 !text-[17px]" data-astro-cid-bbe6dxrz=""> <span className="btn-primary-label !text-[17px] !font-medium" data-astro-cid-bbe6dxrz="">Register</span> <span className="btn-primary-arrow !w-12" aria-hidden="true" data-astro-cid-bbe6dxrz=""> <svg viewBox="0 0 14 14" className="w-4 h-4" data-astro-cid-bbe6dxrz=""><path d="M3 7h8m0 0L7.5 3.5M11 7l-3.5 3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" data-astro-cid-bbe6dxrz=""></path></svg> </span> </a> <a href="mailto:amaninsane139@gmail.com" target="_blank" rel="noopener" className="btn-secondary justify-center !h-12 !text-[17px] !font-medium" data-astro-cid-bbe6dxrz=""> <span data-astro-cid-bbe6dxrz="">Talk to the team</span> </a> </div> </div> {/* Customer logo ticker{/* Customer logo ticker — lives inside `.hero-center` so it shares the
-         staggered entrance and breathes with the rest of the hero copy. */}
+              </p> {/* CTA group */} <div className="hero-step hero-cta-group cta-group flex flex-col items-center gap-3.5 w-full max-w-[460px]" data-astro-cid-bbe6dxrz=""> <a href="/register" className="btn-primary !h-12 !text-[17px] !px-8" data-astro-cid-bbe6dxrz=""> <span className="btn-primary-label !text-[17px] !font-medium" data-astro-cid-bbe6dxrz="">Register</span> <span className="btn-primary-arrow !w-12" aria-hidden="true" data-astro-cid-bbe6dxrz=""> <svg viewBox="0 0 14 14" className="w-4 h-4" data-astro-cid-bbe6dxrz=""><path d="M3 7h8m0 0L7.5 3.5M11 7l-3.5 3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" data-astro-cid-bbe6dxrz=""></path></svg> </span> </a> </div> {/* Customer logo ticker */}
               <div className="hero-step hero-ticker-step w-full" data-astro-cid-bbe6dxrz="">
                 <div className="hero-ticker" aria-label="Companies using Aeromentor" data-astro-cid-3rtzm5mn="">
-                  <p className="hero-ticker-eyebrow font-body !text-[17px] md:!text-[19px] text-text-muted" data-astro-cid-3rtzm5mn="">
-                    Trusted by elite engineers at
-                  </p>
                   <div className="font-heading text-3xl md:text-4xl mt-3 font-medium text-text tracking-tight" data-astro-cid-3rtzm5mn="">
                     Naval Institute of Aeronautical Technology
                   </div>
@@ -120,9 +114,9 @@ export default function HomePage() {
                           </button>
                         </li>
                         <li className="catalog-spine-row" data-astro-cid-p4n2ralz="">
-                          <button type="button" className="catalog-spine-item" data-spine-btn="" data-index="2" aria-label="View Aviation Manuals" aria-current="false" role="tab" data-astro-cid-p4n2ralz="">
+                          <button type="button" className="catalog-spine-item" data-spine-btn="" data-index="2" aria-label="View Training Material" aria-current="false" role="tab" data-astro-cid-p4n2ralz="">
                             <span className="catalog-spine-num font-mono" data-astro-cid-p4n2ralz="">03</span>
-                            <span className="catalog-spine-title font-heading" data-astro-cid-p4n2ralz="">Aviation Manuals</span>
+                            <span className="catalog-spine-title font-heading" data-astro-cid-p4n2ralz="">Training Material</span>
                             <span className="catalog-spine-dot" aria-hidden="true" data-astro-cid-p4n2ralz=""></span>
                             <span className="catalog-spine-progress" aria-hidden="true" data-astro-cid-p4n2ralz="">
                               <span className="catalog-spine-progress-fill" data-progress-fill="" data-astro-cid-p4n2ralz=""></span>
@@ -130,9 +124,9 @@ export default function HomePage() {
                           </button>
                         </li>
                         <li className="catalog-spine-row" data-astro-cid-p4n2ralz="">
-                          <button type="button" className="catalog-spine-item" data-spine-btn="" data-index="3" aria-label="View Officer Profiles" aria-current="false" role="tab" data-astro-cid-p4n2ralz="">
+                          <button type="button" className="catalog-spine-item" data-spine-btn="" data-index="3" aria-label="View User Profiles" aria-current="false" role="tab" data-astro-cid-p4n2ralz="">
                             <span className="catalog-spine-num font-mono" data-astro-cid-p4n2ralz="">04</span>
-                            <span className="catalog-spine-title font-heading" data-astro-cid-p4n2ralz="">Officer Profiles</span>
+                            <span className="catalog-spine-title font-heading" data-astro-cid-p4n2ralz="">User Profiles</span>
                             <span className="catalog-spine-dot" aria-hidden="true" data-astro-cid-p4n2ralz=""></span>
                             <span className="catalog-spine-progress" aria-hidden="true" data-astro-cid-p4n2ralz="">
                               <span className="catalog-spine-progress-fill" data-progress-fill="" data-astro-cid-p4n2ralz=""></span>
@@ -189,7 +183,7 @@ export default function HomePage() {
                             Instant RAG Feedback
                           </h3>
                           <p className="catalog-text-desc font-body" data-astro-cid-p4n2ralz="">
-                            Hybrid search and structured context across thousands of aviation manuals at sub-300ms latency. Provides trainees with precise, verifiable answers during quizzes and simulations.
+                            Hybrid search and structured context across thousands of training materials at sub-300ms latency. Provides trainees with precise, verifiable answers during quizzes and simulations.
                           </p>
                         </div>
                         <div className="catalog-text-card" data-text-card="" data-index="2" aria-hidden="true" data-astro-cid-p4n2ralz="">
@@ -197,7 +191,7 @@ export default function HomePage() {
                             03 · FILESYSTEMS
                           </p>
                           <h3 className="catalog-text-title font-heading" data-astro-cid-p4n2ralz="">
-                            Aviation Manuals
+                            Training Material
                           </h3>
                           <p className="catalog-text-desc font-body" data-astro-cid-p4n2ralz="">
                             A unified filesystem mount for all your technical documentation. Standard operating procedures, safety guidelines, and aircraft specs are automatically indexed and searchable.
@@ -208,10 +202,10 @@ export default function HomePage() {
                             04 · PROFILES
                           </p>
                           <h3 className="catalog-text-title font-heading" data-astro-cid-p4n2ralz="">
-                            Officer Profiles
+                            User Profiles
                           </h3>
                           <p className="catalog-text-desc font-body" data-astro-cid-p4n2ralz="">
-                            Comprehensive behavioral and performance profiles that stay coherent across training modules. Evaluators get a complete view of each officer's strengths and areas for improvement.
+                            Comprehensive behavioral and performance profiles that stay coherent across training modules. Evaluators get a complete view of each trainee's strengths and areas for improvement.
                           </p>
                         </div>
                       </div>

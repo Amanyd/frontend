@@ -6,12 +6,16 @@ import { api } from "@/lib/api-client";
 import type { Course, Lesson } from "@/types/course";
 import type { LessonWithContent, CourseProgressData } from "@/types/progress";
 
+import { auth } from "@/lib/auth";
+
 interface PageProps {
   params: Promise<{ courseId: string }>;
 }
 
 export default async function LearnPage({ params }: PageProps) {
   const { courseId } = await params;
+  const session = await auth();
+  const isInstructor = session?.user?.role === "instructor";
 
   let course: Course;
   let lessonsWithContent: LessonWithContent[] = [];
@@ -77,6 +81,7 @@ export default async function LearnPage({ params }: PageProps) {
         courseTitle={course.title}
         lessons={lessonsWithContent}
         initialProgress={initialProgress}
+        isInstructor={isInstructor}
       />
     </div>
   );

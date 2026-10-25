@@ -4,6 +4,7 @@ import { api } from "@/lib/api-client";
 import Link from "next/link";
 import { ArrowLeft, UserX } from "lucide-react";
 import { capitalize, cn } from "@/lib/utils";
+import { getUserNavalRank } from "@/lib/course-utils";
 import { StudentDashboard } from "@/components/dashboard/student-dashboard";
 import type { StudentAnalytics } from "@/types/analytics";
 import type { Course } from "@/types/course";
@@ -49,7 +50,7 @@ export default async function StudentDetailPage({ params }: PageProps) {
           </Link>
           <div className="flex items-center gap-2.5 flex-wrap">
             <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
-              {studentAnalytics?.user_profile?.name || "Student Profile"}
+              {studentAnalytics?.user_profile?.name || "Trainee Profile"}
             </h1>
             {studentAnalytics?.user_profile && (
               <>
@@ -58,8 +59,8 @@ export default async function StudentDetailPage({ params }: PageProps) {
                   {studentAnalytics.user_profile.enrollment_id}
                 </span>
                 <span className="text-gray-400 font-light text-base select-none">•</span>
-                <span className="text-base text-gray-500 capitalize">
-                  {studentAnalytics.user_profile.rank}
+                <span className="text-base text-gray-500">
+                  {getUserNavalRank(studentAnalytics.user_profile.rank, studentAnalytics.user_profile.enrollment_id)}
                 </span>
               </>
             )}
@@ -80,7 +81,7 @@ export default async function StudentDetailPage({ params }: PageProps) {
             courses={courses}
             isInstructorView={true}
             titleOverride={studentAnalytics.user_profile.name}
-            descriptionOverride="Comprehensive student learning dossier showing course completion, lesson progress, and quiz evaluation scores."
+            descriptionOverride="Comprehensive trainee learning dossier showing course completion, lesson progress, and quiz evaluation scores."
           />
         ) : (
           <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -88,17 +89,17 @@ export default async function StudentDetailPage({ params }: PageProps) {
               <UserX className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold text-gray-900">
-              Student Record Not Found
+              Trainee Record Not Found
             </h3>
             <p className="text-sm text-gray-500 mt-1 max-w-sm">
-              The requested student profile could not be found or has not generated any records yet.
+              The requested trainee profile could not be found or has not generated any records yet.
             </p>
             <Link
               href="/analytics"
               className="mt-5 inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-none"
             >
               <ArrowLeft className="w-4 h-4" />
-              Return to Student Directory
+              Return to Trainee Directory
             </Link>
           </div>
         )}

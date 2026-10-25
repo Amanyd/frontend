@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { cn, capitalize } from "@/lib/utils";
+import { cleanSubjectDescription, getCourseBranch } from "@/lib/course-utils";
 import type { Course } from "@/types/course";
 
 interface CourseCardProps {
@@ -27,6 +28,7 @@ export const getCourseImage = (id: string) => {
 
 export function CourseCard({ course, index }: CourseCardProps) {
   const bgImage = getCourseImage(course.id);
+  const branch = getCourseBranch(course).toUpperCase();
 
   return (
     <Link href={`/courses/${course.id}`} className="block w-full">
@@ -51,6 +53,9 @@ export function CourseCard({ course, index }: CourseCardProps) {
               {course.title}
             </h3>
             <div className="flex items-center gap-1.5 ml-2 shrink-0">
+              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-100">
+                {branch}
+              </span>
               {!course.published && (
                 <span className="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-600">
                   Draft
@@ -60,7 +65,7 @@ export function CourseCard({ course, index }: CourseCardProps) {
           </div>
           
           <div className="mt-3 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300 ease-out delay-75 text-[13px] text-gray-500 leading-relaxed line-clamp-3">
-            {course.description || "No description provided."}
+            {cleanSubjectDescription(course.description)}
           </div>
         </div>
       </article>

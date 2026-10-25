@@ -98,7 +98,7 @@ export default async function CourseAnalyticsPage({ params }: PageProps) {
       {/* KPI Cards */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         <KpiCard
-          label="Students"
+          label="Trainees"
           value={metrics.total_students}
           color="bg-brand-lavender"
         />

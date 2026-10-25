@@ -91,11 +91,11 @@ export default function HomePage() {
                     <div className="catalog-left" data-astro-cid-p4n2ralz="">
                       <div className="catalog-heading" data-astro-cid-p4n2ralz="">
                         <h2 className="catalog-heading-title font-heading" style={{ textWrap: 'balance' }} data-astro-cid-p4n2ralz="">
-                          All the tools to build the perfect training program
-                          <span className="text-blue" data-astro-cid-p4n2ralz="">for your cadets.</span>
+                          All the tools to build the perfect training program{" "}
+                          <span className="text-blue" data-astro-cid-p4n2ralz="">for your trainees.</span>
                         </h2>
                         <p className="catalog-heading-sub font-body" data-astro-cid-p4n2ralz="">
-                          Focused tools for evaluating, tracking, indexing, and enhancing cadet performance.
+                          Focused tools for evaluating, tracking, indexing, and enhancing trainee performance.
                         </p>
                       </div>
                       <ol className="catalog-spine-list" role="tablist" data-astro-cid-p4n2ralz="">
@@ -178,7 +178,7 @@ export default function HomePage() {
                             Continual Learning &amp; Tracking
                           </h3>
                           <p className="catalog-text-desc font-body" data-astro-cid-p4n2ralz="">
-                            State-of-the-art training memory that tracks every cadet's progress. Automatically identifies knowledge gaps and adapts the curriculum based on individual learning curves.
+                            State-of-the-art training memory that tracks every trainee's progress. Automatically identifies knowledge gaps and adapts the curriculum based on individual learning curves.
                           </p>
                         </div>
                         <div className="catalog-text-card" data-text-card="" data-index="1" aria-hidden="true" data-astro-cid-p4n2ralz="">
@@ -189,7 +189,7 @@ export default function HomePage() {
                             Instant RAG Feedback
                           </h3>
                           <p className="catalog-text-desc font-body" data-astro-cid-p4n2ralz="">
-                            Hybrid search and structured context across thousands of aviation manuals at sub-300ms latency. Provides cadets with precise, verifiable answers during quizzes and simulations.
+                            Hybrid search and structured context across thousands of aviation manuals at sub-300ms latency. Provides trainees with precise, verifiable answers during quizzes and simulations.
                           </p>
                         </div>
                         <div className="catalog-text-card" data-text-card="" data-index="2" aria-hidden="true" data-astro-cid-p4n2ralz="">
@@ -217,123 +217,6 @@ export default function HomePage() {
                       </div>
                     </div>
                   </div>
-                </div>
-              </section>
-
-              <section className="w-full border border-border rounded-2xl overflow-hidden bg-bg shadow-xs" id="faq" aria-labelledby="faq-heading" data-astro-cid-z6gx6xcw="">
-                <div className="w-full bg-bg" data-faq-root="" data-astro-cid-z6gx6xcw="">
-                  {/* Asymmetric header bar: eyebrow + heading left, filter pills right */}
-                  <div className="faq-header flex items-end justify-between gap-8 px-8 max-md:px-4 pt-14 pb-10 max-md:pt-10 max-md:pb-7 max-md:flex-col max-md:items-start max-md:gap-6 border-b border-border" data-astro-cid-z6gx6xcw="">
-                    <div className="flex flex-col gap-3 max-w-[640px]" data-astro-cid-z6gx6xcw="">
-                      <h2 id="faq-heading" className="font-heading text-[44px] font-medium tracking-[-0.04em] leading-[1.05] text-text max-lg:text-[36px] max-md:text-[28px]" style={{ textWrap: 'balance' }} data-astro-cid-z6gx6xcw="">
-                        The fine print,
-                        <span className="text-blue" data-astro-cid-z6gx6xcw="">in plain English.</span>
-                      </h2>
-                    </div>
-                  </div>
-                  {/* Accordion: full-width rows separated by hairlines, single-open behavior */}
-                  <ol className="faq-list list-none" role="list" data-astro-cid-z6gx6xcw="">
-                    <li className="faq-row" data-faq-row="" data-open="false" data-faq-category="billing" data-first="true" data-astro-cid-z6gx6xcw="">
-                      <button type="button" className="faq-q w-full flex items-center justify-between gap-6 px-8 max-md:px-4 py-5 text-left transition-colors duration-200" aria-expanded="false" aria-controls="faq-a-01" id="faq-q-01" data-faq-trigger="" data-astro-cid-z6gx6xcw="">
-                        <div className="flex items-baseline gap-5 min-w-0" data-astro-cid-z6gx6xcw="">
-                          <span className="faq-num font-mono text-[12px] text-text-dim shrink-0 w-7" data-astro-cid-z6gx6xcw="">01</span>
-                          <span className="faq-q-text font-heading text-[18px] font-medium tracking-[-0.01em] leading-[1.35] text-text max-md:text-[16px]" data-astro-cid-z6gx6xcw="">
-                            What training modules are included?
-                          </span>
-                        </div>
-                        <span className="faq-toggle shrink-0 inline-flex items-center justify-center w-5 h-5" aria-hidden="true" data-astro-cid-z6gx6xcw="">
-                          <svg viewBox="0 0 10 10" className="w-3 h-3" data-astro-cid-z6gx6xcw="">
-                            <line className="faq-toggle-h" x1="1.5" y1="5" x2="8.5" y2="5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" data-astro-cid-z6gx6xcw=""></line>
-                            <line className="faq-toggle-v" x1="5" y1="1.5" x2="5" y2="8.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" data-astro-cid-z6gx6xcw=""></line>
-                          </svg>
-                        </span>
-                      </button>
-                      <div className="faq-a-wrap" id="faq-a-01" role="region" aria-labelledby="faq-q-01" data-faq-panel="" data-astro-cid-z6gx6xcw="">
-                        <div className="faq-a-inner" data-astro-cid-z6gx6xcw="">
-                          <div className="faq-a px-8 max-md:px-4 pb-7 max-md:pb-5 flex flex-col gap-3.5 max-w-[860px]" style={{ paddingLeft: 'calc(2rem + 28px + 1.25rem)' }} data-astro-cid-z6gx6xcw="">
-                            <p className="font-body text-[15.5px] leading-[1.65] text-text max-md:text-[14.5px]" data-astro-cid-z6gx6xcw="">
-                              Aeromentor includes all fundamental modules for naval aviators, from basic flight ops to advanced tactical queries. Everything is accessible via our single unified platform.
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                    <li className="faq-row" data-faq-row="" data-open="false" data-faq-category="billing" data-first="false" data-astro-cid-z6gx6xcw="">
-                      <button type="button" className="faq-q w-full flex items-center justify-between gap-6 px-8 max-md:px-4 py-5 text-left transition-colors duration-200" aria-expanded="false" aria-controls="faq-a-02" id="faq-q-02" data-faq-trigger="" data-astro-cid-z6gx6xcw="">
-                        <div className="flex items-baseline gap-5 min-w-0" data-astro-cid-z6gx6xcw="">
-                          <span className="faq-num font-mono text-[12px] text-text-dim shrink-0 w-7" data-astro-cid-z6gx6xcw="">02</span>
-                          <span className="faq-q-text font-heading text-[18px] font-medium tracking-[-0.01em] leading-[1.35] text-text max-md:text-[16px]" data-astro-cid-z6gx6xcw="">
-                            Is my base's training data secure?
-                          </span>
-                        </div>
-                        <span className="faq-toggle shrink-0 inline-flex items-center justify-center w-5 h-5" aria-hidden="true" data-astro-cid-z6gx6xcw="">
-                          <svg viewBox="0 0 10 10" className="w-3 h-3" data-astro-cid-z6gx6xcw="">
-                            <line className="faq-toggle-h" x1="1.5" y1="5" x2="8.5" y2="5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" data-astro-cid-z6gx6xcw=""></line>
-                            <line className="faq-toggle-v" x1="5" y1="1.5" x2="5" y2="8.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" data-astro-cid-z6gx6xcw=""></line>
-                          </svg>
-                        </span>
-                      </button>
-                      <div className="faq-a-wrap" id="faq-a-02" role="region" aria-labelledby="faq-q-02" data-faq-panel="" data-astro-cid-z6gx6xcw="">
-                        <div className="faq-a-inner" data-astro-cid-z6gx6xcw="">
-                          <div className="faq-a px-8 max-md:px-4 pb-7 max-md:pb-5 flex flex-col gap-3.5 max-w-[860px]" style={{ paddingLeft: 'calc(2rem + 28px + 1.25rem)' }} data-astro-cid-z6gx6xcw="">
-                            <p className="font-body text-[15.5px] leading-[1.65] text-text max-md:text-[14.5px]" data-astro-cid-z6gx6xcw="">
-                              Absolutely. Aeromentor is deployed with strict access controls. Your naval docs, manuals, and institutional knowledge are isolated and only queryable by authorized cadets and instructors.
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                    <li className="faq-row" data-faq-row="" data-open="false" data-faq-category="billing" data-first="false" data-astro-cid-z6gx6xcw="">
-                      <button type="button" className="faq-q w-full flex items-center justify-between gap-6 px-8 max-md:px-4 py-5 text-left transition-colors duration-200" aria-expanded="false" aria-controls="faq-a-03" id="faq-q-03" data-faq-trigger="" data-astro-cid-z6gx6xcw="">
-                        <div className="flex items-baseline gap-5 min-w-0" data-astro-cid-z6gx6xcw="">
-                          <span className="faq-num font-mono text-[12px] text-text-dim shrink-0 w-7" data-astro-cid-z6gx6xcw="">03</span>
-                          <span className="faq-q-text font-heading text-[18px] font-medium tracking-[-0.01em] leading-[1.35] text-text max-md:text-[16px]" data-astro-cid-z6gx6xcw="">
-                            Can instructors track cadet progress?
-                          </span>
-                        </div>
-                        <span className="faq-toggle shrink-0 inline-flex items-center justify-center w-5 h-5" aria-hidden="true" data-astro-cid-z6gx6xcw="">
-                          <svg viewBox="0 0 10 10" className="w-3 h-3" data-astro-cid-z6gx6xcw="">
-                            <line className="faq-toggle-h" x1="1.5" y1="5" x2="8.5" y2="5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" data-astro-cid-z6gx6xcw=""></line>
-                            <line className="faq-toggle-v" x1="5" y1="1.5" x2="5" y2="8.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" data-astro-cid-z6gx6xcw=""></line>
-                          </svg>
-                        </span>
-                      </button>
-                      <div className="faq-a-wrap" id="faq-a-03" role="region" aria-labelledby="faq-q-03" data-faq-panel="" data-astro-cid-z6gx6xcw="">
-                        <div className="faq-a-inner" data-astro-cid-z6gx6xcw="">
-                          <div className="faq-a px-8 max-md:px-4 pb-7 max-md:pb-5 flex flex-col gap-3.5 max-w-[860px]" style={{ paddingLeft: 'calc(2rem + 28px + 1.25rem)' }} data-astro-cid-z6gx6xcw="">
-                            <p className="font-body text-[15.5px] leading-[1.65] text-text max-md:text-[14.5px]" data-astro-cid-z6gx6xcw="">
-                              Yes. Instructors can monitor module completion, review specific technical queries made by cadets, and dynamically adjust simulator scenarios to address knowledge gaps.
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                    <li className="faq-row" data-faq-row="" data-open="false" data-faq-category="billing" data-first="false" data-astro-cid-z6gx6xcw="">
-                      <button type="button" className="faq-q w-full flex items-center justify-between gap-6 px-8 max-md:px-4 py-5 text-left transition-colors duration-200" aria-expanded="false" aria-controls="faq-a-04" id="faq-q-04" data-faq-trigger="" data-astro-cid-z6gx6xcw="">
-                        <div className="flex items-baseline gap-5 min-w-0" data-astro-cid-z6gx6xcw="">
-                          <span className="faq-num font-mono text-[12px] text-text-dim shrink-0 w-7" data-astro-cid-z6gx6xcw="">04</span>
-                          <span className="faq-q-text font-heading text-[18px] font-medium tracking-[-0.01em] leading-[1.35] text-text max-md:text-[16px]" data-astro-cid-z6gx6xcw="">
-                            How often are the training materials updated?
-                          </span>
-                        </div>
-                        <span className="faq-toggle shrink-0 inline-flex items-center justify-center w-5 h-5" aria-hidden="true" data-astro-cid-z6gx6xcw="">
-                          <svg viewBox="0 0 10 10" className="w-3 h-3" data-astro-cid-z6gx6xcw="">
-                            <line className="faq-toggle-h" x1="1.5" y1="5" x2="8.5" y2="5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" data-astro-cid-z6gx6xcw=""></line>
-                            <line className="faq-toggle-v" x1="5" y1="1.5" x2="5" y2="8.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" data-astro-cid-z6gx6xcw=""></line>
-                          </svg>
-                        </span>
-                      </button>
-                      <div className="faq-a-wrap" id="faq-a-04" role="region" aria-labelledby="faq-q-04" data-faq-panel="" data-astro-cid-z6gx6xcw="">
-                        <div className="faq-a-inner" data-astro-cid-z6gx6xcw="">
-                          <div className="faq-a px-8 max-md:px-4 pb-7 max-md:pb-5 flex flex-col gap-3.5 max-w-[860px]" style={{ paddingLeft: 'calc(2rem + 28px + 1.25rem)' }} data-astro-cid-z6gx6xcw="">
-                            <p className="font-body text-[15.5px] leading-[1.65] text-text max-md:text-[14.5px]" data-astro-cid-z6gx6xcw="">
-                              Our custom engine pulls in data from updated naval manuals and aviation best practices in real time, ensuring all training scenarios reflect the latest operational standards.
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                  </ol>
                 </div>
               </section>
             </div>

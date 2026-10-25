@@ -19,6 +19,7 @@ import type { LessonTopic } from "@/types/quiz";
 
 interface CoursePlayerProps {
   courseId: string;
+  courseTitle?: string;
   lessons: LessonWithContent[];
   initialLessonIdx?: number;
   initialFileIdx?: number;
@@ -26,6 +27,7 @@ interface CoursePlayerProps {
 
 export function CoursePlayer({
   courseId,
+  courseTitle,
   lessons,
   initialProgress,
   initialLessonIdx = 0,
@@ -413,6 +415,8 @@ export function CoursePlayer({
               key={`slides-${currentLesson?.id}-${currentTopicIdx}`}
               topics={currentTopics}
               activeTopicIndex={currentTopicIdx}
+              courseId={courseId}
+              subjectTitle={courseTitle || currentLesson?.title}
               onTopicChange={(idx) => setCurrentTopicIdx(idx)}
               onCompleteLesson={() => {
                 if (hasQuiz) {

@@ -9,6 +9,7 @@ import {
   Plus,
 } from "lucide-react";
 import { capitalize, cn } from "@/lib/utils";
+import { formatNavalGreeting } from "@/lib/course-utils";
 import { Logo } from "@/components/icons/Logo";
 import type { InstructorAnalytics } from "@/types/analytics";
 import type { Course } from "@/types/course";
@@ -116,11 +117,11 @@ export function InstructorDashboard({
           {/* Center greetings */}
           <div className="relative z-10 my-4">
             <h2 className="text-[24px] font-bold text-white tracking-tight">
-              Welcome, {user.name?.split(" ")[0] || "Instructor"}
+              {formatNavalGreeting(user.rank, user.name)}
             </h2>
             <p className="text-[13px] text-gray-400 mt-1 max-w-xl leading-relaxed">
-              Here is an overview of student enrollment, quiz performance, and
-              completion rates across all your courses.
+              Here is an overview of trainee enrollment, quiz performance, and
+              completion rates across all your subjects.
             </p>
           </div>
 
@@ -129,7 +130,7 @@ export function InstructorDashboard({
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 flex-1">
               <div>
                 <span className="text-[11px] uppercase tracking-wider text-gray-400">
-                  Created Courses
+                  Created Subjects
                 </span>
                 <p className="text-[22px] font-black text-white mt-0.5">
                   {stats.total_courses}
@@ -138,7 +139,7 @@ export function InstructorDashboard({
 
               <div>
                 <span className="text-[11px] uppercase tracking-wider text-gray-400">
-                  Active Students
+                  Active Trainees
                 </span>
                 <p className="text-[22px] font-black text-white mt-0.5">
                   {stats.total_students_active}
@@ -147,7 +148,7 @@ export function InstructorDashboard({
 
               <div>
                 <span className="text-[11px] uppercase tracking-wider text-gray-400">
-                  Graduated Students
+                  Graduated Trainees
                 </span>
                 <p className="text-[22px] font-black text-white mt-0.5">
                   {stats.total_graduates}
@@ -169,7 +170,7 @@ export function InstructorDashboard({
               className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[13px] font-medium transition-all shrink-0 shadow-none"
             >
               <Plus className="h-4 w-4" />
-              Create Course
+              Create Subject
             </Link>
           </div>
         </div>
@@ -194,7 +195,7 @@ export function InstructorDashboard({
             <div className="bg-white border border-gray-200 rounded-xl p-4 flex items-center justify-between">
               <div>
                 <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
-                  Overall Student Average
+                  Overall Trainee Average
                 </span>
                 <div className="text-[28px] font-black text-gray-900 leading-tight">
                   {stats.overall_avg_quiz_score > 0
@@ -265,7 +266,7 @@ export function InstructorDashboard({
           <div className="pt-3 border-t border-gray-100 flex items-center justify-between text-[12px]">
             <span className="text-gray-500">Quiz Scores</span>
             <span className="font-semibold text-gray-900">
-              Aggregated across all student attempts
+              Aggregated across all trainee attempts
             </span>
           </div>
         </div>
@@ -296,9 +297,9 @@ export function InstructorDashboard({
             <table className="w-full text-left text-[13px]">
               <thead>
                 <tr className="border-b border-gray-200 text-[11px] uppercase tracking-wider text-gray-500 font-semibold bg-gray-50/50">
-                  <th className="py-2.5 px-3">Course</th>
+                  <th className="py-2.5 px-3">Subject</th>
                   <th className="py-2.5 px-3">Lessons</th>
-                  <th className="py-2.5 px-3">Students</th>
+                  <th className="py-2.5 px-3">Trainees</th>
                   <th className="py-2.5 px-3">Completion Rate</th>
                   <th className="py-2.5 px-3 text-right">Lesson Quiz Avg</th>
                   <th className="py-2.5 px-3 text-right">Course Quiz Avg</th>
@@ -390,8 +391,8 @@ export function InstructorDashboard({
                       colSpan={7}
                       className="py-8 text-center text-gray-400 text-[13px]"
                     >
-                      No courses created yet. Create your first course to begin
-                      teaching students.
+                      No subjects created yet. Create your first subject to begin
+                      training personnel.
                     </td>
                   </tr>
                 )}
@@ -409,7 +410,7 @@ export function InstructorDashboard({
                   <Clock className="h-4 w-4" />
                 </div>
                 <h3 className="text-[15px] font-bold text-gray-900">
-                  Recent Student Activity
+                  Recent Trainee Activity
                 </h3>
               </div>
               <span className="text-[11px] font-mono text-gray-400">Live</span>
@@ -459,7 +460,7 @@ export function InstructorDashboard({
 
               {recentActivity.length === 0 && (
                 <div className="p-8 text-center text-gray-400 text-[13px]">
-                  No recent student activity yet.
+                  No recent trainee activity yet.
                 </div>
               )}
             </div>

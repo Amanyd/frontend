@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Check, Loader2, Send } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Loader2, Send, Timer } from "lucide-react";
 import { QuizQuestion } from "@/components/quiz/quiz-question";
 import { DifficultyBadge } from "@/components/quiz/difficulty-badge";
 import { useQuizStore } from "@/stores/quiz-store";
@@ -42,6 +42,8 @@ export default function QuizTakePage() {
   const [quizDetail, setQuizDetail] = useState<QuizDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  // Default to 10 minutes for course quizzes, 5 mins for lesson quizzes
+  const [timeLeft, setTimeLeft] = useState<number>(10 * 60);
 
   useEffect(() => {
     reset();
@@ -52,6 +54,9 @@ export default function QuizTakePage() {
           `/api/v1/quizzes/${quizId}`
         );
         setQuizDetail(detail);
+
+        const duration = detail.quiz?.lesson_id ? 5 * 60 : 10 * 60;
+        setTimeLeft(duration);
 
         const attempt = await startAttempt.mutateAsync(quizId);
         setAttemptId(attempt.id);
@@ -65,6 +70,43 @@ export default function QuizTakePage() {
     init();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quizId]);
+
+  const handleSubmit = useCallback(async () => {
+    if (!attemptId || submitting) return;
+    setSubmitting(true);
+    try {
+      for (const [questionId, answer] of Object.entries(answers)) {
+        await submitAnswer.mutateAsync({
+          attemptId,
+          data: { question_id: questionId, answer },
+        });
+      }
+
+      const result = await finishAttempt.mutateAsync(attemptId);
+      reset();
+      router.push(`/quizzes/${quizId}/results?attemptId=${result.id}`);
+    } catch {
+      setSubmitting(false);
+    }
+  }, [attemptId, submitting, answers, submitAnswer, finishAttempt, reset, router, quizId]);
+
+  // Countdown timer: 10 minutes for course-wide quizzes, auto-submits on expiration
+  useEffect(() => {
+    if (loading || submitting || !attemptId) return;
+
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          handleSubmit();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [loading, submitting, attemptId, handleSubmit]);
 
   if (loading || !quizDetail || !attemptId) {
     return (
@@ -87,23 +129,10 @@ export default function QuizTakePage() {
   const isLast = total > 0 && currentQuestion === total - 1;
   const progress = total > 0 ? Math.round(((currentQuestion + 1) / total) * 100) : 0;
 
-  const handleSubmit = async () => {
-    setSubmitting(true);
-    try {
-      for (const [questionId, answer] of Object.entries(answers)) {
-        await submitAnswer.mutateAsync({
-          attemptId,
-          data: { question_id: questionId, answer },
-        });
-      }
-
-      const result = await finishAttempt.mutateAsync(attemptId);
-      reset();
-      router.push(`/quizzes/${quizId}/results?attemptId=${result.id}`);
-    } catch {
-      setSubmitting(false);
-    }
-  };
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+  const timeString = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  const isUrgent = timeLeft < 120;
 
   return (
     <div className="h-[calc(100vh-4rem)] -mx-6 -my-6 flex flex-col font-sans bg-[#f3f4f6] p-6">
@@ -126,13 +155,32 @@ export default function QuizTakePage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <span className="text-[13px] font-medium text-gray-500">
-            Question {currentQuestion + 1} of {total}
-          </span>
-          <span className="text-[11px] font-semibold text-gray-400">
-            ({progress}%)
-          </span>
+        {/* Center/Right Timer & Question progress */}
+        <div className="flex items-center gap-3">
+          {/* Sticky Countdown Timer */}
+          <div
+            className={cn(
+              "flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-[13px] font-mono font-bold tracking-wide transition-all shadow-none",
+              isUrgent
+                ? "bg-red-50 text-red-700 border-red-200 animate-pulse"
+                : "bg-white text-gray-800 border-gray-200"
+            )}
+            title="Time Remaining"
+          >
+            <Timer className={cn("w-4 h-4", isUrgent ? "text-red-600" : "text-blue-600")} />
+            <span>{timeString}</span>
+          </div>
+
+          <div className="h-4 w-px bg-gray-300" />
+
+          <div className="flex items-center gap-2">
+            <span className="text-[13px] font-medium text-gray-500">
+              Question {currentQuestion + 1} of {total}
+            </span>
+            <span className="text-[11px] font-semibold text-gray-400">
+              ({progress}%)
+            </span>
+          </div>
         </div>
       </div>
 
@@ -159,7 +207,7 @@ export default function QuizTakePage() {
             onClick={prevQuestion}
             disabled={isFirst}
             className={cn(
-              "flex items-center gap-1.5 px-4 py-2 text-[13px] font-medium rounded-lg transition-colors border",
+              "flex items-center gap-1.5 px-4 py-2 text-[13px] font-medium rounded-lg transition-colors border cursor-pointer",
               isFirst
                 ? "border-transparent text-gray-300 cursor-not-allowed"
                 : "border-gray-200 bg-white hover:bg-gray-50 text-gray-700 shadow-none"
@@ -173,7 +221,7 @@ export default function QuizTakePage() {
             <button
               onClick={handleSubmit}
               disabled={submitting}
-              className="flex items-center gap-1.5 px-5 py-2 text-[13px] font-medium rounded-lg transition-colors bg-emerald-600 hover:bg-emerald-700 text-white shadow-none"
+              className="flex items-center gap-1.5 px-5 py-2 text-[13px] font-medium rounded-lg transition-colors bg-emerald-600 hover:bg-emerald-700 text-white shadow-none cursor-pointer disabled:opacity-50"
             >
               {submitting ? (
                 <>
@@ -190,7 +238,7 @@ export default function QuizTakePage() {
           ) : (
             <button
               onClick={nextQuestion}
-              className="flex items-center gap-1.5 px-5 py-2 text-[13px] font-medium rounded-lg transition-colors bg-blue-600 hover:bg-blue-700 text-white shadow-none"
+              className="flex items-center gap-1.5 px-5 py-2 text-[13px] font-medium rounded-lg transition-colors bg-blue-600 hover:bg-blue-700 text-white shadow-none cursor-pointer"
             >
               Next Question
               <ArrowRight className="h-4 w-4" />

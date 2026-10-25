@@ -15,6 +15,7 @@ import {
   Trophy,
 } from "lucide-react";
 import { capitalize, cn } from "@/lib/utils";
+import { formatNavalGreeting, getUserNavalRank } from "@/lib/course-utils";
 import { Logo } from "@/components/icons/Logo";
 import type { StudentAnalytics } from "@/types/analytics";
 import type { Course } from "@/types/course";
@@ -42,8 +43,8 @@ export function StudentDashboard({
 }: StudentDashboardProps) {
   // Graceful defaults if analytics hasn't loaded or is empty
   const profile = analytics?.user_profile ?? {
-    name: user.name || "Student",
-    rank: user.rank || "Officer",
+    name: user.name || "Trainee",
+    rank: user.rank || "Sub Lieutenant",
     enrollment_id: "AF-2026-9041",
     readiness_score: 0,
   };
@@ -136,15 +137,13 @@ export function StudentDashboard({
                   {profile.enrollment_id || "AF-2026-9041"}
                 </span>
               </div>
-            </div>
-
-            <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-white/10 backdrop-blur-md border border-white/15 text-gray-200">
-                Category: {capitalize(profile.rank)}
+                Rank: {getUserNavalRank(profile.rank, profile.enrollment_id)}
               </span>
               <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Active Student
+                Active Trainee
               </span>
             </div>
           </div>
@@ -152,7 +151,7 @@ export function StudentDashboard({
           {/* Center greetings */}
           <div className="relative z-10 my-4">
             <h2 className="text-[24px] font-bold text-white tracking-tight">
-              {titleOverride || (isInstructorView ? profile.name : `Welcome back, ${profile.name.split(" ")[0] || "Student"}`)}
+              {titleOverride || (isInstructorView ? profile.name : formatNavalGreeting(profile.rank, profile.name, profile.enrollment_id))}
             </h2>
             <p className="text-[13px] text-gray-400 mt-1 max-w-xl leading-relaxed">
               {descriptionOverride ||
@@ -195,17 +194,17 @@ export function StudentDashboard({
               {!isInstructorView && (
                 <Link
                   href="/quizzes"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white text-[13px] font-medium transition-all border border-white/10 shadow-none"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white text-[13px] font-medium transition-all border border-white/10 shadow-none"
                 >
                   Quizzes
                 </Link>
               )}
               {isInstructorView && (
                 <span className="px-3.5 py-1.5 rounded-lg bg-white/10 text-white text-[13px] font-medium border border-white/15">
-                  Full Student Record
+                  Full Trainee Record
                 </span>
               )}
-            </div>
+            </div>      </div>
           </div>
         </div>
 
@@ -575,7 +574,7 @@ export function StudentDashboard({
                 <Trophy className="h-4 w-4" />
               </div>
               <h3 className="text-[16px] font-bold text-gray-900 tracking-tight">
-                {isInstructorView ? "Student Category Standing" : "Student Leaderboard"}
+                {isInstructorView ? "Trainee Category Standing" : "Trainee Leaderboard"}
               </h3>
               <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-200">
                 {capitalize(profile.rank)} Category
@@ -584,7 +583,7 @@ export function StudentDashboard({
             <p className="text-[12px] text-gray-500">
               {isInstructorView
                 ? `Official standing for ${profile.name} in the ${capitalize(profile.rank)} cohort.`
-                : `Top-ranking students in the ${capitalize(profile.rank)} category based on average quiz score and completed courses.`}
+                : `Top-ranking trainees in the ${capitalize(profile.rank)} category based on average quiz score and completed courses.`}
             </p>
           </div>
 
@@ -604,7 +603,7 @@ export function StudentDashboard({
             <thead>
               <tr className="border-b border-gray-200 bg-gray-50/75 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
                 <th className="py-3 px-4 w-16">Rank</th>
-                <th className="py-3 px-4">Student</th>
+                <th className="py-3 px-4">Trainee</th>
                 <th className="py-3 px-4">Category</th>
                 <th className="py-3 px-4">Courses Done</th>
                 <th className="py-3 px-4">Lessons Done</th>
@@ -756,7 +755,7 @@ export function StudentDashboard({
                     colSpan={8}
                     className="py-8 text-center text-gray-400 text-[13px]"
                   >
-                    No students on the leaderboard yet.
+                    No trainees on the leaderboard yet.
                   </td>
                 </tr>
               )}

@@ -36,7 +36,7 @@ export function Topbar({ user }: TopbarProps) {
         {/* Left side tag */}
         <div className="hidden md:flex items-center px-3 py-1 bg-gray-200 rounded-lg border border-gray-300">
           <span className="text-[14px] font-semibold text-gray-800">
-            {user.role === "instructor" ? "Instructor's Portal" : "Student's Portal"}
+            {user.role === "instructor" ? "Instructor's Portal" : "Trainee's Portal"}
           </span>
         </div>
       </div>

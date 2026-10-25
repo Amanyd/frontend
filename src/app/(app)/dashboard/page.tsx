@@ -4,6 +4,7 @@ import { api } from "@/lib/api-client";
 import { StudentDashboard } from "@/components/dashboard/student-dashboard";
 import { InstructorDashboard } from "@/components/dashboard/instructor-dashboard";
 import { capitalize } from "@/lib/utils";
+import { getUserNavalRank } from "@/lib/course-utils";
 import type { Course } from "@/types/course";
 import type { StudentAnalytics, InstructorAnalytics } from "@/types/analytics";
 
@@ -38,7 +39,7 @@ export default async function DashboardPage() {
               Instructor Overview & Analytics
             </h1>
             <p className="text-[13px] text-gray-500 mt-0.5">
-              Track student progress, quiz performance, and course completion
+              Track trainee progress, quiz performance, and subject completion
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -78,15 +79,15 @@ export default async function DashboardPage() {
       <div className="flex items-center justify-between mb-6 px-2">
         <div>
           <h1 className="text-[20px] font-bold text-gray-900 tracking-tight">
-            Student Overview & Performance
+            Trainee Overview & Performance
           </h1>
           <p className="text-[13px] text-gray-500 mt-0.5">
-            Track your course progress, quiz scores, and learning milestones
+            Track your subject progress, quiz scores, and learning milestones
           </p>
         </div>
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[12px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-            {capitalize(user.rank)} Student
+            {getUserNavalRank(user.rank)} Trainee
           </span>
         </div>
       </div>

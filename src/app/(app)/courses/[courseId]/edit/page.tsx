@@ -67,7 +67,7 @@ export default function EditCoursePage() {
     <div className="h-[calc(100vh-4rem)] -mx-6 -my-6 flex flex-col font-sans bg-[#f3f4f6] p-6">
       <div className="flex items-center justify-between mb-6 px-2">
         <h1 className="text-[20px] font-bold text-gray-900 tracking-tight">
-          Course builder studio...
+          Subject builder studio...
         </h1>
         <div className="flex items-center gap-4">
           <span className="text-[12px] font-medium text-gray-500 flex items-center gap-1.5">
@@ -146,8 +146,8 @@ export default function EditCoursePage() {
                 <p className="text-[13px] text-gray-500 mb-6">Irreversible and destructive actions.</p>
                 <div className="border border-red-200 bg-red-50/50 rounded-xl p-5 flex items-center justify-between">
                   <div>
-                    <h3 className="text-[14px] font-bold text-red-900">Delete Course</h3>
-                    <p className="text-[12px] text-red-700 mt-0.5">Permanently remove this course and all of its content.</p>
+                    <h3 className="text-[14px] font-bold text-red-900">Delete Subject</h3>
+                    <p className="text-[12px] text-red-700 mt-0.5">Permanently remove this subject and all of its content.</p>
                   </div>
                   <DeleteCourseButton courseId={course.id} />
                 </div>

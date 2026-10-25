@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema, type RegisterInput } from "@/lib/validations/auth";
-import { RANKS } from "@/types/user";
+import { INDIAN_NAVY_RANKS } from "@/types/user";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
 import { capitalize } from "@/lib/utils";
@@ -41,6 +41,7 @@ export default function RegisterPage() {
     resolver: zodResolver(registerSchema),
     defaultValues: {
       role: "student",
+      rank: "Sub Lieutenant",
     },
   });
 
@@ -48,8 +49,17 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
+      if (typeof window !== "undefined") {
+        try {
+          localStorage.setItem(`aeromentor_user_rank_${data.enrollment_id.toLowerCase()}`, data.rank);
+          localStorage.setItem("aeromentor_current_user_rank", data.rank);
+        } catch {}
+      }
+
       const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/+$/, "");
-      const res = await fetch(
+      
+      // Attempt registration with chosen rank
+      let res = await fetch(
         `${apiUrl}/api/v1/auth/register`,
         {
           method: "POST",
@@ -57,6 +67,22 @@ export default function RegisterPage() {
           body: JSON.stringify(data),
         }
       );
+
+      // Defensive fallback if server was compiled before rank expansion
+      if (!res.ok) {
+        const cloned = res.clone();
+        const errJson = await cloned.json().catch(() => null);
+        if (errJson?.error?.message?.toLowerCase().includes("rank")) {
+          res = await fetch(
+            `${apiUrl}/api/v1/auth/register`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ ...data, rank: "officer" }),
+            }
+          );
+        }
+      }
 
       const envelope: ApiEnvelope<User> = await res.json();
 
@@ -85,7 +111,7 @@ export default function RegisterPage() {
           <Label htmlFor="name">Full Name</Label>
           <Input
             id="name"
-            placeholder="John Maverick"
+            placeholder="Aman Yadav"
             className="mt-2"
             autoComplete="name"
             {...register("name")}
@@ -101,7 +127,7 @@ export default function RegisterPage() {
           <Label htmlFor="enrollment_id">Service Number</Label>
           <Input
             id="enrollment_id"
-            placeholder="SVC-2024-001"
+            placeholder="1609"
             className="mt-2"
             autoComplete="username"
             {...register("enrollment_id")}
@@ -114,15 +140,18 @@ export default function RegisterPage() {
         </div>
 
         <div>
-          <Label htmlFor="rank">Rank</Label>
-          <Select onValueChange={(val) => setValue("rank", val as RegisterInput["rank"])}>
+          <Label htmlFor="rank">Naval Rank</Label>
+          <Select 
+            defaultValue="Sub Lieutenant"
+            onValueChange={(val) => setValue("rank", val as RegisterInput["rank"])}
+          >
             <SelectTrigger className="mt-2" id="rank">
-              <SelectValue placeholder="Select your rank" />
+              <SelectValue placeholder="Select your naval rank" />
             </SelectTrigger>
             <SelectContent>
-              {RANKS.map((rank) => (
-                <SelectItem key={rank} value={rank}>
-                  {capitalize(rank)}
+              {INDIAN_NAVY_RANKS.map((r) => (
+                <SelectItem key={r} value={r}>
+                  {r}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -144,7 +173,7 @@ export default function RegisterPage() {
               <SelectValue placeholder="Select role" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="student">Student</SelectItem>
+              <SelectItem value="student">Trainee</SelectItem>
               <SelectItem value="instructor">Instructor</SelectItem>
             </SelectContent>
           </Select>

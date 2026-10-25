@@ -39,8 +39,8 @@ export function QuizViewer({ quiz, onPass }: QuizViewerProps) {
   const [state, setState] = useState<"idle" | "loading" | "attempting" | "submitting" | "results">("idle");
   const [resultsScore, setResultsScore] = useState<{ score: number; total: number } | null>(null);
 
-  // Examination countdown timer: 10 mins for lesson quiz, 25 mins for course final exam
-  const initialTimeSeconds = quiz.lesson_id ? 10 * 60 : 25 * 60;
+  // Examination countdown timer: 5 mins for lesson quiz, 10 mins for course final exam
+  const initialTimeSeconds = quiz.lesson_id ? 5 * 60 : 10 * 60;
   const [timeLeft, setTimeLeft] = useState<number>(initialTimeSeconds);
 
   const startAttempt = useStartAttempt();
@@ -150,14 +150,14 @@ export function QuizViewer({ quiz, onPass }: QuizViewerProps) {
       </h2>
       <p className="text-[13px] text-gray-500 max-w-sm mb-6 leading-relaxed">
         {quiz.lesson_id
-          ? "5 questions drawn at random from the 30-question bank. Difficulty calibrated via Bloom's taxonomy. 10 minutes time limit."
-          : "20 questions covering all course flight modules. 25 minutes time limit. Automated submission on expiry."}
+          ? "5 questions drawn at random from the 30-question bank. Difficulty calibrated via Bloom's taxonomy. 5 minutes time limit."
+          : "20 questions covering all course flight modules. 10 minutes time limit. Automated submission on expiry."}
       </p>
 
       <div className="flex items-center gap-3 mb-6">
         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-50 border border-gray-200 text-[12px] font-semibold text-gray-700">
           <Clock className="w-3.5 h-3.5 text-blue-600" />
-          <span>{quiz.lesson_id ? "10 Minutes" : "25 Minutes"}</span>
+          <span>{quiz.lesson_id ? "5 Minutes" : "10 Minutes"}</span>
         </div>
         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-50 border border-gray-200 text-[12px] font-semibold text-gray-700 capitalize">
           <span>Difficulty: {quiz.difficulty}</span>

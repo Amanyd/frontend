@@ -32,10 +32,10 @@ export default async function AnalyticsPage() {
       {/* Header */}
       <div className="mb-4 flex-shrink-0">
         <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
-          Student Performance & Analytics
+          Trainee Performance & Analytics
         </h1>
         <p className="text-sm text-gray-500 mt-1">
-          Track cohort performance, analyze learning metrics, and inspect individual student progress.
+          Track cohort performance, analyze learning metrics, and inspect individual trainee progress.
         </p>
       </div>
 

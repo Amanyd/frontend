@@ -88,7 +88,7 @@ export function InstructorAnalyticsView({
           <div className="bg-[#fafbfc] border border-gray-200 rounded-xl p-5 flex flex-col justify-between">
             <div className="flex items-center justify-between text-gray-500">
               <span className="text-[12px] font-semibold uppercase tracking-wider">
-                Active Students
+                Active Trainees
               </span>
               <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
                 <Users className="w-4 h-4" />
@@ -99,7 +99,7 @@ export function InstructorAnalyticsView({
                 {stats.total_students_active}
               </span>
               <p className="text-[12px] text-gray-500 mt-0.5">
-                Students actively enrolled in courses
+                Trainees actively enrolled in subjects
               </p>
             </div>
           </div>
@@ -321,7 +321,7 @@ export function InstructorAnalyticsView({
                 <Trophy className="w-4 h-4" />
               </div>
               <h2 className="text-[16px] font-bold text-gray-900 tracking-tight">
-                Live Student Rankings & Directory
+                Live Trainee Rankings & Directory
               </h2>
             </div>
             <p className="text-[13px] text-gray-500 mt-0.5">
@@ -338,7 +338,7 @@ export function InstructorAnalyticsView({
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search student or service no..."
+                placeholder="Search trainee or service no..."
                 className="w-full pl-9 pr-8 py-2 text-[13px] bg-white border border-gray-200 rounded-lg text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               />
               {searchQuery && (
@@ -397,7 +397,7 @@ export function InstructorAnalyticsView({
             <thead>
               <tr className="border-b border-gray-200 bg-gray-50/75 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
                 <th className="py-3 px-4 w-16">Rank</th>
-                <th className="py-3 px-4">Student</th>
+                <th className="py-3 px-4">Trainee</th>
                 <th className="py-3 px-4">Category</th>
                 <th className="py-3 px-4">Courses Done</th>
                 <th className="py-3 px-4">Lessons Done</th>
@@ -544,14 +544,14 @@ export function InstructorAnalyticsView({
                     {searchQuery ? (
                       <div>
                         <p className="font-medium text-gray-600">
-                          No students matching &quot;{searchQuery}&quot;
+                          No trainees matching &quot;{searchQuery}&quot;
                         </p>
                         <p className="text-[12px] text-gray-400 mt-1">
                           Try searching by another name or service number.
                         </p>
                       </div>
                     ) : (
-                      "No students registered in this category."
+                      "No trainees registered in this category."
                     )}
                   </td>
                 </tr>

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { api } from "@/lib/api-client";
 import { CourseCard } from "@/components/course/course-card";
-import { ArrowRight, HelpCircle, Loader2, Sparkles, Award } from "lucide-react";
+import { ArrowRight, HelpCircle, Loader2, Sparkles, Award, Timer } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Quiz } from "@/types/quiz";
 import type { Course } from "@/types/course";
@@ -171,9 +171,14 @@ function renderQuizBox(tier: "basic" | "advanced", quiz?: Quiz) {
             {isBasic ? <Sparkles className="w-3 h-3 text-blue-600" /> : <Award className="w-3 h-3 text-purple-600" />}
             {isBasic ? "Basic Assessment" : "Advanced Assessment"}
           </span>
-          <span className="text-[11px] text-gray-500 font-medium">
-            {questionCount} Questions
-          </span>
+          <div className="flex items-center gap-2 text-[11px] text-gray-500 font-medium">
+            <span>{questionCount} Questions</span>
+            <span>&bull;</span>
+            <span className="flex items-center gap-1 font-semibold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200/60">
+              <Timer className="w-3 h-3 text-amber-600" />
+              10m Timer
+            </span>
+          </div>
         </div>
 
         <p className="text-[12px] text-gray-400 mb-3">

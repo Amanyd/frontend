@@ -72,7 +72,12 @@ export default async function LearnPage({ params }: PageProps) {
       </div>
 
       {/* Big white container — course player fills this */}
-      <CoursePlayer courseId={courseId} lessons={lessonsWithContent} initialProgress={initialProgress} />
+      <CoursePlayer
+        courseId={courseId}
+        courseTitle={course.title}
+        lessons={lessonsWithContent}
+        initialProgress={initialProgress}
+      />
     </div>
   );
 }
